@@ -1196,10 +1196,6 @@ export default function App() {
 
           </div>
 
-                    {/* Persistent global footer credits */}
-          <footer className="bg-white dark:bg-[#18181b] text-slate-400 dark:text-zinc-500 text-center py-6 border-t border-slate-100 dark:border-zinc-850 px-6 text-[11px] font-sans font-medium hover:text-slate-500 dark:hover:text-zinc-400 transition-all select-none mb-16 lg:mb-0">
-            <span className="block">{t.footerText.replace('{year}', String(new Date().getFullYear()))}</span>
-         </footer>
         </main>
       </div>
     </div>
