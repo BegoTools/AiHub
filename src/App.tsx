@@ -323,9 +323,9 @@ export default function App() {
   }, [selectedCategoryId, allTools]);
 
   const activeCategoryDetails = useMemo(() => {
-    if (!selectedCategoryId) return null;
-    return localizedCategories.find(c => c.id === selectedCategoryId) || null;
-  }, [selectedCategoryId]);
+      if (!selectedCategoryId) return null;
+      return localizedCategories.find(c => c.id === selectedCategoryId) || null;
+    }, [selectedCategoryId, localizedCategories]);
 
   // General statistics
   const recentToolsUsed = useMemo(() => {
