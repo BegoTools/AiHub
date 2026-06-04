@@ -1,0 +1,711 @@
+// Types and definitions for Multilingual AI Smart Tools Platform
+
+export type Language = 'ar' | 'en' | 'de' | 'fr' | 'it';
+
+export interface LanguageInfo {
+  id: Language;
+  name: string;
+  flag: string;
+}
+
+export const languages: LanguageInfo[] = [
+  { id: 'ar', name: 'العربية', flag: '🇪🇬' },
+  { id: 'en', name: 'English', flag: '🇺🇸' },
+  { id: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { id: 'fr', name: 'Français', flag: '🇫🇷' },
+  { id: 'it', name: 'Italiano', flag: '🇮🇹' }
+];
+
+export interface TranslationDict {
+  home: string;
+  chatAssistant: string;
+  categories: string;
+  favorites: string;
+  history: string;
+  settings: string;
+  appTitle: string;
+  appSubtitle: string;
+  serviceStatus: string;
+  secureProtocol: string;
+  searchPlaceholder: string;
+  lightMode: string;
+  dimMode: string;
+  darkMode: string;
+  noFavorites: string;
+  noHistory: string;
+  favoritesTitle: string;
+  favoritesDesc: string;
+  historyTitle: string;
+  historyDesc: string;
+  clearHistory: string;
+  settingsTitle: string;
+  settingsDesc: string;
+  providerLabel: string;
+  geminiDesc: string;
+  openrouterDesc: string;
+  useCustomKeys: string;
+  customKeysDesc: string;
+  geminiKeyLabel: string;
+  openrouterKeyLabel: string;
+  getFreeKey: string;
+  getOpenrouterKey: string;
+  settingsGuideTitle: string;
+  settingsGuideDesc1: string;
+  settingsGuideDesc2: string;
+  settingsGuideSteps: string;
+  guideStep1: string;
+  guideStep2: string;
+  guideStep3: string;
+  guideStep4: string;
+  saveButton: string;
+  chatTitle: string;
+  chatDesc: string;
+  onboardingTitle: string;
+  onboardingDesc: string;
+  getStarted: string;
+  emptyOutput: string;
+  exportPdf: string;
+  printPdf: string;
+  importPdf: string;
+  pdfExtractor: string;
+  modelSelectTitle: string;
+  modelSelectDesc: string;
+  activeModelLabel: string;
+  runTool: string;
+  running: string;
+  errorOccurred: string;
+  copiedToClipboard: string;
+  copyCode: string;
+  pdfImportSuccess: string;
+  pdfImportError: string;
+  apiProviderLabel: string;
+  customApiKeyPlaceholder: string;
+  useCustomKeysLabel: string;
+  recentTools: string;
+  noRecentTools: string;
+  noMatchingTools: string;
+  searchResultTitle: string;
+  allFeatures: string;
+  heroTitle: string;
+  heroDesc: string;
+  exploreTools: string;
+  techDetails: string;
+  categoriesGridTitle: string;
+  viewAllCategories: string;
+  recentToolsTitle: string;
+  emptyRecentTools: string;
+  connectionSecurityNotice: string;
+  connectionSecurityDesc: string;
+  connectionSecuritySettingsLink: string;
+  sectionsTitle: string;
+  sectionsDesc: string;
+  toolsAvailable: string;
+  tryNow: string;
+  removeFromFavorites: string;
+  saveToFavorites: string;
+  customToolLabel: string;
+  quickSearchPlaceholder: string;
+  secureProtocolLabel: string;
+  searchNoResults: string;
+  searchCancel: string;
+  brandTitleMobile: string;
+  breadcrumbHome: string;
+  breadcrumbCategories: string;
+  about: string;
+  aboutTitle: string;
+  aboutDesc: string;
+  aboutVersion: string;
+  aboutFeature1Title: string;
+  aboutFeature1Desc: string;
+  aboutFeature2Title: string;
+  aboutFeature2Desc: string;
+  footerText: string;
+  countTools: string;
+  availableTools: string;
+  by: string;
+  inputsLabel: string;
+  copyOutput: string;
+  openInWorkbench: string;
+  connectionSettingsTitle: string;
+  welcomeOnboarding1: string;
+  welcomeOnboarding2: string;
+  welcomeOnboarding3: string;
+}
+
+export const translations: Record<Language, TranslationDict> = {
+  ar: {
+    home: 'الرئيسية 🏠',
+    chatAssistant: 'المساعد الذكي 🤖',
+    categories: 'أقسام الأدوات 📁',
+    favorites: 'المفضلة 🌟',
+    history: 'سجل العمليات ⏱️',
+    settings: 'أدوات الاتصال ⚙️',
+    appTitle: 'بيئة الأدوات فائقة الذكاء',
+    appSubtitle: 'أسرع بيئة محلية لـ 38 أداة ذكية متخصصة بنماذج ذكاء اصطناعي رائدة.',
+    serviceStatus: 'حالة الخدمات المتطورة',
+    secureProtocol: 'بروتوكول آمن محلي',
+    searchPlaceholder: 'ابحث عن أداة ذكية...',
+    lightMode: '☀️ الوضع المضيء',
+    dimMode: '🌙 الوضع الخافت',
+    darkMode: '🌌 الوضع الداكن',
+    noFavorites: 'لا توجد أدوات مفضلة بعد. اضغط على نجمة لحفظ أدواتك هنا! ⭐',
+    noHistory: 'السجل فارغ تمامًا! لم تقم بأي عمليات بعد. 📝',
+    favoritesTitle: 'الأدوات المفضلة الخاصة بك 🌟',
+    historyTitle: 'سجل المحادثات والعمليات المستعملة ⏱️',
+    settingsTitle: 'إعدادات الاتصال ومفاتيح العمل ⚙️',
+    settingsDesc: 'اختر نموذج الذكاء الاصطناعي المناسب وقدم مفتاحه الخاص للبدء بالتشغيل المحمي.',
+    saveButton: 'حفظ الإعدادات والمفاتيح',
+    chatTitle: 'مساعد البحث وتوليد المهام الذكي 🧠',
+    chatDesc: 'تحدث مع المساعد الذكي لاكتشاف الأدوات المناسبة لمهامك وتصميم حلول مخصصة.',
+    onboardingTitle: 'مرحبا بك في واحة الذكاء الفائق! 🎉',
+    onboardingDesc: 'اكتشف روعة التطوير والحل الذكي المباشر دون تعقيد أو تسجيل دخول.',
+    getStarted: 'ابدأ تصفح المنصة الآن',
+    emptyOutput: 'بانتظار إمدادك ببيانات الإدخال للبدء بالتحليل المعمق والتوليد السريع... ✨',
+    exportPdf: 'تصدير النتيجة كملف PDF 📄',
+    printPdf: 'طباعة التقرير المولد 🖨️',
+    importPdf: 'استخراج نصوص من ملف PDF 📂',
+    pdfExtractor: 'مستخرج النصوص الـ PDF المدمج 🔬',
+    modelSelectTitle: 'اختر نموذج التشغيل المناسب',
+    modelSelectDesc: 'يمكنك التبديل بين نموذج العمل الافتراضي السريع أو السيرفر المباشر.',
+    activeModelLabel: 'النموذج الفعال الآن:',
+    runTool: 'تشغيل الأداة الذكية 🚀',
+    running: 'جاري التوليد والتحليل...',
+    errorOccurred: 'أوووبس! حدث خطأ أثناء الاتصال',
+    copiedToClipboard: 'تم نسخ النص إلى الحافظة بنجاح! 📋',
+    copyCode: 'نسخ النص 📋',
+    pdfImportSuccess: 'تم استيراد واستخراج النص من ملف PDF بنجاح! تم وضعه في خانة الإدخال.',
+    pdfImportError: 'حدث تعطل أثناء استيراد وقراءة ملف الـ PDF. يرجى التأكد من سلامة الملف.',
+    apiProviderLabel: 'مزود الخدمة والنموذج الفعال:',
+    customApiKeyPlaceholder: 'أدخل مفتاح الـ API الخاص بك هنا...',
+    useCustomKeysLabel: 'استخدام مفتاحي الشخصي لتوليد مجاني غير محدود بكفاءة أكبر',
+    recentTools: 'الأدوات المقترحة',
+    noRecentTools: 'لا توجد أدوات مستعملة مؤخراً.',
+    noMatchingTools: 'لا توجد نتائج بحث مطابقة.',
+    searchResultTitle: 'نتائج البحث عن',
+    allFeatures: 'كل ما تحتاج في مكان واحد',
+    heroTitle: 'صديقك الذكي للمهام المعقدة والمستعصية! 🚀',
+    heroDesc: 'اختر من بين 38 أداة متخصصة مبنية بأقوى نماذج الذكاء الاصطناعي لمساعدتك في التلخيص، الكتابة، التسويق، وصحة بدنك مجاناً وبكل أمان.',
+    exploreTools: 'اكتشف أدوات المنصة 🔍',
+    techDetails: 'تعرف على تكنولوجيا المنصة 🧪',
+    categoriesGridTitle: 'تصفح الفئات والأقسام الرئيسية 📁',
+    viewAllCategories: 'عرض كل الأقسام 📁',
+    recentToolsTitle: 'الأدوات المستعملة مؤخراً ⏱️',
+    emptyRecentTools: 'لم تستعمل أي من الأدوات الذكية بعد. جرب فتح الملخص أو كاتب الرسائل لتبدأ!',
+    connectionSecurityNotice: 'تنويه مهني وأمني مهم للغاية 🔒',
+    connectionSecurityDesc: 'نحن نعمل بطاقة محلية بالكامل على جهازك. لا داعي للقلق بشأن السيرفرات أو كلمات السر، نحن نخزن سجلاتك ومفضلاتك محلياً في المتصفح باستخدام Local Storage.',
+    connectionSecuritySettingsLink: 'إذا لم تكن تتوفر على مفتاح تشغيل، يرجى تزويد صفحة (أدوات الاتصال) بمفاتيح Gemini الخاصة بك للحصول على عمل مجاني وتوليد غير محدود.',
+    sectionsTitle: 'أقسام الفئات الكبرى والذكاء الفئوي',
+    sectionsDesc: 'تصفح الفئات المتكاملة التي تم ترشيحها لتسهيل حياتك وعملك اليومي.',
+    toolsAvailable: '38 أداة جاهزة للعمل',
+    tryNow: 'جرب الأداة الآن 🚀',
+    removeFromFavorites: 'إزالة من المفضلة 🌟',
+    saveToFavorites: 'إضافة للمفضلة 🌟',
+    customToolLabel: 'أداة ذكية مخصصة',
+    quickSearchPlaceholder: 'ابحث عن أداة ذكية...',
+    secureProtocolLabel: 'بروتوكول آمن',
+    searchNoResults: 'مفيش أي أداة بالاسم ده! جرب كلمة بحث تانية :)',
+    searchCancel: 'إلغاء البحث',
+    brandTitleMobile: 'منصة الأدوات الذكية',
+    breadcrumbHome: 'الرئيسية',
+    breadcrumbCategories: 'الأقسام',
+    about: 'حول المنصة ℹ️',
+    aboutTitle: 'تكنولوجيا منصة الأدوات الذكية الخارقة 🧪',
+    aboutDesc: 'المنصة مبنية بأحدث تقنيات الويب والذكاء الاصطناعي التوليدي، معتمدة على نماذج Google Gemini فائقة التطور.',
+    welcomeOnboarding1: 'منصة متكاملة تضم 38 أداة ذكية في خدمتك لتوليد محتوى، تحليل وماتشينغ بيانات فوري.',
+    welcomeOnboarding2: 'أمان كامل 100% - بياناتك وسجلاتك ومفاتيح تشغيلك مشفرة تمامًا في متصفحك محليًا.',
+    welcomeOnboarding3: 'إمكانية إرفاق وقرائة ملفات PDF والتبديل الكامل بمرونة تامة للغات والثيمات المضيئة والخافتة والداكنة.',
+    favoritesDesc: 'قائمة بالأدوات الذكية التي قمت بتمييزها بنجمة للوصول المباشر والسريع.',
+    historyDesc: 'تتبع كافة مخرجاتك وما قمت بصياغته وحفظه باستخدام الذكاء في مكان آمن.',
+    clearHistory: 'مسح السجل بالكامل',
+    providerLabel: 'مزود الخدمة الأساسي:',
+    geminiDesc: 'مجاني وسريع - مقدم من Google',
+    openrouterDesc: 'خيار احتياطي - نماذج متعددة',
+    useCustomKeys: 'استخدام مفاتيح مخصصة',
+    customKeysDesc: 'أدخل مفاتيح API الخاصة بك للتوليد المباشر',
+    geminiKeyLabel: 'مفتاح Google Gemini API',
+    openrouterKeyLabel: 'مفتاح OpenRouter API',
+    getFreeKey: 'احصل على مفتاح مجاني هنا',
+    getOpenrouterKey: 'احصل على مفتاح OpenRouter',
+    settingsGuideTitle: 'كيفية الإعداد خطوة بخطوة',
+    settingsGuideDesc1: 'هذه المنصة تستخدم اتصالاً آمناً من المتصفح للخادم. يمكنك استخدام المفاتيح الافتراضية للبيئة أو إدخال مفاتيحك الشخصية.',
+    settingsGuideDesc2: 'عند استخدام مفاتيحك الشخصية، يتم تخزينها محلياً في متصفحك فقط ولا تُرسل لأي طرف ثالث.',
+    settingsGuideSteps: 'خطوات الإعداد:',
+    guideStep1: 'تأكد من اختيار المزود المناسب بوضوح.',
+    guideStep2: 'قم بتفعيل خيار "استخدام مفاتيح مخصصة".',
+    guideStep3: 'انسخ المفتاح من استوديو جوجل أو أوبن روتر والصقه بالخانة.',
+    guideStep4: 'افتح أي أداة دراسية، واضغط زر توليد ذكي لتأكيد الاتصال والمصادقة!',
+    aboutVersion: 'AI Tools Hub - الإصدار 1.0',
+    aboutFeature1Title: 'تفوق دراسي وعمل سلس',
+    aboutFeature1Desc: 'البرومبتات والقوالب المهيئة للأدوات تم صياغتها بعناية لنضمن عدم خروج ردود منخفضة الجودة أو مليئة بالفراغات. نتحكم بالقواعد الداخلية ليقوم الذكاء ببناء جداول كاملة، اختبارات MCQ منسقة، نماذج إجابة وحاسبة ماكروز دقيقة كليا.',
+    aboutFeature2Title: 'طريقة إضافة أداة ذكية جديدة لاحقاً',
+    aboutFeature2Desc: 'المنصة مصممة بهيكل برمجي غاية في النظافة داخل المجلد src/data/tools.ts. لإضافة أي أداة ذكية إضافية جديدة كل ما تحتاجه هو إضافة كائن Tool جديد للمصفوفة بالمدخلات والبرومبت المخصص لتظهر فوراً في الأقسام والبحث والصفحات!',
+    footerText: '© {year} منصة الأدوات الذكية - AI Tools Hub. كافة الحقوق محفوظة ومضمونة بالكامل للمستعرض المحلي 💖',
+    countTools: '{count} أداة',
+    availableTools: '{count} أداة متوفرة',
+    by: 'بواسطة',
+    inputsLabel: 'المدخلات:',
+    copyOutput: 'نسخ النتيجة',
+    openInWorkbench: 'فتح في ورشة التوليد',
+    connectionSettingsTitle: 'إعدادات الاتصال والرموز'
+  },
+  en: {
+    home: 'Home 🏠',
+    chatAssistant: 'AI Chat Advisor 🤖',
+    categories: 'Tool Categories 📁',
+    favorites: 'Favorites 🌟',
+    history: 'Operations History ⏱️',
+    settings: 'API Setup ⚙️',
+    appTitle: 'AI Smart Desktop Engine',
+    appSubtitle: 'Supercharged local client environment containing 38 professional AI-powered utilities.',
+    serviceStatus: 'Services Online State',
+    secureProtocol: 'Secure Client Connection',
+    searchPlaceholder: 'Search smart tools...',
+    lightMode: '☀️ Light Mode',
+    dimMode: '🌙 Dim Mode',
+    darkMode: '🌌 Dark Mode',
+    noFavorites: 'No favorite tools saved. Press star on any tool to save it here! ⭐',
+    noHistory: 'Operation history is empty! Try running some tools to fill it. 📝',
+    favoritesTitle: 'Your Favorite Tools 🌟',
+    historyTitle: 'Recent Prompt Operations ⏱️',
+    settingsTitle: 'API Configuration & Credentials ⚙️',
+    settingsDesc: 'Specify the AI runtime model and enter your secret keys to run fully localized tasks.',
+    saveButton: 'Save Settings & Keys',
+    chatTitle: 'AI Navigator & Agent Copilot 🧠',
+    chatDesc: 'Talk with our agent to discover matched tools or craft custom interactive utilities.',
+    onboardingTitle: 'Welcome to AI Smart Oasis! 🎉',
+    onboardingDesc: 'Direct, lightweight browser-based operations without requiring any registration or servers.',
+    getStarted: 'Explore the Dashboard Now',
+    emptyOutput: 'Waiting for your entry parameters and analytical parameters... Results will appear here. ✨',
+    exportPdf: 'Export Result as PDF 📄',
+    printPdf: 'Print Document Report 🖨️',
+    importPdf: 'Extract Text from PDF 📂',
+    pdfExtractor: 'Integrated PDF Text Extractor 🔬',
+    modelSelectTitle: 'Active Model Configuration',
+    modelSelectDesc: 'Swap seamlessly between backend defaults or direct gateway routing keys.',
+    activeModelLabel: 'Active AI Core Model:',
+    runTool: 'Execute Smart Tool 🚀',
+    running: 'Analyzing and generating output...',
+    errorOccurred: 'An error occurred during communication',
+    copiedToClipboard: 'Copied to clipboard successfully! 📋',
+    copyCode: 'Copy Texts 📋',
+    pdfImportSuccess: 'PDF extracted successfully! Text transferred to input field.',
+    pdfImportError: 'Error occurred reading the PDF file. Please ensure files are not corrupted.',
+    apiProviderLabel: 'Active Service Provider & Model:',
+    customApiKeyPlaceholder: 'Enter your API key here...',
+    useCustomKeysLabel: 'Use personal API key for unlimited free requests and priority speeds',
+    recentTools: 'Suggested Utilities',
+    noRecentTools: 'No recently executed utilities.',
+    noMatchingTools: 'No matching tools found.',
+    searchResultTitle: 'Search findings for',
+    allFeatures: 'All Core Utilities Under One Roof',
+    heroTitle: 'Your Intelligent Ally for Complex Tasks! 🚀',
+    heroDesc: 'Accelerate your routine by using 38 specialized utilities for copywriting, code generation, diagnostics, SEO, and personal fitness.',
+    exploreTools: 'Explore Available Tools 🔍',
+    techDetails: 'Discover Technology Under the Hood 🧪',
+    categoriesGridTitle: 'Browse Categories and Fields 📁',
+    viewAllCategories: 'View All Categories 📁',
+    recentToolsTitle: 'Recently Used Utilities ⏱️',
+    emptyRecentTools: 'You haven\'t used any tools yet. Open Summarizer or Email Composer to start!',
+    connectionSecurityNotice: 'Client-Side Privacy Priority 🔒',
+    connectionSecurityDesc: 'All operations are processed fully locally in your browser workspace. No logs leave your computer, and settings are saved on local Storage.',
+    connectionSecuritySettingsLink: 'If you don\'t have a key, please configure your private Google Gemini Key in the (API Setup) tab for free unbounded speeds.',
+    sectionsTitle: 'Unified Category Dashboard',
+    sectionsDesc: 'Explore 8 custom-tailored fields focused on simplifying your daily workflow.',
+    toolsAvailable: '38 Production Tools Active',
+    tryNow: 'Launch Tool 🚀',
+    removeFromFavorites: 'Remove Favorite 🌟',
+    saveToFavorites: 'Add to Favorites 🌟',
+    customToolLabel: 'Custom AI Tool',
+    quickSearchPlaceholder: 'Search high-impact tools...',
+    secureProtocolLabel: 'Secure Connection',
+    searchNoResults: 'No matches found! Try a different search keyword.',
+    searchCancel: 'Clear Search',
+    brandTitleMobile: 'AI Multi-Tools Workspace',
+    breadcrumbHome: 'Home',
+    breadcrumbCategories: 'Categories',
+    about: 'About ℹ️',
+    aboutTitle: 'About our Intelligent Architecture 🧪',
+    aboutDesc: 'This environment utilizes Google Gemini cutting-edge models layered with rich native web technologies.',
+    welcomeOnboarding1: 'An all-in-one ecosystem with 38 smart tools at your disposal to generate content, analyze, and map fields.',
+    welcomeOnboarding2: '100% complete security - your logs and API keys are stored encrypted locally in your browser.',
+    welcomeOnboarding3: 'Support for PDF scanning, layout multi-modes, and switches between Arabic, English, German, French, and Italian.',
+    favoritesDesc: 'A list of your favorite smart tools marked with a star for direct access.',
+    historyDesc: 'Track all your outputs, formulations, and designs saved with AI in a safe place.',
+    clearHistory: 'Clear Entire History',
+    providerLabel: 'Service Provider:',
+    geminiDesc: 'Free & Fast - Powered by Google',
+    openrouterDesc: 'Backup option - Multiple models',
+    useCustomKeys: 'Use Custom Keys',
+    customKeysDesc: 'Enter your own API keys for direct generation',
+    geminiKeyLabel: 'Google Gemini API Key',
+    openrouterKeyLabel: 'OpenRouter API Key',
+    getFreeKey: 'Get free key here',
+    getOpenrouterKey: 'Get OpenRouter key',
+    settingsGuideTitle: 'How to Setup Step by Step',
+    settingsGuideDesc1: 'This platform uses a secure connection from browser to server. You can use default environment keys or enter your personal keys.',
+    settingsGuideDesc2: 'When using your personal keys, they are stored locally in your browser only and never sent to any third party.',
+    settingsGuideSteps: 'Setup Steps:',
+    guideStep1: 'Ensure correct provider is selected.',
+    guideStep2: 'Enable "Use Custom Keys" toggle.',
+    guideStep3: 'Copy key from AI Studio or OpenRouter and paste.',
+    guideStep4: 'Open any educational tool and generate to verify authentication!',
+    aboutVersion: 'AI Tools Hub - Version 1.0',
+    aboutFeature1Title: 'Academic Excellence & Seamless Flow',
+    aboutFeature1Desc: 'All module prompts and templates are carefully optimized to secure maximum density, rich structured MD tables, precise MCQ exams with model answers, and flawless custom calculators.',
+    aboutFeature2Title: 'How to Add More Tools',
+    aboutFeature2Desc: 'The hub is designed on an ultra-clean modular structure. To add any custom tools, simply add a new Tool object to the array in src/data/tools.ts, and it propagates on search, grids, and workflows instantly.',
+    footerText: '© {year} AI Tools Hub - Smart Tools Platform. All rights reserved locally in secure storage 💖',
+    countTools: '{count} Tools',
+    availableTools: '{count} Available Tools',
+    by: 'by',
+    inputsLabel: 'Inputs:',
+    copyOutput: 'Copy Output',
+    openInWorkbench: 'Open in Workbench',
+    connectionSettingsTitle: 'Connection & Token Settings'
+  },
+  de: {
+    home: 'Startseite 🏠',
+    chatAssistant: 'KI-Assistent 🤖',
+    categories: 'Kategorien 📁',
+    favorites: 'Favoriten 🌟',
+    history: 'Verlauf ⏱️',
+    settings: 'Schnittstelle ⚙️',
+    appTitle: 'KI-Smart-Tools Plattform',
+    appSubtitle: '38 spezialisierte KI-Dienstprogramme für Ihren Erfolg, lokal im Browser.',
+    serviceStatus: 'Systemstatus aktiv',
+    secureProtocol: 'Sichere Verbindung',
+    searchPlaceholder: 'KI-Tools suchen...',
+    lightMode: '☀️ Hellen Modus',
+    dimMode: '🌙 Gedimmten Modus',
+    darkMode: '🌌 Dunklen Modus',
+    noFavorites: 'Keine Favoriten gespeichert. Klicken Sie auf den Stern bei einem Tool! ⭐',
+    noHistory: 'Der Verlauf ist leer! Führen Sie ein Tool aus. 📝',
+    favoritesTitle: 'Ihre favorisierten KI-Tools 🌟',
+    historyTitle: 'Letzte Operationen und Verläufe ⏱️',
+    settingsTitle: 'API-Konfiguration & Schnittstellen ⚙️',
+    settingsDesc: 'Wählen Sie das Modell und geben Sie Ihren privaten Schlüssel für unbegrenzte KI-Dienste ein.',
+    saveButton: 'Einstellungen speichern',
+    chatTitle: 'Intelligenter Such- und Navigationsassistent 🧠',
+    chatDesc: 'Sprechen Sie mit unserem Berater, um Werkzeuge zu finden oder spezialisierte Lösungen zu entwerfen.',
+    onboardingTitle: 'Willkommen in der KI-Oase! 🎉',
+    onboardingDesc: 'Mühelose und schnelle lokale Ausführung im Browser ohne Registrierungspflicht.',
+    getStarted: 'Jetzt Dashboard öffnen',
+    emptyOutput: 'Warte auf Eingabeparameter zur genauen inhaltsbezogenen KI-Analyse... ✨',
+    exportPdf: 'Als PDF exportieren 📄',
+    printPdf: 'Bericht drucken 🖨️',
+    importPdf: 'Aus PDF extrahieren 📂',
+    pdfExtractor: 'Integrierter PDF-Textextraktor 🔬',
+    modelSelectTitle: 'KI-Modell anpassen',
+    modelSelectDesc: 'Wechseln Sie zwischen dem Standard-Server oder Ihrer direkten Verbindung.',
+    activeModelLabel: 'Aktives KI-Modell:',
+    runTool: 'Werkzeug ausführen 🚀',
+    running: 'Generierung läuft...',
+    errorOccurred: 'Verbindungsfehler aufgetreten',
+    copiedToClipboard: 'In die Zwischenablage kopiert! 📋',
+    copyCode: 'Text kopieren 📋',
+    pdfImportSuccess: 'PDF erfolgreich importiert! Text wurde in die Eingabebox übertragen.',
+    pdfImportError: 'Fehler beim Lesen der PDF-Datei. Stellen Sie sicher, dass sie nicht beschädigt ist.',
+    apiProviderLabel: 'Aktiver Anbieter:',
+    customApiKeyPlaceholder: 'API-Schlüssel hier eingeben...',
+    useCustomKeysLabel: 'Eigenen API-Schlüssel für unbegrenzte, schnellere Generierung verwenden',
+    recentTools: 'Vorgeschlagene Tools',
+    noRecentTools: 'Keine kürzlich verwendeten Tools.',
+    noMatchingTools: 'Keine passenden Übereinstimmungen gefunden.',
+    searchResultTitle: 'Suchergebnisse für',
+    allFeatures: 'Alles an einem Ort vereint',
+    heroTitle: 'Ihr intelligenter Partner für anspruchsvolle Aufgaben! 🚀',
+    heroDesc: 'Wählen Sie aus über 38 Web-Mitteln für Marketing, gesunde Beratung, Textierung und Codeerzeugung, ganz vertraulich.',
+    exploreTools: 'Tools durchsuchen 🔍',
+    techDetails: 'Arbeitsweise & Technologie 🧪',
+    categoriesGridTitle: 'Kategorien und Fachbereiche 📁',
+    viewAllCategories: 'Alle Kategorien anzeigen 📁',
+    recentToolsTitle: 'Zuletzt verwendete Tools ⏱️',
+    emptyRecentTools: 'Nichts verwendet. Starten Sie das Zusammenfassungstool, um loszulegen!',
+    connectionSecurityNotice: 'Lokale Privatsphäre & Sicherheit 🔒',
+    connectionSecurityDesc: 'Alle Vorgänge finden lokal auf Ihrem Endgerät im Browser statt. Es wird nichts Ungewünschtes übermittelt.',
+    connectionSecuritySettingsLink: 'Verwalten Sie Ihre privaten Gemini-API-Schlüssel unter (Schnittstelle) für erstklassige Geschwindigkeiten.',
+    sectionsTitle: 'Optimiertes Kategorie-Dashboard',
+    sectionsDesc: 'Durchsuchen Sie 8 intelligente strukturierte Arbeitskategorien für den Büro- und Alltag.',
+    toolsAvailable: '38 aktive KI-Werkzeuge',
+    tryNow: 'Jetzt starten 🚀',
+    removeFromFavorites: 'Favorit löschen 🌟',
+    saveToFavorites: 'Favorit hinzufügen 🌟',
+    customToolLabel: 'Benutzerdefiniertes KI-Tool',
+    quickSearchPlaceholder: 'Werkzeuge schnell durchsuchen...',
+    secureProtocolLabel: 'Verbindung gesichert',
+    searchNoResults: 'Keine passenden Tools gefunden! Versuchen Sie ein anderes Schlagwort.',
+    searchCancel: 'Suche abbrechen',
+    brandTitleMobile: 'KI Smart-Portfolio',
+    breadcrumbHome: 'Startseite',
+    breadcrumbCategories: 'Kategorien',
+    about: 'Über uns ℹ️',
+    aboutTitle: 'Über unsere Technologie-Basis 🧪',
+    aboutDesc: 'Diese moderne Plattform basiert auf wegweisenden Google Gemini Sprachmodelle gepaart mit reaktiver, schneller Client-Entwicklung.',
+    welcomeOnboarding1: 'Ein All-in-One-Ecosystem mit 38 praktischen KI-Werkzeugen für jede Text- oder Analysearbeit.',
+    welcomeOnboarding2: '100% Sicherheit - Ihre Schlüssel und Daten werden verschlüsselt auf Ihrem lokalen Speicher gesichert.',
+    welcomeOnboarding3: 'Inklusive präziser PDF-Strukturierung, verschiedenen Designstilen und vollständiger deutscher Übersetzung.',
+    favoritesDesc: 'Eine Liste Ihrer bevorzugten KI-Tools, die mit einem Stern markiert sind.',
+    historyDesc: 'Verfolgen Sie alle Ihre Ausgaben, Formulierungen und Designs in einer sicheren Umgebung.',
+    clearHistory: 'Verlauf löschen',
+    providerLabel: 'Dienstanbieter:',
+    geminiDesc: 'Kostenlos & schnell - von Google',
+    openrouterDesc: 'Backup-Option - Mehrere Modelle',
+    useCustomKeys: 'Eigene Schlüssel verwenden',
+    customKeysDesc: 'Geben Sie Ihre eigenen API-Schlüssel für die direkte Generierung ein',
+    geminiKeyLabel: 'Google Gemini API-Schlüssel',
+    openrouterKeyLabel: 'OpenRouter API-Schlüssel',
+    getFreeKey: 'Kostenlosen Schlüssel hier erhalten',
+    getOpenrouterKey: 'OpenRouter-Schlüssel erhalten',
+    settingsGuideTitle: 'Schritt-für-Schritt Einrichtung',
+    settingsGuideDesc1: 'Diese Plattform verwendet eine sichere Verbindung vom Browser zum Server. Sie können Standard-Umgebungsschlüssel oder Ihre persönlichen Schlüssel verwenden.',
+    settingsGuideDesc2: 'Bei Verwendung Ihrer persönlichen Schlüssel werden diese nur lokal in Ihrem Browser gespeichert und nie an Dritte weitergegeben.',
+    settingsGuideSteps: 'Einrichtungsschritte:',
+    guideStep1: 'Stellen Sie sicher, dass der richtige Anbieter ausgewählt ist.',
+    guideStep2: 'Aktivieren Sie die Option "Eigene Schlüssel verwenden".',
+    guideStep3: 'Kopieren Sie den Schlüssel von AI Studio oder OpenRouter und fügen Sie ihn ein.',
+    guideStep4: 'Öffnen Sie ein beliebiges Tool und generieren Sie, um die Authentifizierung zu bestätigen!',
+    aboutVersion: 'AI Tools Hub - Version 1.0',
+    aboutFeature1Title: 'Akademische Exzellenz & reibungsloser Ablauf',
+    aboutFeature1Desc: 'Alle Modul-Prompts und Vorlagen sind sorgfältig optimiert, um maximale Dichte, reich strukturierte MD-Tabellen, präzise MCQ-Prüfungen und makellose benutzerdefinierte Rechner zu gewährleisten.',
+    aboutFeature2Title: 'So fügen Sie weitere Tools hinzu',
+    aboutFeature2Desc: 'Der Hub ist auf einer ultra-sauberen modularen Struktur aufgebaut. Um benutzerdefinierte Tools hinzuzufügen, fügen Sie einfach ein neues Tool-Objekt zum Array in src/data/tools.ts hinzu.',
+    footerText: '© {year} AI Tools Hub - Smart Tools Plattform. Alle Rechte lokal im sicheren Speicher vorbehalten 💖',
+    countTools: '{count} Tools',
+    availableTools: '{count} Verfügbare Tools',
+    by: 'von',
+    inputsLabel: 'Eingaben:',
+    copyOutput: 'Ausgabe kopieren',
+    openInWorkbench: 'Im Workbench öffnen',
+    connectionSettingsTitle: 'Verbindungs- und Token-Einstellungen'
+  },
+  fr: {
+    home: 'Accueil 🏠',
+    chatAssistant: 'Assistant IA 🤖',
+    categories: 'Catégories d\'outils 📁',
+    favorites: 'Favoris 🌟',
+    history: 'Historique ⏱️',
+    settings: 'Configuration ⚙️',
+    appTitle: 'Espace AI Smart Tools',
+    appSubtitle: '38 utilitaires ultra-performants pilotés par l\'intelligence artificielle pour votre réussite.',
+    serviceStatus: 'Services de pointe en ligne',
+    secureProtocol: 'Protocole client sécurisé',
+    searchPlaceholder: 'Rechercher un outil...',
+    lightMode: '☀️ Mode Lumineux',
+    dimMode: '🌙 Mode Tamisé',
+    darkMode: '🌌 Mode Sombre',
+    noFavorites: 'Aucun favori enregistré. Cliquez sur l\'étoile d\'un outil pour le sauvegarder ici ! ⭐',
+    noHistory: 'Votre historique est vide! Effectuez des opérations pour le remplir. 📝',
+    favoritesTitle: 'Vos outils KI favoris 🌟',
+    historyTitle: 'Historique des opérations récentes ⏱️',
+    settingsTitle: 'Configurations API & Modèles ⚙️',
+    settingsDesc: 'Sélectionnez le modèle et intégrez vos clés secrètes pour un traitement libre et confidentiel.',
+    saveButton: 'Enregistrer les configurations',
+    chatTitle: 'Assistant intelligent de recherche et création 🧠',
+    chatDesc: 'Échangez avec l\'assistant IA pour découvrir de nouveaux outils ou façonner des modules sur mesure.',
+    onboardingTitle: 'Bienvenue dans l\'oasis intelligente ! 🎉',
+    onboardingDesc: 'Découvrez la rapidité du traitement client, sans création de compte requise.',
+    getStarted: 'Ouvrir le tableau de bord',
+    emptyOutput: 'En attente d\'entrées textuelles ou de fichiers pour initier la synthèse analytique... ✨',
+    exportPdf: 'Exporter le résultat en PDF 📄',
+    printPdf: 'Imprimer le rapport 🖨️',
+    importPdf: 'Extraire les textes du PDF 📂',
+    pdfExtractor: 'Extracteur de texte PDF intégré 🔬',
+    modelSelectTitle: 'Configuration du modèle actif',
+    modelSelectDesc: 'Basculez entre notre passerelle par défaut ou votre clé privée Gemini.',
+    activeModelLabel: 'Modèle actif :',
+    runTool: 'Lancer l\'application 🚀',
+    running: 'Analyse et traitement IA en cours...',
+    errorOccurred: 'Une erreur de communication est survenue',
+    copiedToClipboard: 'Texte copié dans le presse-papiers ! 📋',
+    copyCode: 'Copier le texte 📋',
+    pdfImportSuccess: 'PDF importé avec succès! Le texte extrait a été copié vers votre entrée.',
+    pdfImportError: 'Une erreur est survenue lors de la lecture du PDF. Vérifiez l\'intégrité de votre fichier.',
+    apiProviderLabel: 'Fournisseur d\'accès :',
+    customApiKeyPlaceholder: 'Saisissez votre clé API ici...',
+    useCustomKeysLabel: 'Utiliser mes clés privées pour une génération accélérée et gratuite',
+    recentTools: 'Outils populaires',
+    noRecentTools: 'Aucun outil utilisé récemment.',
+    noMatchingTools: 'Aucun résultat trouvé.',
+    searchResultTitle: 'Résultats de recherche pour',
+    allFeatures: 'Tout en un seul endroit',
+    heroTitle: 'Votre allié intelligent pour les tâches complexes ! 🚀',
+    heroDesc: 'Exploitez plus de 38 outils de copywriting, programmation, fitness, marketing et santé, en toute sécurité.',
+    exploreTools: 'Découvrir nos outils 🔍',
+    techDetails: 'En savoir plus sur nos technologies 🧪',
+    categoriesGridTitle: 'Parcourir nos catégories d\'outils 📁',
+    viewAllCategories: 'Voir toutes les catégories 📁',
+    recentToolsTitle: 'Outils utilisés récemment ⏱️',
+    emptyRecentTools: 'Aucun outil utilisé. Ouvrez le Synthétiseur pour commencer !',
+    connectionSecurityNotice: 'Priorité à la confidentialité de vos données 🔒',
+    connectionSecurityDesc: 'Les opérations s\'exécutent exclusivement sur votre ordinateur dans votre navigateur.',
+    connectionSecuritySettingsLink: 'Ajoutez votre clé Gemini privée dans l\'onglet (Configuration) pour bénéficier de vitesses accrues.',
+    sectionsTitle: 'Tableau de bord par catégories',
+    sectionsDesc: 'Explorez 8 domaines transversaux conçus pour enrichir votre quotidien.',
+    toolsAvailable: '38 outils KI actifs',
+    tryNow: 'Lancer l\'outil 🚀',
+    removeFromFavorites: 'Retirer des favoris 🌟',
+    saveToFavorites: 'Ajouter aux favoris 🌟',
+    customToolLabel: 'Outil KI sur mesure',
+    quickSearchPlaceholder: 'Rechercher rapidement...',
+    secureProtocolLabel: 'Connexion sécurisée',
+    searchNoResults: 'Aucun outil trouvé avec ce mot-clé !',
+    searchCancel: 'Annuler la recherche',
+    brandTitleMobile: 'AI Suite Multifonctionnelle',
+    breadcrumbHome: 'Accueil',
+    breadcrumbCategories: 'Catégories',
+    about: 'À propos ℹ️',
+    aboutTitle: 'À propos de nos technologies 🧪',
+    aboutDesc: 'Cette plateforme exploite les technologies Google Gemini de dernière génération couplées à un développement client réactif.',
+    welcomeOnboarding1: 'Un écosystème IA complet incluant 38 outils performants pour simplifier tout travail d\'analyse.',
+    welcomeOnboarding2: 'Sécurité absolue - Vos clés secrètes d\'API sont chiffrées localement dans votre propre navigateur.',
+    welcomeOnboarding3: 'Permet la numérisation de fichiers PDF, le support des modes tamisés, et des traductions françaises et italiennes.',
+    favoritesDesc: 'Une liste de vos outils intelligents préférés pour un accès direct.',
+    historyDesc: 'Conservez tous vos rendus et rédactions au même endroit sécurisé.',
+    clearHistory: "Effacer l'historique",
+    providerLabel: 'Fournisseur de services :',
+    geminiDesc: 'Gratuit & rapide - Propulsé par Google',
+    openrouterDesc: 'Option de secours - Plusieurs modèles',
+    useCustomKeys: 'Utiliser des clés personnalisées',
+    customKeysDesc: 'Entrez vos propres clés API pour la génération directe',
+    geminiKeyLabel: 'Clé API Google Gemini',
+    openrouterKeyLabel: "Clé API OpenRouter",
+    getFreeKey: 'Obtenez une clé gratuite ici',
+    getOpenrouterKey: 'Obtenez une clé OpenRouter',
+    settingsGuideTitle: 'Configuration pas à pas',
+    settingsGuideDesc1: 'Cette plateforme utilise une connexion sécurisée du navigateur au serveur. Vous pouvez utiliser les clés par défaut ou entrer vos clés personnelles.',
+    settingsGuideDesc2: "Lorsque vous utilisez vos clés personnelles, elles sont stockées localement dans votre navigateur et jamais envoyées à un tiers.",
+    settingsGuideSteps: 'Étapes de configuration :',
+    guideStep1: 'Assurez-vous que le bon fournisseur est sélectionné.',
+    guideStep2: 'Activez l\'option "Utiliser des clés personnalisées".',
+    guideStep3: 'Copiez la clé depuis AI Studio ou OpenRouter et collez-la.',
+    guideStep4: 'Ouvrez un outil et générez pour vérifier l\'authentification !',
+    aboutVersion: 'AI Tools Hub - Version 1.0',
+    aboutFeature1Title: 'Excellence académique & flux fluide',
+    aboutFeature1Desc: "Tous les prompts et modèles sont soigneusement optimisés pour garantir une densité maximale, des tableaux MD riches, des examens QCM précis et des calculatrices personnalisées parfaites.",
+    aboutFeature2Title: 'Comment ajouter plus d\'outils',
+    aboutFeature2Desc: "Le hub est conçu sur une structure modulaire ultra-propre. Pour ajouter des outils personnalisés, ajoutez simplement un nouvel objet Tool au tableau dans src/data/tools.ts.",
+    footerText: '© {year} AI Tools Hub - Plateforme d\'outils intelligents. Tous droits réservés localement 💖',
+    countTools: '{count} Outils',
+    availableTools: '{count} Outils Disponibles',
+    by: 'par',
+    inputsLabel: 'Entrées :',
+    copyOutput: 'Copier le résultat',
+    openInWorkbench: 'Ouvrir dans l\'outil',
+    connectionSettingsTitle: 'Paramètres de connexion et jetons'
+  },
+  it: {
+    home: 'Home 🏠',
+    chatAssistant: 'Assistente IA 🤖',
+    categories: 'Categorie Strumenti 📁',
+    favorites: 'Preferiti 🌟',
+    history: 'Cronologia ⏱️',
+    settings: 'Configurazione ⚙️',
+    appTitle: 'AI Smart Engine',
+    appSubtitle: '38 moduli intelligenti specializzati eseguiti localmente nel tuo browser.',
+    serviceStatus: 'Stato servizi attivo',
+    secureProtocol: 'Connessione client sicura',
+    searchPlaceholder: 'Cerca strumenti...',
+    lightMode: '☀️ Modalità Chiara',
+    dimMode: '🌙 Modalità Soffusa',
+    darkMode: '🌌 Modalità Scura',
+    noFavorites: 'Nessun preferito salvato. Clicca sulla stella di un modulo per aggiungerlo qui! ⭐',
+    noHistory: 'La tua cronologia è vuota! Utilizza gli strumenti per registrare attività. 📝',
+    favoritesTitle: 'I tuoi moduli preferiti 🌟',
+    historyTitle: 'Cronologia delle attività recenti ⏱️',
+    settingsTitle: 'Configurazione API & Modelli ⚙️',
+    settingsDesc: 'Indica il modello e digita le tue chiavi segrete per sbloccare esecuzioni free e protette.',
+    saveButton: 'Salva Impostazioni',
+    chatTitle: 'Navigatore e Sviluppatore assistito assistito dall\'Intelletto 🧠',
+    chatDesc: 'Conversa con l\'assistente intelligente per scoprire nuovi strumenti o progettare utilità ad-hoc.',
+    onboardingTitle: 'Benvenuto nell\'Oasi Intelligente ! 🎉',
+    onboardingDesc: 'Esecuzione locale fulminea, senza vincoli di registrazione o intermediari server.',
+    getStarted: 'Apri la Dashboard del Portale',
+    emptyOutput: 'In attesa di parametri di testo per l\'elaborazione e la generazione... ✨',
+    exportPdf: 'Esporta risultato come PDF 📄',
+    printPdf: 'Stampa resoconto generato 🖨️',
+    importPdf: 'Estrai testi da file PDF 📂',
+    pdfExtractor: 'Estrattore di testo PDF integrato 🔬',
+    modelSelectTitle: 'Configurazione del modello attivo',
+    modelSelectDesc: 'Scegli se indirizzare tramite il server standard o con la tua chiave privata Gemini.',
+    activeModelLabel: 'Modello IA attivo :',
+    runTool: 'Lancia applicazione 🚀',
+    running: 'Analisi e compilazione dei risultati in corso...',
+    errorOccurred: 'Errore durate la comunicazione col server',
+    copiedToClipboard: 'Testo copiato con successo negli appunti! 📋',
+    copyCode: 'Copia testi 📋',
+    pdfImportSuccess: 'Testi estratti dal PDF installati con successo all\'input principale.',
+    pdfImportError: 'Errore col caricamento del file PDF, assicurarsi che il file non sia corrotto.',
+    apiProviderLabel: 'Fornitore del servizio API :',
+    customApiKeyPlaceholder: 'Inserisci qui la tua chiave API...',
+    useCustomKeysLabel: 'Usa le mie chiavi API Gemini per un servizio accelerato e gratuito',
+    recentTools: 'Moduli raccomandati',
+    noRecentTools: 'Nessun modulo utilizzato di recente.',
+    noMatchingTools: 'Nessun risultato di ricerca trovato.',
+    searchResultTitle: 'Risultati di ricerca per',
+    allFeatures: 'Tutti gli strumenti in un unico posto',
+    heroTitle: 'Il tuo partner intelligente per compiti complessi ! 🚀',
+    heroDesc: 'Usa oltre 38 utility mirate per saggistica, email marketing, diete, palestra e automazione per il lavoro.',
+    exploreTools: 'Esplora tutti i moduli 🔍',
+    techDetails: 'Tecnologia di funzionamento 🧪',
+    categoriesGridTitle: 'Programmazione delle Categorie 📁',
+    viewAllCategories: 'Mostra tutte le categorie 📁',
+    recentToolsTitle: 'Moduli recenti utilizzati ⏱️',
+    emptyRecentTools: 'Ancora nessun utilizzo. Inizia con il modulo Sintesi per sbloccare la dashboard!',
+    connectionSecurityNotice: 'Privacy incentrata sull\'utente 🔒',
+    connectionSecurityDesc: 'Ogni operazione di crittografia e compilazione dati avviene in sicurezza locale nel tuo browser.',
+    connectionSecuritySettingsLink: 'Inserisci le tue chiavi Gemini in (Configurazione) per velocità prioritaria senza limiti.',
+    sectionsTitle: 'Dashboard Categorie Unificata',
+    sectionsDesc: 'Sfoglia 8 comode suddivisioni tematiche pronte a supportare il tuo desktop quotidiano.',
+    toolsAvailable: '38 moduli attivi',
+    tryNow: 'Lancia strumento 🚀',
+    removeFromFavorites: 'Rimuovi dai preferiti 🌟',
+    saveToFavorites: 'Aggiungi ai preferiti 🌟',
+    customToolLabel: 'Modulo di calcolo su misura',
+    quickSearchPlaceholder: 'Cerca in tempo reale...',
+    secureProtocolLabel: 'Protocollo blindato',
+    searchNoResults: 'Nessuna corrispondenza trovata! Prova con altri termini.',
+    searchCancel: 'Annulla ricerca',
+    brandTitleMobile: 'Suite Multifunzionale IA',
+    breadcrumbHome: 'Home',
+    breadcrumbCategories: 'Categorie',
+    about: 'Informazioni ℹ️',
+    aboutTitle: 'Informazioni sulla nostra tecnologia 🧪',
+    aboutDesc: 'Questa suite si appoggia sui rinomati modelli Google Gemini, supportata da una struttura client dinamica e scattante.',
+    welcomeOnboarding1: 'Un ecosistema completo con 38 strumenti pronti a semplificare la generazione e l\'analisi.',
+    welcomeOnboarding2: '100% Sicuro - Cifratura locale permanente delle tue chiavi API personali e cronologia.',
+    welcomeOnboarding3: 'Supporta importazione di documenti PDF, layout multiruolo e una traduzione italiana eccellente.',
+    favoritesDesc: 'Una lista dei tuoi moduli preferiti contrassegnati da una stella.',
+    historyDesc: 'Traccia tutti i tuoi output e testi generati in modo sicuro.',
+    clearHistory: 'Cancella Cronologia',
+    providerLabel: 'Fornitore del servizio:',
+    geminiDesc: 'Gratuito e veloce - Da Google',
+    openrouterDesc: 'Opzione di backup - Modelli multipli',
+    useCustomKeys: 'Usa chiavi personalizzate',
+    customKeysDesc: 'Inserisci le tue chiavi API per la generazione diretta',
+    geminiKeyLabel: 'Chiave API Google Gemini',
+    openrouterKeyLabel: 'Chiave API OpenRouter',
+    getFreeKey: 'Ottieni una chiave gratuita qui',
+    getOpenrouterKey: 'Ottieni una chiave OpenRouter',
+    settingsGuideTitle: 'Come configurare passo dopo passo',
+    settingsGuideDesc1: 'Questa piattaforma utilizza una connessione sicura dal browser al server. Puoi usare le chiavi predefinite o inserire le tue chiavi personali.',
+    settingsGuideDesc2: 'Quando usi le tue chiavi personali, vengono memorizzate localmente nel tuo browser e mai inviate a terzi.',
+    settingsGuideSteps: 'Passaggi di configurazione:',
+    guideStep1: 'Assicurati che il fornitore corretto sia selezionato.',
+    guideStep2: 'Attiva l\'opzione "Usa chiavi personalizzate".',
+    guideStep3: 'Copia la chiave da AI Studio o OpenRouter e incollala.',
+    guideStep4: 'Apri qualsiasi strumento e genera per verificare l\'autenticazione!',
+    aboutVersion: 'AI Tools Hub - Versione 1.0',
+    aboutFeature1Title: 'Eccellenza accademica e flusso continuo',
+    aboutFeature1Desc: 'Tutti i prompt e i modelli sono attentamente ottimizzati per garantire la massima densità, tabelle MD ricche, esami MCQ precisi e calcolatrici personalizzate impeccabili.',
+    aboutFeature2Title: 'Come aggiungere più strumenti',
+    aboutFeature2Desc: 'L\'hub è progettato su una struttura modulare ultra-pulita. Per aggiungere strumenti personalizzati, aggiungi un nuovo oggetto Tool all\'array in src/data/tools.ts.',
+    footerText: '© {year} AI Tools Hub - Piattaforma di strumenti intelligenti. Tutti i diritti riservati localmente 💖',
+    countTools: '{count} Moduli',
+    availableTools: '{count} Moduli Disponibili',
+    by: 'da',
+    inputsLabel: 'Input:',
+    copyOutput: 'Copia risultato',
+    openInWorkbench: 'Apri per modificare',
+    connectionSettingsTitle: 'Impostazioni di connessione e token'
+  }
+};

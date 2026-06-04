@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Cairo", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-zinc-850: #1a1a1f;
+  --color-zinc-650: #52525b;
+  --color-zinc-550: #71717a;
+  --color-zinc-450: #a1a1aa;
+  --color-zinc-350: #d4d4d8;
+  --color-zinc-205: #e5e5eb;
+  --color-slate-850: #0f1729;
+  --color-slate-750: #1e293b;
+  --color-slate-650: #475569;
+  --color-slate-550: #64748b;
+  --color-slate-450: #94a3b8;
+  --color-slate-350: #cbd5e1;
+  --color-slate-205: #e2e6ec;
+  --color-slate-150: #eef1f5;
+  --color-slate-105: #f1f4f8;
+  --color-blue-650: #1d4ed8;
+  --color-blue-550: #2563eb;
+  --color-blue-505: #3b82f6;
+  --color-blue-450: #60a5fa;
+  --color-blue-105: #dbeafe;
+  --color-rose-455: #f43f5e;
+  --color-amber-550: #d97706;
+  --color-zinc-805: #27272a;
+  --color-slate-250: #e2e8f0;
+  --color-slate-150: #f1f5f9;
+  --color-slate-705: #475569;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f8fafc;
+  color: #0f172a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.light body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+html.dark body {
+  background-color: #09090b;
+  color: #f4f4f5;
+}
+
+/* Dim Mode - elegant dark-blue theme */
+html.dim body,
+html.dim .bg-\[\#09090b\] {
+  background-color: #15202b;
+}
+
+html.dim main,
+html.dim header,
+html.dim footer {
+  background-color: #15202b;
+}
+
+html.dim aside,
+html.dim .bg-\[\#111113\] {
+  background-color: #192734;
+}
+
+html.dim nav.lg\:hidden,
+html.dim .bg-zinc-950 {
+  background-color: #111b24;
+}
+
+html.dim .bg-\[\#18181b\] {
+  background-color: #1e2732;
+}
+
+html.dim .border-zinc-800,
+html.dim .border-zinc-850 {
+  border-color: #38444d;
+}
+
+html.dim .bg-zinc-900\/65 {
+  background-color: #192734;
+}
+
+html.dim .text-zinc-100,
+html.dim .text-zinc-200 {
+  color: #f8fafc;
+}
+
+html.dim .text-zinc-400,
+html.dim .text-zinc-500 {
+  color: #8899a6;
+}
+
+html.dim .text-zinc-300 {
+  color: #ccd6dd;
+}
+
+html.dim input,
+html.dim textarea,
+html.dim select {
+  border-color: #38444d;
+  background-color: #15202b;
+  color: #f8fafc;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.4);
+}
+
+/* Smooth active focus glow */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.4);
+}
+
+/* Bento custom interactive transitions */
+.bento-transition {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-shadow-glow {
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.4);
+}
+
+.bento-glow-border:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.1);
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  /* Removed overflow-x: hidden to help debugging layout issues */
+}
+
+/* Safe area padding for mobile devices */
+:root {
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  body {
+    overscroll-behavior-y: none;
+  }
+
+  .mobile-safe-text {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  
+  /* Ensure main content doesn't get hidden behind bottom nav */
+  main {
+    padding-bottom: calc(5rem + var(--safe-area-inset-bottom));
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "AI Tools Hub",
+  "description": "منصة أدوات الذكاء الاصطناعي المتكاملة والقوية باللغة العربية بلمسة مصرية بسيطة، لمساعدتك في الدراسة والكتابة والتسويق والصحة والبرمجة وحياتك اليومية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
