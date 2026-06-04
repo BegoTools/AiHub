@@ -29,8 +29,8 @@ import {
 } from 'lucide-react';
 
 import { Category, Tool, HistoryItem, ApiSettings } from './types';
-import { categories } from './data/categories';
-import { tools } from './data/tools';
+import { tools as arabicTools } from './data/tools';
+import { getLocalizedTools, getLocalizedCategories } from './utils/localize-content';
 import { LOCAL_STORAGE_KEYS, DEFAULT_SETTINGS } from './config/apiConfig';
 import { generateAIContent } from './services/aiService';
 import { languages, translations, Language } from './translations';
@@ -72,7 +72,7 @@ export default function App() {
   });
 
   const handleAddCustomTool = (newToolRaw: any) => {
-    if (tools.some(t => t.id === newToolRaw.id) || customTools.some(t => t.id === newToolRaw.id)) {
+    if (arabicTools.some(t => t.id === newToolRaw.id) || customTools.some(t => t.id === newToolRaw.id)) {
       return;
     }
 
@@ -97,8 +97,8 @@ export default function App() {
   };
 
   const allTools = useMemo(() => {
-    return [...tools, ...customTools];
-  }, [customTools]);
+    return [...localizedTools, ...customTools];
+  }, [localizedTools, customTools]);
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -117,6 +117,9 @@ export default function App() {
   const t = useMemo(() => {
     return translations[language] || translations['ar'];
   }, [language]);
+
+  const localizedCategories = useMemo(() => getLocalizedCategories(language), [language]);
+  const localizedTools = useMemo(() => getLocalizedTools(language), [language]);
 
   useEffect(() => {
     localStorage.setItem('ai_hub_language', language);
@@ -280,7 +283,7 @@ export default function App() {
 
     } catch (err: any) {
       console.error(err);
-      setGenerationError(err.message || 'حدث خطأ غير متوقع أثناء توليد المحتوى. يرجى مراجعة إعدادات الاتصال الخاصة بك.');
+      setGenerationError(err.message || t.errorOccurred);
     } finally {
       setIsGenerating(false);
     }
@@ -321,7 +324,7 @@ export default function App() {
 
   const activeCategoryDetails = useMemo(() => {
     if (!selectedCategoryId) return null;
-    return categories.find(c => c.id === selectedCategoryId) || null;
+    return localizedCategories.find(c => c.id === selectedCategoryId) || null;
   }, [selectedCategoryId]);
 
   // General statistics
@@ -387,7 +390,7 @@ export default function App() {
                 {selectedToolId && activeTool && (
                   <>
                     <ArrowLeft size={12} className="rtl:rotate-0 rotate-180" />
-                    <span className="hover:text-slate-800 dark:hover:text-zinc-300 cursor-pointer" onClick={() => { setTab('categories'); openCategory(activeTool.categoryId); }}>{categories.find(c => c.id === activeTool.categoryId)?.name}</span>
+                    <span className="hover:text-slate-800 dark:hover:text-zinc-300 cursor-pointer" onClick={() => { setTab('categories'); openCategory(activeTool.categoryId); }}>{localizedCategories.find(c => c.id === activeTool.categoryId)?.name}</span>
                     <ArrowLeft size={12} className="rtl:rotate-0 rotate-180" />
                     <span className="text-blue-600 dark:text-blue-400">{activeTool.title}</span>
                   </>
@@ -401,7 +404,7 @@ export default function App() {
                 <input
                   id="top-search-input"
                   type="text"
-                  placeholder="ابحث عن أداة ذكية..."
+                  placeholder={t.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-slate-100 dark:bg-zinc-950/60 border border-slate-200 dark:border-zinc-850 text-slate-800 dark:text-zinc-100 rounded-2xl pl-10 pr-4 py-2 placeholder-slate-400 dark:placeholder-zinc-500 text-xs transition-all focus:border-blue-500"
@@ -520,7 +523,7 @@ export default function App() {
                           <p className="text-xs text-slate-600 dark:text-zinc-400 line-clamp-2 leading-relaxed">{tool.description}</p>
                         </div>
                         <span className="text-[10px] text-slate-500 dark:text-zinc-500 font-bold block mt-3 bg-slate-100 dark:bg-zinc-950 px-2.5 py-1 rounded-lg w-fit">
-                          {categories.find(c => c.id === tool.categoryId)?.name}
+                          {localizedCategories.find(c => c.id === tool.categoryId)?.name}
                         </span>
                       </button>
                     ))}
@@ -590,7 +593,7 @@ export default function App() {
                     <button onClick={() => setTab('categories')} className="text-xs text-blue-600 dark:text-blue-400 hover:underline">{t.viewAllCategories}</button>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {categories.map((category) => (
+                    {localizedCategories.map((category) => (
                       <button
                         key={category.id}
                        onClick={() => openCategory(category.id)}
@@ -635,7 +638,7 @@ export default function App() {
                               </div>
                               <div>
                                 <h4 className="font-bold text-xs text-slate-850 dark:text-zinc-100">{tool.title}</h4>
-                                <span className="text-[10px] text-slate-500 dark:text-zinc-500 block mt-0.5">{categories.find(c => c.id === tool.categoryId)?.name}</span>
+                                <span className="text-[10px] text-slate-500 dark:text-zinc-500 block mt-0.5">{localizedCategories.find(c => c.id === tool.categoryId)?.name}</span>
                               </div>
                             </button>
                             <button 
@@ -661,12 +664,12 @@ export default function App() {
                       <div className="p-3 bg-blue-500/10 border border-blue-505/20 text-blue-400 w-fit rounded-2xl">
                         <Cpu size={24} />
                       </div>
-                      <h4 className="font-extrabold text-sm text-zinc-100">تنويه مهني وأمني مهم للغاية 🔒</h4>
+                      <h4 className="font-extrabold text-sm text-zinc-100">{t.connectionSecurityNotice}</h4>
                       <p className="text-xs text-zinc-400 leading-relaxed">
-                        نحن نعمل بطاقة محلية بالكامل على جهازك. لا داعي للقلق بشأن السيرفرات أو كلمات السر، نحن نخزن سجلاتك ومفضلاتك محلياً في المتصفح باستخدام <strong className="text-zinc-200">Local Storage</strong>.
+                        {t.connectionSecurityDesc}
                       </p>
                       <p className="text-xs text-zinc-400 leading-relaxed">
-                        إذا لم تكن تتوفر على مفتاح تشغيل، يرجى تزويد صفحة <strong className="text-blue-400 underline cursor-pointer" onClick={() => setTab('settings')}>أدوات الاتصال</strong> بمفاتيح Gemini الخاصة بك للحصول على عمل مجاني وتوليد غير محدود.
+                        {t.connectionSecuritySettingsLink}
                       </p>
                     </div>
                   </div>
@@ -683,8 +686,8 @@ export default function App() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {categories.map((category) => {
-                    const count = tools.filter(t => t.categoryId === category.id).length;
+                  {localizedCategories.map((category) => {
+                    const count = localizedTools.filter(t => t.categoryId === category.id).length;
                     return (
                       <button
                         key={category.id}
@@ -780,7 +783,7 @@ export default function App() {
                     </button>
                     <div>
                       <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/25">
-                        {categories.find(c => c.id === activeTool.categoryId)?.name}
+                        {localizedCategories.find(c => c.id === activeTool.categoryId)?.name}
                       </span>
                       <h2 className="font-extrabold text-xl text-slate-800 dark:text-zinc-100 mt-1">{activeTool.title}</h2>
                     </div>
@@ -870,7 +873,7 @@ export default function App() {
                             <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">{tool.description}</p>
                           </div>
                           <span className="text-[10px] text-slate-600 dark:text-zinc-500 font-bold block mt-3 bg-slate-100 dark:bg-zinc-950 px-2.5 py-1 rounded-lg w-fit">
-                            {categories.find(c => c.id === tool.categoryId)?.name}
+                            {localizedCategories.find(c => c.id === tool.categoryId)?.name}
                           </span>
                         </div>
                       );
@@ -940,7 +943,7 @@ export default function App() {
                               <button
                                 onClick={() => handleDeleteHistoryItem(item.id)}
                                 className="p-2 text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all cursor-pointer"
-                                title="حذف هذا السجل"
+                                title={t.clearHistory}
                               >
                                 <Trash2 size={13} />
                               </button>
@@ -1072,7 +1075,7 @@ export default function App() {
                               : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-zinc-800'
                           }`}
                         >
-                          <h4 className="text-sm text-slate-800 dark:text-zinc-100">OpenRouter (خيار احتياطي)</h4>
+                          <h4 className="text-sm text-slate-800 dark:text-zinc-100">OpenRouter</h4>
                           <span className="text-[10px] text-slate-500 dark:text-zinc-400 block mt-1">{t.openrouterDesc}</span>
                         </button>
                       </div>
