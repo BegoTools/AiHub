@@ -167,7 +167,7 @@ export default function Sidebar({
           ) : (
             <Sparkles size={18} className="text-violet-500" />
           )}
-          <span className="text-[9px] font-bold tracking-tight">المظهر</span>
+          <span className="text-[9px] font-bold tracking-tight">{t.dimMode || 'Theme'}</span>
         </button>
       </nav>
     </>

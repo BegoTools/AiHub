@@ -96,6 +96,14 @@ export default function App() {
     }
   };
 
+  const [language, setLanguage] = useState<Language>(() => {
+    const saved = localStorage.getItem('ai_hub_language');
+    return (saved as Language) || 'ar';
+  });
+
+  const localizedCategories = useMemo(() => getLocalizedCategories(language), [language]);
+  const localizedTools = useMemo(() => getLocalizedTools(language), [language]);
+
   const allTools = useMemo(() => {
     return [...localizedTools, ...customTools];
   }, [localizedTools, customTools]);
@@ -109,17 +117,10 @@ export default function App() {
   const [settings, setSettings] = useState<ApiSettings>(DEFAULT_SETTINGS);
   const [theme, setTheme] = useState<'light' | 'dim' | 'dark'>('light');
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [language, setLanguage] = useState<Language>(() => {
-    const saved = localStorage.getItem('ai_hub_language');
-    return (saved as Language) || 'ar';
-  });
 
   const t = useMemo(() => {
     return translations[language] || translations['ar'];
   }, [language]);
-
-  const localizedCategories = useMemo(() => getLocalizedCategories(language), [language]);
-  const localizedTools = useMemo(() => getLocalizedTools(language), [language]);
 
   useEffect(() => {
     localStorage.setItem('ai_hub_language', language);
