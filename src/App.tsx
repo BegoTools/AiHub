@@ -815,6 +815,7 @@ export default function App() {
                       tool={activeTool} 
                       onSubmit={handleGenerate} 
                       isLoading={isGenerating} 
+                      t={t}
                     />
                   </div>
 
@@ -932,7 +933,7 @@ export default function App() {
                               <div>
                                 <h3 className="font-bold text-sm text-slate-800 dark:text-zinc-100">{tool.title}</h3>
                                 <span className="text-[10px] text-slate-500 dark:text-zinc-500 block mt-0.5">
-                                  {t.by} {item.provider === 'gemini' ? 'Gemini API' : 'OpenRouter API'}
+                                  {t.by} {item.provider === 'gemini' ? (t.providerGemini || 'Gemini API') : (t.providerOpenRouter || 'OpenRouter API')}
                                 </span>
                               </div>
                             </div>
@@ -1062,7 +1063,7 @@ export default function App() {
                               : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-zinc-800'
                           }`}
                         >
-                          <h4 className="text-sm text-slate-800 dark:text-zinc-100">Google Gemini API</h4>
+                          <h4 className="text-sm text-slate-800 dark:text-zinc-100">{t.geminiProviderTitle || 'Google Gemini API'}</h4>
                           <span className="text-[10px] text-slate-500 dark:text-zinc-400 block mt-1">{t.geminiDesc}</span>
                         </button>
                         
@@ -1076,7 +1077,7 @@ export default function App() {
                               : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-zinc-800'
                           }`}
                         >
-                          <h4 className="text-sm text-slate-800 dark:text-zinc-100">OpenRouter</h4>
+                          <h4 className="text-sm text-slate-800 dark:text-zinc-100">{t.openrouterProviderTitle || 'OpenRouter'}</h4>
                           <span className="text-[10px] text-slate-500 dark:text-zinc-400 block mt-1">{t.openrouterDesc}</span>
                         </button>
                       </div>
@@ -1111,7 +1112,7 @@ export default function App() {
                           <input
                             id="input-setting-gemini"
                             type="password"
-                            placeholder="AlzaSy..."
+                            placeholder={t.geminiKeyPlaceholder || 'AlzaSy...'}
                             value={settings.geminiKey}
                             onChange={(e) => handleSaveSettings({ ...settings, geminiKey: e.target.value })}
                             className="w-full bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 text-slate-950 dark:text-slate-100 rounded-xl px-4 py-2.5 text-xs focus:border-amber-400"
@@ -1126,7 +1127,7 @@ export default function App() {
                           <input
                             id="input-setting-openrouter"
                             type="password"
-                            placeholder="sk-or-v1-..."
+                            placeholder={t.openrouterKeyPlaceholder || 'sk-or-v1-...'}
                             value={settings.openRouterKey}
                             onChange={(e) => handleSaveSettings({ ...settings, openRouterKey: e.target.value })}
                             className="w-full bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 text-slate-950 dark:text-slate-100 rounded-xl px-4 py-2.5 text-xs focus:border-amber-400"

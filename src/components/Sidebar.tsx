@@ -91,7 +91,7 @@ export default function Sidebar({
             <p className="text-[10px] text-slate-500 dark:text-zinc-500 mb-2 uppercase tracking-widest font-black">{t.serviceStatus}</p>
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
-              <span className="text-xs font-bold text-slate-700 dark:text-zinc-300">Gemini AI Active</span>
+              <span className="text-xs font-bold text-slate-700 dark:text-zinc-300">{t.geminiActiveStatus || 'Gemini AI Active'}</span>
             </div>
           </div>
         </div>

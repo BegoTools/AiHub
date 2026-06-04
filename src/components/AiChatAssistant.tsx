@@ -40,6 +40,8 @@ const chatTranslations: Record<string, {
   toolCreated_title: string;
   toolCreated_btn: string;
   defaultExplanation: string;
+  geminiBadge: string;
+  fallbackToolTitle: string;
 }> = {
   ar: {
     welcome: 'أهلاً بك في خدمات الدعم والذكاء الفوري! 🤖\n\nأنا هنا كـ AI مساعد لمساندتك. إذا كنت تبحث عن ميزة أو أداة معينة ولم تجدها في المنصة، أو كانت مفقودة، فقط اكتب لي ما تريدها أن تنجز:\n\n1. سأقوم بالبحث الفوري عنها بالمنصة وإعطائك إياها.\n2. إذا كانت غير متوفرة، سأقوم بصناعتها وتثبيتها لك فوراً وبشكل آلي تماماً لتستخدمها في نفس اللحظة!\n\nاكتب فكرتك أو اختر أحد المقترحات بالأسفل لنجرب ذلك سوياً ✨',
@@ -68,7 +70,9 @@ const chatTranslations: Record<string, {
     toolMatched_btn: 'افتح وجرب الفكرة',
     toolCreated_title: 'تم تثبيت أداة ذكية جديدة بنجاح في المنصة! 🎉',
     toolCreated_btn: 'ابدأ الاستخدام الفوري',
-    defaultExplanation: 'تم معالجة فكرتك الإبداعية!'
+    defaultExplanation: 'تم معالجة فكرتك الإبداعية!',
+    geminiBadge: 'GEMINI ACTIVE',
+    fallbackToolTitle: 'أداة بالمنصة'
   },
   en: {
     welcome: 'Welcome to instant support and intelligence! 🤖\n\nI am your AI Assistant here to help you. If you are looking for a feature or custom tool and failed to find it, just tell me what you want to achieve:\n\n1. I will instantly search the platform and provide it to you.\n2. If it is not available, I will dynamically build and install it for you on the fly!\n\nDescribe your idea or choose a suggestion below to begin ✨',
@@ -97,7 +101,9 @@ const chatTranslations: Record<string, {
     toolMatched_btn: 'Open and Try Tool',
     toolCreated_title: 'New smart tool compiled and installed successfully! 🎉',
     toolCreated_btn: 'Start Using Instantly',
-    defaultExplanation: 'Your creative idea was processed successfully!'
+    defaultExplanation: 'Your creative idea was processed successfully!',
+    geminiBadge: 'GEMINI ACTIVE',
+    fallbackToolTitle: 'Tool on platform'
   },
   de: {
     welcome: 'Willkommen beim sofortigen KI-Support! 🤖\n\nIch bin Ihr KI-Assistent. Wenn Sie nach einer Funktion oder einem Tool suchen, das fehlt, schreiben Sie mir einfach, was Sie machen möchten:\n\n1. Ich werde die Plattform sofort durchsuchen und Ihnen das Tool zeigen.\n2. Wenn es fehlt, werde ich es sofort speziell für Sie generieren und installieren!\n\nWählen Sie unten einen Vorschlag aus, um zu beginnen ✨',
@@ -126,7 +132,9 @@ const chatTranslations: Record<string, {
     toolMatched_btn: 'Tool öffnen',
     toolCreated_title: 'Neues KI-Spezialtool erfolgreich installiert! 🎉',
     toolCreated_btn: 'Jetzt verwenden',
-    defaultExplanation: 'Ihre kreative Idee wurde verarbeitet!'
+    defaultExplanation: 'Ihre kreative Idee wurde verarbeitet!',
+    geminiBadge: 'GEMINI AKTIV',
+    fallbackToolTitle: 'Werkzeug auf der Plattform'
   },
   fr: {
     welcome: 'Bienvenue sur l\'assistance IA instantanée ! 🤖\n\nJe suis votre assistant IA. Si vous manquez d\'un outil ou d\'une fonctionnalité spécifique, dites-moi simplement ce que vous souhaitez accomplir :\n\n1. Je vais rechercher instantanément dans le catalogue et vous le fournir.\n2. S\'il n\'existe pas, je le concevrai et l\'installerai automatiquement en direct !\n\nÉcrivez votre idée ou choisissez une suggestion ci-dessous ✨',
@@ -155,7 +163,9 @@ const chatTranslations: Record<string, {
     toolMatched_btn: 'Ouvrir l\'outil',
     toolCreated_title: 'Nouvel outil intelligent compilé et déployé avec succès ! 🎉',
     toolCreated_btn: 'Commencer l\'utilisation',
-    defaultExplanation: 'Votre concept créatif a été traité !'
+    defaultExplanation: 'Votre concept créatif a été traité !',
+    geminiBadge: 'GEMINI ACTIF',
+    fallbackToolTitle: 'Outil sur la plateforme'
   },
   it: {
     welcome: 'Benvenuto nell\'assistenza IA istantanea! 🤖\n\nSono il tuo Assistente IA. Se cerchi una funzionalità o uno strumento personalizzato che manca nella suite, scrivimi cosa vuoi realizzare:\n\n1. Cercherò nel catalogo e te lo proprodo all\'istante.\n2. Se non disponibile, lo progetterò e lo installerò al volo per te!\n\nEsponi la tua idea o scegli un suggerimento qui sotto per iniziare ✨',
@@ -184,7 +194,9 @@ const chatTranslations: Record<string, {
     toolMatched_btn: 'Apri strumento',
     toolCreated_title: 'Nuovo strumento IA compilato e installato con successo! 🎉',
     toolCreated_btn: 'Inizia subito ad usare',
-    defaultExplanation: 'Il tuo concetto creativo è stato elaborato!'
+    defaultExplanation: 'Il tuo concetto creativo è stato elaborato!',
+    geminiBadge: 'GEMINI ATTIVO',
+    fallbackToolTitle: 'Strumento nella piattaforma'
   }
 };
 
@@ -355,7 +367,7 @@ export default function AiChatAssistant({
             </div>
           </div>
           <div className="px-2.5 py-1 bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/30 rounded-lg text-[10px] font-bold tracking-wide">
-            GEMINI ACTIVE
+            {t.geminiBadge || 'GEMINI ACTIVE'}
           </div>
         </div>
 
@@ -390,7 +402,7 @@ export default function AiChatAssistant({
                         </div>
                         <div>
                           <h4 className="font-bold text-[11px] text-slate-800 dark:text-zinc-200">
-                            {allTools.find(t => t.id === msg.matchedToolId)?.title || 'أداة بالمنصة'}
+                            {allTools.find(t => t.id === msg.matchedToolId)?.title || t.fallbackToolTitle || 'أداة بالمنصة'}
                           </h4>
                           <span className="text-[9px] text-slate-400 dark:text-zinc-500 block mt-0.5">{t.toolMatched_title}</span>
                         </div>

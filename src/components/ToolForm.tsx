@@ -7,6 +7,7 @@ interface ToolFormProps {
   tool: Tool;
   onSubmit: (values: Record<string, string>) => void;
   isLoading: boolean;
+  t?: any;
 }
 
 // Map dynamic string icons safely to Lucide Icons
@@ -21,7 +22,7 @@ export function DynamicIcon({ name, className, size = 20 }: { name: string; clas
   return <IconComponent className={className} size={size} />;
 }
 
-export default function ToolForm({ tool, onSubmit, isLoading }: ToolFormProps) {
+export default function ToolForm({ tool, onSubmit, isLoading, t = {} as any }: ToolFormProps) {
   const [formValues, setFormValues] = useState<Record<string, string>>({});
   const [isExtractingPdf, setIsExtractingPdf] = useState(false);
 
@@ -84,11 +85,11 @@ export default function ToolForm({ tool, onSubmit, isLoading }: ToolFormProps) {
           if (extractedText.trim().length > 0) {
             handleInputChange(inputId, extractedText.trim());
           } else {
-            alert('لم نتمكن من استخراج أي نصوص من هذا الملف. قد يكون ملفاً ممسوحاً ضوئياً (فقط صور).');
+            alert(t.pdfImportError || 'لم نتمكن من استخراج أي نصوص من هذا الملف.');
           }
         } catch (err) {
           console.error(err);
-          alert('فشل قراءة ملف PDF. الرجاء التثبت من أنه مستند صالح وغير مشفر.');
+          alert(t.pdfImportError || 'فشل قراءة ملف PDF.');
         } finally {
           setIsExtractingPdf(false);
         }
@@ -97,7 +98,7 @@ export default function ToolForm({ tool, onSubmit, isLoading }: ToolFormProps) {
       reader.readAsArrayBuffer(file);
     } catch (err) {
       console.error(err);
-      alert('فشل تحميل مكملات قراءة المستندات.');
+      alert(t.pdfImportError || 'فشل تحميل مكملات قراءة المستندات.');
       setIsExtractingPdf(false);
     }
   };
@@ -145,9 +146,8 @@ export default function ToolForm({ tool, onSubmit, isLoading }: ToolFormProps) {
                 className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between"
               >
                 <span>{input.label} {input.required && <span className="text-rose-500">*</span>}</span>
-                {/* Character counter (fixed hatha typo) */}
                 <span className="text-[11px] font-mono text-slate-400">
-                  {value.length} / {maxChars} حرف
+                  {value.length} / {maxChars} {t.charCount || 'حرف'}
                 </span>
               </label>
 
@@ -167,7 +167,7 @@ export default function ToolForm({ tool, onSubmit, isLoading }: ToolFormProps) {
                   <div className="flex justify-end">
                     <label className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-600 hover:text-white text-blue-500 hover:text-white dark:text-amber-400 dark:hover:text-white border border-blue-500/20 dark:border-amber-500/20 rounded-xl text-xs font-semibold cursor-pointer transition-all">
                       <icons.Paperclip size={12} className="shrink-0" />
-                      <span>{isExtractingPdf ? 'جاري استخراج النص...' : 'استيراد نصوص من PDF 📄'}</span>
+                      <span>{isExtractingPdf ? (t.pdfExtracting || 'جاري استخراج النص...') : (t.importPdf || 'استيراد نصوص من PDF 📄')}</span>
                       <input
                         type="file"
                         accept=".pdf"
@@ -219,7 +219,7 @@ export default function ToolForm({ tool, onSubmit, isLoading }: ToolFormProps) {
               className="px-4 py-2.5 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/20 dark:hover:bg-amber-950/40 text-amber-700 dark:text-amber-400 text-xs font-semibold rounded-xl border border-amber-200/50 dark:border-amber-900/30 transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles size={14} />
-              <span>مثال توضيحي</span>
+              <span>{t.exampleInput || 'مثال توضيحي'}</span>
             </button>
             <button
               id="btn-clear-form"
@@ -228,7 +228,7 @@ export default function ToolForm({ tool, onSubmit, isLoading }: ToolFormProps) {
               className="px-4 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <RotateCcw size={14} />
-              <span>تفريغ الحقول</span>
+              <span>{t.clearFields || 'تفريغ الحقول'}</span>
             </button>
           </div>
 
@@ -243,12 +243,12 @@ export default function ToolForm({ tool, onSubmit, isLoading }: ToolFormProps) {
             {isLoading ? (
               <>
                 <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
-                <span>إعداد الاستجابة الذكية...</span>
+                <span>{t.preparingResponse || 'إعداد الاستجابة الذكية...'}</span>
               </>
             ) : (
               <>
                 <Play size={14} fill="currentColor" />
-                <span>ابدأ التوليد الذكي</span>
+                <span>{t.runTool || 'ابدأ التوليد الذكي'}</span>
               </>
             )}
           </button>

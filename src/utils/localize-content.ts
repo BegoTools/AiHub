@@ -32,14 +32,18 @@ function applyToolTranslations(tool: Tool, map: ContentTranslationMap): Tool {
 }
 
 export function getLocalizedTools(language: Language): Tool[] {
-  const map = contentTranslations[language] || {};
   if (language === 'ar') return tools;
+  const langMap = contentTranslations[language] || {};
+  const enMap = contentTranslations['en'] || {};
+  const map: ContentTranslationMap = { ...enMap, ...langMap };
   return tools.map(t => applyToolTranslations(t, map));
 }
 
 export function getLocalizedCategories(language: Language): Category[] {
-  const map = contentTranslations[language] || {};
   if (language === 'ar') return categoryData;
+  const langMap = contentTranslations[language] || {};
+  const enMap = contentTranslations['en'] || {};
+  const map: ContentTranslationMap = { ...enMap, ...langMap };
   return categoryData.map(cat => ({
     ...cat,
     name: map[`cat_${cat.id}_name`] || cat.name,
