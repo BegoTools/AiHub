@@ -28,6 +28,9 @@ export interface Tool {
   inputs: InputField[];
   exampleInput: Record<string, string>;
   promptTemplate: (inputs: Record<string, string>) => string;
+  keywords?: string[];
+  tags?: string[];
+  isNew?: boolean;
 }
 
 export interface HistoryItem {

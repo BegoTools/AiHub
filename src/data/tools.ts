@@ -366,7 +366,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'writing_cv',
-    categoryId: 'writing',
+    categoryId: 'career',
     title: 'صانع محتوى السيرة الذاتية (CV)',
     description: 'اكتب بياناتك وخبراتك البسيطة، واحصل على نصوص سيرة ذاتية مهنية تثير إعجاب الشركات.',
     icon: 'FileUser',
@@ -402,7 +402,7 @@ export const tools: Tool[] = [
   // --- MARKETING TOOLS ---
   {
     id: 'marketing_desc',
-    categoryId: 'marketing',
+    categoryId: 'social',
     title: 'مولد وصف المنتجات الباعث للشراء',
     description: 'اكتب تفاصيل منتجك واحصل على وصف تسويقي يلمس احتياج العميل ويقنعه فوراً بنقرة زر واحدة.',
     icon: 'ShoppingBag',
@@ -438,7 +438,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'marketing_fb',
-    categoryId: 'marketing',
+    categoryId: 'social',
     title: 'صانع بوستات الفيسبوك التفاعلية',
     description: 'بوست فيسبوك جاهز مع الإيموجي واللمسة الجذابة لشد انتباه المتابع وزيادة التفاعل والإعجاب.',
     icon: 'Facebook',
@@ -463,7 +463,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'marketing_ad',
-    categoryId: 'marketing',
+    categoryId: 'social',
     title: 'كاتب إعلانات السوشيال ميديا القصيرة',
     description: 'إعلانات مركزة وقصيرة لإنستجرام أو فيسبوك أدز تعتمد على الفضول والإقناع السريع.',
     icon: 'Sparkle',
@@ -487,7 +487,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'marketing_hashtags',
-    categoryId: 'marketing',
+    categoryId: 'social',
     title: 'مولد الهاشتاجات التريند الذكي',
     description: 'اكتب موضوع مشاركتك واحصل على مجموعة هاشتاجات نشطة ومنظمة لزيادة المشاهدات والتفاعل.',
     icon: 'Hash',
@@ -511,7 +511,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'marketing_calendar',
-    categoryId: 'marketing',
+    categoryId: 'social',
     title: 'صانع جدول المحتوى الأسبوعي',
     description: 'خطط لصفحاتك وقنواتك بجدول منشورات ذكي يغطى 7 أيام كاملة بمنشورات منوعة.',
     icon: 'CalendarRange',
@@ -864,10 +864,10 @@ export const tools: Tool[] = [
     `
   },
 
-  // --- HEALTH AND FITNESS TOOLS ---
+  // --- DAILY LIFE TOOLS (Health & Fitness) ---
   {
     id: 'health_meals',
-    categoryId: 'health',
+    categoryId: 'daily',
     title: 'مخطط الوجبات والأكلات المقترح',
     description: 'جدول أكلات ووجبات صحية مرن للتنحيف أو التضخيم حسب المتوفر في ثلاجتك.',
     icon: 'Utensils',
@@ -903,7 +903,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'health_calories',
-    categoryId: 'health',
+    categoryId: 'daily',
     title: 'حاسب السعرات والبروتين التقديري',
     description: 'اكتب الأكل اللي أكلته النهاردة، واحصل على تقييم تقديري ذكي للسعرات ونسبة البروتين.',
     icon: 'Calculator',
@@ -929,7 +929,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'health_gym',
-    categoryId: 'health',
+    categoryId: 'daily',
     title: 'صانع جدول تمارين الجيم الحديدة',
     description: 'خطط تمارينك في صالة الجيم أو المنزل بجدول منظم بالأيام والتمارين والعدادات المناسبة.',
     icon: 'Dumbbell',
@@ -980,7 +980,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'health_advice',
-    categoryId: 'health',
+    categoryId: 'career',
     title: 'مستشار تخطي ثبات الوزن وتحسين الأداء',
     description: 'إذا كان وزنك ثابتاً وملّيت من الدايت أو أداؤك متراجع، فإليك حلولاً عملية للخروج من المشكلة.',
     icon: 'HeartPulse',
@@ -1004,10 +1004,10 @@ export const tools: Tool[] = [
     `
   },
 
-  // --- TECH TOOLS ---
+  // --- CODING TOOLS ---
   {
     id: 'tech_solver',
-    categoryId: 'tech',
+    categoryId: 'coding',
     title: 'مستكشف ومصلح المشاكل التقنية',
     description: 'ابصم موبايلك مبيفتحش أو الواي فاي بيفصل؟ اكتب المشكلة واحصل على خطوات حل برمجية وفنية واضحة.',
     icon: 'Wrench',
@@ -1032,7 +1032,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'tech_windows',
-    categoryId: 'tech',
+    categoryId: 'coding',
     title: 'خبير إعدادات وأسرار نظام ويندوز (Windows)',
     description: 'تعلم كيف تسرع ويندوز، وتبحث عن الإعدادات المخفية وتتحكم في تحديثات ويندوز المزعجة.',
     icon: 'Monitor',
@@ -1056,7 +1056,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'tech_phone',
-    categoryId: 'tech',
+    categoryId: 'coding',
     title: 'دليل توفير مساحة وسرعة الهاتف',
     description: 'خطوات برمجية دقيقة لتفريغ مساحة التخزين في هاتفك الأندرويد أو الآيفون دون حذف صورك الغالية.',
     icon: 'Smartphone',
@@ -1093,10 +1093,10 @@ export const tools: Tool[] = [
     `
   },
 
-  // --- PROMPT TOOLS ---
+  // --- WRITING TOOLS (Formerly Prompts) ---
   {
     id: 'prompts_gen',
-    categoryId: 'prompts',
+    categoryId: 'writing',
     title: 'صانع الأوامر الخارق (Prompt Generator)',
     description: 'حول فكرتك العادية لأمر احترافي وصارم لتقديمه للشات بوت وإعطائه نتائج دقيقة ومحكمة للغاية.',
     icon: 'MessageSquareShare',
@@ -1120,7 +1120,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'prompts_image',
-    categoryId: 'prompts',
+    categoryId: 'media',
     title: 'صانع برومبت توليد الصور المبهرة',
     description: 'صياغة برومبت صور تفصيلي غني بالألوان والزاوية والإضاءة لاستخدامه في مولدات الصور الحديثة كـ Midjourney أو Imagen.',
     icon: 'Image',
@@ -1144,7 +1144,7 @@ export const tools: Tool[] = [
   },
   {
     id: 'prompts_app',
-    categoryId: 'prompts',
+    categoryId: 'coding',
     title: 'صانع برومبت برمجة التطبيقات الذكية',
     description: 'اصنع برومبت برمجي عالي الجودة لبناء تطبيقات ويب كاملة أو صفحات بـ AI Studio بكل سلاسة وثبات.',
     icon: 'AppWindow',
@@ -1165,6 +1165,769 @@ export const tools: Tool[] = [
 1. البرومبت المتطور والمهيكل بالإنجليزية الجاهز للنسخ والاستخدام في المطورين وبناء التطبيقات.
 2. نصائح برمجية دقيقة مصاحبة بالعربية لـ ما هي لغات البرمجة والـ Frameworks والمكتبات الرائدة والمجانية (React، Tailwind، Chart.js... إلخ) الأفضل لتنفيذ هذا المشروع بنجاح منفرداً وسريعاً.
     `
+  },
+  // --- NEW WRITING TOOLS ---
+  {
+    id: 'writing_simplify',
+    categoryId: 'writing',
+    title: 'مبسط النصوص',
+    description: 'حول أي نص معقد إلى كلمات سهلة وبسيطة يفهمها أي شخص.',
+    icon: 'BookOpenText',
+    keywords: ['تبسيط', 'تسهيل', 'مبسط', 'نص', 'بسيط', 'simplify'],
+    tags: ['كتابة', 'تبسيط', 'تحرير'],
+    inputs: [
+      { id: 'text', label: 'النص المراد تبسيطه', type: 'textarea', placeholder: 'انسخ النص المعقد هنا...' }
+    ],
+    exampleInput: { text: 'النظرية النسبية الخاصة تنص على أن قوانين الفيزياء واحدة في جميع الأطر المرجعية العطالية وأن سرعة الضوء ثابتة في جميع الأطر.' },
+    promptTemplate: (inputs) => `
+أنت خبير في تبسيط العلوم والمفاهيم بأسلوب سهل ممتع.
+المطلوب: أعد كتابة النص التالي بطريقة بسيطة جداً يفهمها أي شخص، مع استخدام تشبيهات من الحياة اليومية:
+"${inputs.text}"
+اكتب النص المبسط بطريقة واضحة وجذابة.`
+  },
+  {
+    id: 'writing_egyptian',
+    categoryId: 'writing',
+    title: 'تحويل للهجة المصرية',
+    description: 'حول أي نص فصحى أو إنجليزي إلى لهجة مصرية عامية سلسة.',
+    icon: 'MessageCircle',
+    keywords: ['مصري', 'عامية', 'لهجة مصرية', 'مصري', 'Egyptian'],
+    tags: ['كتابة', 'لهجة', 'مصري'],
+    inputs: [
+      { id: 'text', label: 'النص المراد تحويله للعامية المصرية', type: 'textarea', placeholder: 'اكتب النص الفصحى أو الإنجليزي هنا...' }
+    ],
+    exampleInput: { text: 'يسرني أن أتقدم إليكم بخالص الشكر والتقدير على حسن تعاونكم معنا خلال الفترة الماضية.' },
+    promptTemplate: (inputs) => `
+أنت خبير في تحويل النصوص الفصحى إلى اللهجة المصرية العامية بطريقة طبيعية.
+حول النص التالي إلى لهجة مصرية عامية سلسة ومفهومة:
+"${inputs.text}"
+استخدم كلمات مصرية دارجة بطبيعية بدون مبالغة.`
+  },
+  {
+    id: 'writing_formalize',
+    categoryId: 'writing',
+    title: 'تحويل للغة الرسمية',
+    description: 'حول أي نص غير رسمي إلى لغة عربية فصحى رسمية ومهنية.',
+    icon: 'ScrollText',
+    keywords: ['رسمي', 'فصحى', 'مهني', 'رسمية', 'formal'],
+    tags: ['كتابة', 'رسمي', 'تحرير'],
+    inputs: [
+      { id: 'text', label: 'النص المراد تحويله للغة رسمية', type: 'textarea', placeholder: 'اكتب النص غير الرسمي هنا...' }
+    ],
+    exampleInput: { text: 'يا جماعة أنا عايزكم تساعدوني في الموضوع ده بسرعة من فضلكم.' },
+    promptTemplate: (inputs) => `
+أنت كاتب محترف ومتخصص في الصياغة الرسمية باللغة العربية الفصحى.
+المطلوب: إعادة صياغة النص التالي بأسلوب رسمي مهذب ومحترف:
+"${inputs.text}"
+استخدم لغة عربية فصحى سليمة وخالية من الأخطاء.`
+  },
+  {
+    id: 'writing_ideas',
+    categoryId: 'writing',
+    title: 'تحويل الأفكار لنص منظم',
+    description: 'حول أفكارك المبعثرة لنص منسق وجاهز للاستخدام.',
+    icon: 'Lightbulb',
+    keywords: ['أفكار', 'تنظيم', 'نص', 'تفكير', 'ideas', 'organize'],
+    tags: ['كتابة', 'أفكار', 'تنظيم'],
+    inputs: [
+      { id: 'ideas', label: 'أفكارك المبعثرة أو النقاط اللي عايز تنظمها', type: 'textarea', placeholder: 'اكتب أفكارك هنا حتى لو مش مرتبة...' },
+      { id: 'format', label: 'نوع النص المطلوب', type: 'text', placeholder: 'مثلاً: إيميل، مقال، بوست، تقرير...' }
+    ],
+    exampleInput: { ideas: 'عايز أتكلم عن التغير المناخي - أسبابو - تأثيره على مصر - الحلول الممكنة - دور الفرد والمجتمع - خاتمة تشجع على العمل', format: 'مقال قصير' },
+    promptTemplate: (inputs) => `
+أنت كاتب محترف ومبدع تستطيع تحويل الأفكار المبعثرة لنص منظم وجميل.
+الأفكار المتاحة: "${inputs.ideas}"
+نوع النص المطلوب: "${inputs.format}"
+نظم هذه الأفكار في نص منسق وجذاب باللغة العربية.`
+  },
+  {
+    id: 'writing_paraphrase',
+    categoryId: 'writing',
+    title: 'إعادة صياغة متقدمة',
+    description: 'أعد صياغة أي نص بثلاث طرق مختلفة: رسمية، إبداعية، أو بسيطة.',
+    icon: 'Repeat',
+    keywords: ['إعادة صياغة', 'تغيير', 'بديل', 'paraphrase', 'rewrite'],
+    tags: ['كتابة', 'صياغة', 'تحرير'],
+    inputs: [
+      { id: 'text', label: 'النص المراد إعادة صياغته', type: 'textarea', placeholder: 'انسخ النص هنا...' },
+      { id: 'style', label: 'الأسلوب المطلوب', type: 'select', placeholder: 'اختر الأسلوب', options: [{ value: 'all', label: 'الثلاثة معاً' }, { value: 'formal', label: 'رسمي' }, { value: 'creative', label: 'إبداعي' }, { value: 'simple', label: 'بسيط' }], defaultValue: 'all' }
+    ],
+    exampleInput: { text: 'التكنولوجيا غيرت حياتنا بشكل كبير جداً في السنوات الأخيرة ومستمرة في التطور السريع.', style: 'all' },
+    promptTemplate: (inputs) => `
+أنت كاتب متميز في إعادة الصياغة والصياغة الإبداعية.
+المطلوب: إعادة صياغة النص التالي بثلاث طرق مختلفة${inputs.style !== 'all' ? ' (ركز على الأسلوب: ' + inputs.style + ')' : ''}:
+"${inputs.text}"
+قدم 3 نسخ مختلفة: رسمية، إبداعية، وبسيطة.`
+  },
+
+  // --- NEW BUSINESS TOOLS ---
+  {
+    id: 'business_competitors',
+    categoryId: 'business',
+    title: 'تحليل المنافسين',
+    description: 'حلل منافسيك في السوق واحصل على رؤية واضحة لنقاط قوتهم وضعفهم.',
+    icon: 'Search',
+    keywords: ['منافسين', 'تحليل', 'سوق', 'competitors', 'analysis'],
+    tags: ['بيزنس', 'تحليل', 'منافسة'],
+    inputs: [
+      { id: 'business_type', label: 'مجالك أو نوع البيزنس', type: 'text', placeholder: 'مثلاً: مطاعم برجر، متجر ملابس أونلاين...' },
+      { id: 'competitors', label: 'أسماء المنافسين (لو تعرفهم)', type: 'textarea', placeholder: 'اكتب أسماء المنافسين إن وجدوا...' }
+    ],
+    exampleInput: { business_type: 'مطاعم فاست فود في مدينة نصر', competitors: 'ماكدونالدز، كنتاكي، برجر كينج، وكنتاكي' },
+    promptTemplate: (inputs) => `
+أنت خبير تحليل سوق ودراسة منافسين (Competitive Analysis Specialist).
+حلل المنافسين في مجال: "${inputs.business_type}"
+المنافسون: "${inputs.competitors}"
+قدم تحليلاً شاملاً لنقاط القوة والضعف والفرص والتهديدات لكل منافس باللغة العربية.`
+  },
+  {
+    id: 'business_marketing_plan',
+    categoryId: 'business',
+    title: 'خطة تسويق متكاملة',
+    description: 'اطلع على خطة تسويق شاملة لمنتجك أو خدمتك تشمل القنوات والميزانية والجدول الزمني.',
+    icon: 'Target',
+    keywords: ['تسويق', 'خطة', 'marketing plan', 'strategy'],
+    tags: ['بيزنس', 'تسويق', 'تخطيط'],
+    inputs: [
+      { id: 'product', label: 'المنتج أو الخدمة', type: 'text', placeholder: 'مثلاً: تطبيق توصيل طلبات' },
+      { id: 'budget', label: 'الميزانية التسويقية التقريبية', type: 'text', placeholder: 'مثلاً: 5000 جنيه شهرياً' },
+      { id: 'target', label: 'الجمهور المستهدف', type: 'text', placeholder: 'مثلاً: شباب 18-35 سنة في القاهرة' }
+    ],
+    exampleInput: { product: 'تطبيق لتعليم البرمجة للمبتدئين', budget: '10000 جنيه شهرياً', target: 'طلاب جامعات وخريجين 20-30 سنة' },
+    promptTemplate: (inputs) => `
+أنت مدير تسويق رقمي محترف.
+صمم خطة تسويق متكاملة للمنتج: "${inputs.product}"
+الميزانية: "${inputs.budget}"
+الجمهور: "${inputs.target}"
+قدم خطة تشمل القنوات والمحتوى والميزانية والجدول الزمني باللغة العربية.`
+  },
+  {
+    id: 'business_launch',
+    categoryId: 'business',
+    title: 'خطة إطلاق منتج',
+    description: 'خطة متكاملة لإطلاق منتجك الجديد في السوق بنجاح.',
+    icon: 'Rocket',
+    keywords: ['إطلاق', 'منتج', 'لانش', 'launch', 'product launch'],
+    tags: ['بيزنس', 'إطلاق', 'تخطيط'],
+    inputs: [
+      { id: 'product', label: 'اسم المنتج وفكرته', type: 'textarea', placeholder: 'وصف المنتج الجديد...' },
+      { id: 'timeline', label: 'المدة المتاحة قبل الإطلاق', type: 'text', placeholder: 'مثلاً: شهر واحد' }
+    ],
+    exampleInput: { product: 'تطبيق موبايل لطلب واستئجار السيارات بين الأفراد', timeline: 'شهرين' },
+    promptTemplate: (inputs) => `
+أنت خبير إطلاق منتجات (Product Launch Specialist).
+ضع خطة إطلاق كاملة للمنتج: "${inputs.product}"
+المدة المتاحة: "${inputs.timeline}"
+الخطة تشمل المراحل: ما قبل الإطلاق، يوم الإطلاق، وما بعد الإطلاق باللغة العربية.`
+  },
+  {
+    id: 'business_sales_ideas',
+    categoryId: 'business',
+    title: 'أفكار لزيادة المبيعات',
+    description: 'احصل على 10 أفكار عملية ومبتكرة لزيادة مبيعاتك.',
+    icon: 'TrendingUp',
+    keywords: ['مبيعات', 'زيادة', 'أفكار', 'sales', 'ideas'],
+    tags: ['بيزنس', 'مبيعات', 'أفكار'],
+    inputs: [
+      { id: 'business', label: 'نشاطك التجاري', type: 'text', placeholder: 'مثلاً: متجر عطور أونلاين' },
+      { id: 'challenge', label: 'التحدي اللي بتواجهه في المبيعات', type: 'textarea', placeholder: 'مثلاً: الزبائن مش بيكرروا الشراء...' }
+    ],
+    exampleInput: { business: 'متجر هدايا أونلاين', challenge: 'قلة الزوار وقلة الطلبات في الشهور الأولى' },
+    promptTemplate: (inputs) => `
+أنت خبير مبيعات وتسويق.
+قدم 10 أفكار عملية ومبتكرة لزيادة مبيعات: "${inputs.business}"
+التحدي الحالي: "${inputs.challenge}"
+الأفكار تكون قابلة للتنفيذ ومتنوعة باللغة العربية.`
+  },
+  {
+    id: 'business_quotation',
+    categoryId: 'business',
+    title: 'كتابة عرض سعر احترافي',
+    description: 'عرض سعر منظم ومقنع لأي منتج أو خدمة.',
+    icon: 'FileSignature',
+    keywords: ['عرض سعر', 'تسعير', 'quotation', 'quote', 'proposal'],
+    tags: ['بيزنس', 'عروض', 'تسعير'],
+    inputs: [
+      { id: 'service', label: 'الخدمة أو المنتج', type: 'textarea', placeholder: 'وصف الخدمة أو المنتج...' },
+      { id: 'price', label: 'السعر والشروط', type: 'text', placeholder: 'مثلاً: 5000 جنيه شامل الضريبة' }
+    ],
+    exampleInput: { service: 'تصميم موقع إلكتروني متكامل لشركة عقارات يشمل 5 صفحات ونظام إدارة محتوى', price: '12000 جنيه مصري شامل الضريبة - مدة التسليم 14 يوماً' },
+    promptTemplate: (inputs) => `
+أنت خبير في كتابة عروض الأسعار التجارية.
+اكتب عرض سعر احترافي وجاهز للتقديم بناءً على:
+الخدمة: "${inputs.service}"
+السعر والشروط: "${inputs.price}"
+استخدم تنسيقاً مهنياً يشمل: المقدمة، نطاق العمل، السعر، الشروط، وفترة الصلاحية.`
+  },
+
+  // --- NEW SOCIAL MEDIA TOOLS ---
+  {
+    id: 'social_tiktok',
+    categoryId: 'social',
+    title: 'سكريبت تيك توك',
+    description: 'سكريبت فيديو قصير وجذاب لتيك توك أو ريلز مع الحركات والإيماءات.',
+    icon: 'Video',
+    keywords: ['تيك توك', 'سكريبت', 'فيديو', 'ريلز', 'tiktok', 'reels'],
+    tags: ['سوشيال', 'فيديو', 'تيك توك'],
+    inputs: [
+      { id: 'topic', label: 'موضوع الفيديو', type: 'text', placeholder: 'مثلاً: نصيحة للربح من الإنترنت' },
+      { id: 'duration', label: 'المدة التقريبية', type: 'select', placeholder: 'اختر المدة', options: [{ value: '15', label: '15 ثانية (قصير جداً)' }, { value: '30', label: '30 ثانية' }, { value: '60', label: '60 ثانية (طويل)' }], defaultValue: '30' },
+      { id: 'tone', label: 'النبرة', type: 'select', placeholder: 'اختر النبرة', options: [{ value: 'funny', label: 'مضحكة' }, { value: 'serious', label: 'جادة ومفيدة' }, { value: 'story', label: 'قصة مشوقة' }], defaultValue: 'funny' }
+    ],
+    exampleInput: { topic: 'إزاى تبدأ مشروع أونلاين بميزانية صفر', duration: '60', tone: 'story' },
+    promptTemplate: (inputs) => `
+أنت كاتب سكريبتات تيك توك وتوليد فيديوهات قصيرة محترف.
+اكتب سكريبت فيديو قصير لمدة ${inputs.duration} ثانية عن: "${inputs.topic}"
+النبرة: ${inputs.tone === 'funny' ? 'مضحكة' : inputs.tone === 'serious' ? 'جادة ومفيدة' : 'على شكل قصة'}
+اكتب السكريبت مع وصف المشاهد والحركات.`
+  },
+  {
+    id: 'social_cta',
+    categoryId: 'social',
+    title: 'كاتب عبارات CTA',
+    description: 'عبارات دعوة لاتخاذ إجراء جذابة ومقنعة لأي منشور أو إعلان.',
+    icon: 'Pointer',
+    keywords: ['CTA', 'دعوة', 'إجراء', 'call to action', 'زر'],
+    tags: ['سوشيال', 'كتابة', 'تسويق'],
+    inputs: [
+      { id: 'context', label: 'سياق المنشور أو الإعلان', type: 'textarea', placeholder: 'اكتب عن إيه المنشور أو الإعلان...' },
+      { id: 'goal', label: 'الهدف المطلوب', type: 'select', placeholder: 'عايز العميل يعمل إيه؟', options: [{ value: 'buy', label: 'شراء' }, { value: 'subscribe', label: 'اشتراك' }, { value: 'contact', label: 'تواصل' }, { value: 'download', label: 'تحميل' }, { value: 'visit', label: 'زيارة' }], defaultValue: 'buy' }
+    ],
+    exampleInput: { context: 'إعلان عن دورة تدريبية في التسويق الإلكتروني بخصم 50%', goal: 'buy' },
+    promptTemplate: (inputs) => `
+أنت خبير كتابة عبارات تسويقية (CTA Copywriter).
+اكتب 5 عبارات CTA مختلفة ومبتكرة لـ:
+السياق: "${inputs.context}"
+الهدف: "${inputs.goal}"
+كل عبارة تكون قصيرة ومقنعة وتحث على اتخاذ الإجراء فوراً.`
+  },
+  {
+    id: 'social_reels',
+    categoryId: 'social',
+    title: 'أفكار ريلز وشورتس',
+    description: 'توليد 10 أفكار مبتكرة لفيديوهات Reels أو Shorts مع وصف كل فكرة.',
+    icon: 'Film',
+    keywords: ['ريلز', 'شورتس', 'أفكار', 'فيديو', 'reels', 'shorts', 'youtube'],
+    tags: ['سوشيال', 'فيديو', 'أفكار'],
+    inputs: [
+      { id: 'niche', label: 'مجالك أو موضوعك', type: 'text', placeholder: 'مثلاً: طبخ، برمجة، سفر...' },
+      { id: 'audience', label: 'الجمهور المستهدف', type: 'text', placeholder: 'مثلاً: ربات بيوت، مبرمجين مبتدئين...' }
+    ],
+    exampleInput: { niche: 'القهوة وطرق تحضيرها', audience: 'عشاق القهوة والمختصين' },
+    promptTemplate: (inputs) => `
+أنت مبدع محتوى ريلز وشورتس.
+اقترح 10 أفكار مبتكرة لفيديوهات قصيرة في مجال: "${inputs.niche}"
+الجمهور المستهدف: "${inputs.audience}"
+لكل فكرة: عنوان جذاب + وصف سريع + هاشتاجات مقترحة.`
+  },
+  {
+    id: 'social_idea_video',
+    categoryId: 'social',
+    title: 'تحويل فكرة لفيديو قصير',
+    description: 'حول أي فكرة أو نص إلى سكريبت فيديو قصير وجاهز للتصوير.',
+    icon: 'Clapperboard',
+    keywords: ['فيديو', 'فكرة', 'سكريبت', 'تصوير', 'تحويل', 'video script'],
+    tags: ['سوشيال', 'فيديو', 'إنتاج'],
+    inputs: [
+      { id: 'idea', label: 'فكرتك أو الموضوع', type: 'textarea', placeholder: 'اكتب الفكرة هنا...' },
+      { id: 'platform', label: 'المنصة المستهدفة', type: 'select', placeholder: 'اختر المنصة', options: [{ value: 'tiktok', label: 'تيك توك' }, { value: 'instagram', label: 'إنستجرام (Reels)' }, { value: 'youtube', label: 'يوتيوب (Shorts)' }], defaultValue: 'instagram' }
+    ],
+    exampleInput: { idea: 'نشرح إزاي نعمل حساب بنكي أونلاين في 3 دقائق', platform: 'tiktok' },
+    promptTemplate: (inputs) => `
+أنت مخرج ومنتج فيديوهات قصيرة.
+حول الفكرة التالية إلى سكريبت كامل وجاهز للتصوير لمنصة ${inputs.platform}:
+"${inputs.idea}"
+اكتب السكريبت مع وصف المشاهد والمدة التقريبية لكل مقطع.`
+  },
+  {
+    id: 'social_content_strategy',
+    categoryId: 'social',
+    title: 'استراتيجية محتوى متكاملة',
+    description: 'خطة محتوى كاملة لمدة شهر تشمل أنواع المنشورات وأيام النشر.',
+    icon: 'CalendarCheck',
+    keywords: ['استراتيجية', 'خطة محتوى', 'content strategy', 'شهر'],
+    tags: ['سوشيال', 'تخطيط', 'محتوى'],
+    inputs: [
+      { id: 'brand', label: 'اسم العلامة التجارية أو الصفحة', type: 'text', placeholder: 'اسم الصفحة' },
+      { id: 'niche', label: 'المجال', type: 'text', placeholder: 'مثلاً: صحة ولياقة' },
+      { id: 'goals', label: 'الأهداف', type: 'text', placeholder: 'مثلاً: زيادة المتابعين، زيادة المبيعات...' }
+    ],
+    exampleInput: { brand: 'Fit Egypt', niche: 'اللياقة البدنية والتغذية', goals: 'زيادة المتابعين وبيع البرامج التدريبية' },
+    promptTemplate: (inputs) => `
+أنت استراتيجي محتوى سوشيال ميديا محترف.
+ضع خطة محتوى شهرية كاملة للعلامة التجارية: "${inputs.brand}"
+المجال: "${inputs.niche}"
+الأهداف: "${inputs.goals}"
+الخطة تشمل: أنواع المنشورات، أيام النشر المقترحة، ونصائح للتفاعل.`
+  },
+
+  // --- NEW STUDY TOOLS ---
+  {
+    id: 'study_quick_test',
+    categoryId: 'study',
+    title: 'اختبار سريع',
+    description: 'توليد اختبار قصير من 5 أسئلة لقياس فهمك لأي موضوع.',
+    icon: 'ClipboardCheck',
+    keywords: ['اختبار', 'أسئلة', 'قياس', 'test', 'quiz'],
+    tags: ['تعلم', 'اختبارات', 'تقييم'],
+    inputs: [
+      { id: 'topic', label: 'الموضوع المراد الاختبار فيه', type: 'textarea', placeholder: 'اكتب الموضوع أو الصق النص...' }
+    ],
+    exampleInput: { topic: 'النظام الشمسي - الكواكب والشمس والمجرات' },
+    promptTemplate: (inputs) => `
+أنت معلم خبير في وضع الاختبارات.
+اعمل اختبار سريع من 5 أسئلة متنوعة (اختيار من متعدد، صح وخطأ، أكمل) عن:
+"${inputs.topic}"
+قدم الإجابات الصحيحة بعد الأسئلة.`
+  },
+  {
+    id: 'study_key_points',
+    categoryId: 'study',
+    title: 'استخراج النقاط المهمة',
+    description: 'استخرج أهم النقاط والمفاهيم الرئيسية من أي نص طويل.',
+    icon: 'List',
+    keywords: ['نقاط مهمة', 'استخراج', 'key points', 'ملخص'],
+    tags: ['تعلم', 'تلخيص', 'مذاكرة'],
+    inputs: [
+      { id: 'text', label: 'النص المراد استخراج النقاط منه', type: 'textarea', placeholder: 'انسخ النص هنا...' }
+    ],
+    exampleInput: { text: 'الذكاء الاصطناعي هو فرع من علوم الكمبيوتر يهدف إلى إنشاء أنظمة قادرة على أداء مهام تتطلب ذكاء بشري. يشمل التعلم الآلي، معالجة اللغة الطبيعية، الرؤية الحاسوبية، والروبوتات. التطبيقات تشمل السيارات ذاتية القيادة، المساعدات الصوتية، والتشخيص الطبي.' },
+    promptTemplate: (inputs) => `
+أنت خبير في استخراج المعلومات الأساسية من النصوص.
+استخرج أهم النقاط والمفاهيم الرئيسية من النص التالي بشكل منظم:
+"${inputs.text}"
+استخدم تنسيق نقاط (Bullet Points) مع عناوين فرعية.`
+  },
+  {
+    id: 'study_simplify',
+    categoryId: 'study',
+    title: 'تبسيط معلومة',
+    description: 'خذ أي معلومة معقدة واجعلها بسيطة مع أمثلة من الحياة اليومية.',
+    icon: 'Brain',
+    keywords: ['تبسيط', 'شرح', 'معلومة', 'أمثلة', 'simplify'],
+    tags: ['تعلم', 'شرح', 'تبسيط'],
+    inputs: [
+      { id: 'concept', label: 'المعلومة أو المفهوم المعقد', type: 'textarea', placeholder: 'ما هي المعلومة اللي عايز تشرحها؟' },
+      { id: 'audience', label: 'لمن تشرح؟', type: 'text', placeholder: 'مثلاً: طفل 10 سنوات، مبتدئ، شخص عادي...' }
+    ],
+    exampleInput: { concept: 'كيف تعمل البلوكشين والعملات الرقمية', audience: 'شخص عادي مالهوش علاقة بالتكنولوجيا' },
+    promptTemplate: (inputs) => `
+أنت معلم مبدع في تبسيط المعلومات.
+اشرح المفهوم التالي: "${inputs.concept}"
+الجمهور المستهدف: "${inputs.audience}"
+استخدم أمثلة من الحياة اليومية، تشبيهات بسيطة، وتجنب المصطلحات المعقدة.`
+  },
+  {
+    id: 'study_questions_answers',
+    categoryId: 'study',
+    title: 'أسئلة وأجوبة ذكية',
+    description: 'توليد أسئلة وأجوبة شاملة لأي موضوع للتحضير للامتحانات.',
+    icon: 'HelpCircle',
+    keywords: ['أسئلة وأجوبة', 'Q&A', 'مراجعة', 'امتحان'],
+    tags: ['تعلم', 'أسئلة', 'مراجعة'],
+    inputs: [
+      { id: 'subject', label: 'الموضوع الدراسي', type: 'textarea', placeholder: 'اكتب الموضوع أو الصق الملخص...' },
+      { id: 'count', label: 'عدد الأسئلة', type: 'number', placeholder: '10', defaultValue: '10' }
+    ],
+    exampleInput: { subject: 'الحرب العالمية الثانية - الأسباب والأحداث والنتائج', count: '8' },
+    promptTemplate: (inputs) => `
+أنت مدرس خبير في إعداد أسئلة المراجعة.
+اعمل ${inputs.count || 10} سؤال وجواب شاملين عن الموضوع التالي:
+"${inputs.subject}"
+الأسئلة متنوعة بين: معلوماتي، تحليلي، واستنتاجي.`
+  },
+  {
+    id: 'study_mind_map',
+    categoryId: 'study',
+    title: 'خريطة ذهنية',
+    description: 'حول أي موضوع لخريطة ذهنية منظمة تسهل الفهم والحفظ.',
+    icon: 'GitBranch',
+    keywords: ['خريطة ذهنية', 'mind map', 'تنظيم', 'أفكار'],
+    tags: ['تعلم', 'خرائط ذهنية', 'تنظيم'],
+    inputs: [
+      { id: 'topic', label: 'الموضوع المراد تحويله لخريطة ذهنية', type: 'textarea', placeholder: 'اكتب الموضوع الرئيسي...' }
+    ],
+    exampleInput: { topic: 'مكونات الحاسوب: المعالج، الذاكرة، القرص الصلب، الشاشة، اللوحة الأم، وحدات الإدخال والإخراج' },
+    promptTemplate: (inputs) => `
+أنت خبير في إنشاء الخرائط الذهنية (Mind Maps).
+حول الموضوع التالي لخريطة ذهنية منظمة ونصية:
+"${inputs.topic}"
+استخدم هيكلاً هرمياً واضحاً: الموضوع الرئيسي ← الفروع ← التفاصيل.`
+  },
+
+  // --- NEW CAREER TOOLS ---
+  {
+    id: 'career_cover_letter',
+    categoryId: 'career',
+    title: 'كتابة Cover Letter',
+    description: 'خطاب تقديم احترافي وجذاب لأي وظيفة.',
+    icon: 'FilePen',
+    keywords: ['cover letter', 'خطاب تقديم', 'وظيفة', 'تقدم'],
+    tags: ['وظائف', 'CV', 'تقديم'],
+    inputs: [
+      { id: 'position', label: 'الوظيفة المتقدم لها', type: 'text', placeholder: 'مثلاً: مهندس برمجيات' },
+      { id: 'company', label: 'اسم الشركة', type: 'text', placeholder: 'اسم الشركة' },
+      { id: 'skills', label: 'أهم مهاراتك', type: 'textarea', placeholder: 'اكتب مهاراتك وخبراتك...' }
+    ],
+    exampleInput: { position: 'محلل بيانات (Data Analyst)', company: 'شركة اتصالات مصر', skills: 'Excel متقدم، SQL، Python، Power BI، خبرة سنتين في تحليل البيانات' },
+    promptTemplate: (inputs) => `
+أنت خبير توظيف وكتابة خطابات تقديم.
+اكتب Cover Letter احترافي ومقنع لوظيفة: "${inputs.position}"
+في شركة: "${inputs.company}"
+المهارات: "${inputs.skills}"
+الخطاب باللغة العربية أو الإنجليزية حسب المطلوب، قصير ومؤثر.`
+  },
+  {
+    id: 'career_linkedin',
+    categoryId: 'career',
+    title: 'تحسين LinkedIn Bio',
+    description: 'صمم بروفايل LinkedIn احترافي يجذب مسؤولي التوظيف.',
+    icon: 'Linkedin',
+    keywords: ['linkedin', 'بروفايل', 'توظيف', 'سيرة ذاتية'],
+    tags: ['وظائف', 'LinkedIn', 'تسويق شخصي'],
+    inputs: [
+      { id: 'name', label: 'الاسم', type: 'text', placeholder: 'الاسم الكامل' },
+      { id: 'job', label: 'المسمى الوظيفي الحالي', type: 'text', placeholder: 'مثلاً: Frontend Developer' },
+      { id: 'experience', label: 'الخبرات والإنجازات', type: 'textarea', placeholder: 'اكتب خبراتك وإنجازاتك...' },
+      { id: 'goals', label: 'أهدافك المهنية', type: 'text', placeholder: 'مثلاً: البحث عن فرصة في شركة كبيرة' }
+    ],
+    exampleInput: { name: 'أحمد علي', job: 'Frontend Developer', experience: '3 سنوات في تطوير واجهات المستخدم باستخدام React و Next.js، عملت على 10 مشاريع كاملة', goals: 'الانتقال لشركة دولية أو العمل عن بعد' },
+    promptTemplate: (inputs) => `
+أنت مستشار توظيف وخبير LinkedIn.
+صمم بروفايل LinkedIn احترافي بناءً على:
+الاسم: "${inputs.name}"
+المسمى: "${inputs.job}"
+الخبرات: "${inputs.experience}"
+الأهداف: "${inputs.goals}"
+اكتب: عنوان احترافي، ملخص About، وخبرات منسقة.`
+  },
+  {
+    id: 'career_interview',
+    categoryId: 'career',
+    title: 'تحضير مقابلة عمل',
+    description: 'أسئلة متوقعة وإجابات نموذجية لأي مقابلة عمل.',
+    icon: 'UserRound',
+    keywords: ['مقابلة', 'interview', 'أسئلة', 'تحضير', 'وظيفة'],
+    tags: ['وظائف', 'مقابلات', 'تحضير'],
+    inputs: [
+      { id: 'position', label: 'الوظيفة', type: 'text', placeholder: 'مثلاً: Product Manager' },
+      { id: 'experience', label: 'سنوات الخبرة', type: 'text', placeholder: 'مثلاً: 3 سنوات' },
+      { id: 'industry', label: 'المجال', type: 'text', placeholder: 'مثلاً: التكنولوجيا المالية (Fintech)' }
+    ],
+    exampleInput: { position: 'Software Engineer', experience: 'سنتين', industry: 'E-commerce' },
+    promptTemplate: (inputs) => `
+أنت خبير توظيف وموارد بشرية.
+اعدد أسئلة متوقعة لمقابلة عمل لوظيفة: "${inputs.position}"
+خبرة: "${inputs.experience}"
+مجال: "${inputs.industry}"
+قدم 10 أسئلة مع إجابات نموذجية لكل سؤال، ونصائح للأداء.`
+  },
+  {
+    id: 'career_improve_cv',
+    categoryId: 'career',
+    title: 'تحسين CV موجود',
+    description: 'خذ سيرتك الذاتية الحالية واحصل على نصائح لتحسينها.',
+    icon: 'FileBadge',
+    keywords: ['CV', 'سيرة ذاتية', 'تحسين', 'تطوير', 'resume'],
+    tags: ['وظائف', 'CV', 'تطوير'],
+    inputs: [
+      { id: 'current_cv', label: 'محتوى CV الحالي', type: 'textarea', placeholder: 'الصق محتوى سيرتك الذاتية...' },
+      { id: 'target_job', label: 'الوظيفة المستهدفة', type: 'text', placeholder: 'مثلاً: Marketing Manager' }
+    ],
+    exampleInput: { current_cv: 'محمد أحمد - خبرة 5 سنوات في المبيعات - عملت في شركتين - مهارات: تفاوض، تواصل، قيادة', target_job: 'Sales Team Leader' },
+    promptTemplate: (inputs) => `
+أنت مستشار توظيف محترف.
+حلل السيرة الذاتية التالية وقدم نصائح لتحسينها:
+"${inputs.current_cv}"
+الوظيفة المستهدفة: "${inputs.target_job}"
+قدم: نقاط القوة، نقاط الضعف، نصائح محددة للتحسين.`
+  },
+  {
+    id: 'career_job_application',
+    categoryId: 'career',
+    title: 'رسالة تقديم على وظيفة',
+    description: 'رسالة تقديم قصيرة ومقنعة ترسل مع الـ CV.',
+    icon: 'Send',
+    keywords: ['تقديم', 'وظيفة', 'رسالة', 'طلب', 'job application'],
+    tags: ['وظائف', 'تقديم', 'رسائل'],
+    inputs: [
+      { id: 'position', label: 'الوظيفة', type: 'text', placeholder: 'المسمى الوظيفي' },
+      { id: 'company', label: 'الشركة', type: 'text', placeholder: 'اسم الشركة' },
+      { id: 'about', label: 'نبذة عنك', type: 'textarea', placeholder: 'اكتب نبذة قصيرة عن خبراتك...' }
+    ],
+    exampleInput: { position: 'Graphic Designer', company: 'شركة إعلانات كبرى', about: 'مصمم جرافيك بخبرة 4 سنوات، أتقن Adobe Suite، عملت مع 20+ عميل' },
+    promptTemplate: (inputs) => `
+أنت خبير في كتابة رسائل التقديم.
+اكتب رسالة تقديم قصيرة ومقنعة لوظيفة: "${inputs.position}"
+في شركة: "${inputs.company}"
+نبذة عني: "${inputs.about}"
+الرسالة تكون قصيرة، احترافية، وتظهر الحماس للانضمام.`
+  },
+
+  // --- NEW DAILY LIFE TOOLS ---
+  {
+    id: 'daily_weekly_plan',
+    categoryId: 'daily',
+    title: 'جدول أسبوعي منظم',
+    description: 'خطة أسبوعية كاملة تشمل المهام والمواعيد والأهداف.',
+    icon: 'CalendarRange',
+    keywords: ['أسبوعي', 'جدول', 'تخطيط', 'weekly', 'plan'],
+    tags: ['حياة يومية', 'تخطيط', 'تنظيم'],
+    inputs: [
+      { id: 'tasks', label: 'المهام والأهداف للأسبوع', type: 'textarea', placeholder: 'اكتب كل اللي عايز تعمله الأسبوع ده...' },
+      { id: 'priority', label: 'أهم أولوياتك', type: 'text', placeholder: 'مثلاً: الشغل، الدراسة، الصحة...' }
+    ],
+    exampleInput: { tasks: 'تسليم مشروع الشغل يوم الأربعاء، مذاكرة اختبار يوم الجمعة، جيم 3 أيام، مقابلة شخص يوم الاثنين', priority: 'تسليم المشروع أولاً' },
+    promptTemplate: (inputs) => `
+أنت منظم حياة محترف (Life Organizer).
+صمم جدولاً أسبوعياً منظماً بناءً على:
+المهام: "${inputs.tasks}"
+الأولويات: "${inputs.priority}"
+وزع المهام على أيام الأسبوع بطريقة متوازنة مع فترات راحة.`
+  },
+  {
+    id: 'daily_goals',
+    categoryId: 'daily',
+    title: 'قائمة أهداف ذكية',
+    description: 'حول أهدافك العامة لأهداف ذكية SMART قابلة للتحقيق.',
+    icon: 'Target',
+    keywords: ['أهداف', 'SMART', 'تخطيط', 'goals', 'تحقيق'],
+    tags: ['حياة يومية', 'أهداف', 'تطوير ذاتي'],
+    inputs: [
+      { id: 'goal', label: 'الهدف العام', type: 'text', placeholder: 'مثلاً: عايز أتعلم لغة جديدة' },
+      { id: 'timeframe', label: 'الإطار الزمني', type: 'text', placeholder: 'مثلاً: 3 شهور' }
+    ],
+    exampleInput: { goal: 'عايز أبدأ مشروع أونلاين وأكسب أول 1000 دولار', timeframe: '6 شهور' },
+    promptTemplate: (inputs) => `
+أنت مدرب تطوير ذاتي وخبير في تحديد الأهداف (SMART Goals).
+حول الهدف التالي: "${inputs.goal}"
+الإطار الزمني: "${inputs.timeframe}"
+إلى أهداف SMART (محددة، قابلة للقياس، قابلة للتحقيق، ذات صلة، محددة بوقت) مع خطة تنفيذ.`
+  },
+  {
+    id: 'daily_decisions',
+    categoryId: 'daily',
+    title: 'صانع القرارات',
+    description: 'حلل اختياراتك واحصل على توصية مدعومة بسبب واضح.',
+    icon: 'Scale',
+    keywords: ['قرار', 'اختيار', 'مقارنة', 'decision', 'choice'],
+    tags: ['حياة يومية', 'قرارات', 'تحليل'],
+    inputs: [
+      { id: 'options', label: 'الاختيارات المتاحة', type: 'textarea', placeholder: 'اكتب كل اختيار متاح...' },
+      { id: 'criteria', label: 'المعايير المهمة بالنسبة لك', type: 'text', placeholder: 'مثلاً: السعر، الجودة، الوقت، المسافة...' }
+    ],
+    exampleInput: { options: '1- شقة إيجار في وسط البلد 5000 جنيه. 2- شقة في ضاحية بعيدة 3000 جنيه. 3- مشاركة شقة مع زميل بـ 2500 جنيه.', criteria: 'أهم حاجة: قربها من الشغل، أقل تكلفة، وهدوء' },
+    promptTemplate: (inputs) => `
+أنت مستشار قرارات محايد ومحترف.
+حلل الاختيارات التالية: "${inputs.options}"
+المعايير المهمة: "${inputs.criteria}"
+قدم جدول مقارنة مع مميزات وعيوب كل اختيار، ثم توصية نهائية مع الأسباب.`
+  },
+
+  // --- NEW CODING TOOLS ---
+  {
+    id: 'coding_code_explainer',
+    categoryId: 'coding',
+    title: 'شارح كود',
+    description: 'افهم أي كود برمجي بشرح مبسط بالعربية.',
+    icon: 'FileCode',
+    keywords: ['كود', 'شرح', 'برمجة', 'code', 'explain', 'programming'],
+    tags: ['برمجة', 'كود', 'شرح'],
+    inputs: [
+      { id: 'code', label: 'الكود البرمجي', type: 'textarea', placeholder: 'الصق الكود هنا...' },
+      { id: 'language', label: 'لغة البرمجة', type: 'text', placeholder: 'مثلاً: Python, JavaScript, Java...' }
+    ],
+    exampleInput: { code: 'function fibonacci(n) { if (n <= 1) return n; return fibonacci(n-1) + fibonacci(n-2); }', language: 'JavaScript' },
+    promptTemplate: (inputs) => `
+أنت مبرمج خبير ومدرس برمجة.
+افهمني الكود التالي بلغة ${inputs.language}:
+"${inputs.code}"
+اشرح كل جزء بالعربية بطريقة بسيطة للمبتدئين.`
+  },
+  {
+    id: 'coding_error_solver',
+    categoryId: 'coding',
+    title: 'حل أخطاء برمجية',
+    description: 'الصق الخطأ البرمجي واحصل على تفسير وحل واضح.',
+    icon: 'Bug',
+    keywords: ['خطأ', 'error', 'bug', 'حل', 'برمجة'],
+    tags: ['برمجة', 'أخطاء', 'حلول'],
+    inputs: [
+      { id: 'error', label: 'رسالة الخطأ أو وصف المشكلة', type: 'textarea', placeholder: 'الصق رسالة الخطأ أو اشرح المشكلة...' },
+      { id: 'code_snippet', label: 'الكود المتعلق بالمشكلة', type: 'textarea', placeholder: 'الصق الكود اللي فيه المشكلة...' }
+    ],
+    exampleInput: { error: 'TypeError: Cannot read property "map" of undefined', code_snippet: 'const items = fetchData(); items.map(item => item.name);' },
+    promptTemplate: (inputs) => `
+أنت مبرمج خبير في حل الأخطاء البرمجية (Debugging Expert).
+حلل المشكلة التالية وقدم حلاً واضحاً:
+الخطأ: "${inputs.error}"
+الكود: "${inputs.code_snippet}"
+اشرح سبب الخطأ، ثم قدم الكود الصحيح مع شرح التغيير.`
+  },
+  {
+    id: 'coding_code_generator',
+    categoryId: 'coding',
+    title: 'مولد أكواد برمجية',
+    description: 'صف ما تريد فعله بالكود واحصل على كود جاهز.',
+    icon: 'Wand',
+    keywords: ['توليد', 'كود', 'برمجة', 'code generator', 'generate'],
+    tags: ['برمجة', 'توليد', 'كود'],
+    inputs: [
+      { id: 'request', label: 'صِف بالضبط إيه الكود اللي عايزه', type: 'textarea', placeholder: 'مثلاً: عايز دالة في بايثون تحسب متوسط قائمة أرقام...' },
+      { id: 'language', label: 'لغة البرمجة', type: 'text', placeholder: 'مثلاً: Python' }
+    ],
+    exampleInput: { request: 'دالة تأخذ تاريخ ميلاد وترجع العمر بالسنوات', language: 'JavaScript' },
+    promptTemplate: (inputs) => `
+أنت مبرمج محترف.
+اكتب كود بلغة ${inputs.language} للطلب التالي:
+"${inputs.request}"
+قدم الكود مع شرح بسيط وشروحات للاستخدام.`
+  },
+  {
+    id: 'coding_readme',
+    categoryId: 'coding',
+    title: 'كاتب README',
+    description: 'أنشئ ملف README احترافي لمشروعك البرمجي.',
+    icon: 'BookOpen',
+    keywords: ['readme', 'توثيق', 'مشروع', 'documentation', 'github'],
+    tags: ['برمجة', 'توثيق', 'GitHub'],
+    inputs: [
+      { id: 'project_name', label: 'اسم المشروع', type: 'text', placeholder: 'اسم المشروع' },
+      { id: 'description', label: 'وصف المشروع', type: 'textarea', placeholder: 'إيه المشروع ده وبيحل أي مشكلة؟' },
+      { id: 'tech_stack', label: 'التقنيات المستخدمة', type: 'text', placeholder: 'مثلاً: React, Node.js, MongoDB...' }
+    ],
+    exampleInput: { project_name: 'Task Manager API', description: 'REST API لإدارة المهام والمشاريع مع صلاحيات المستخدمين', tech_stack: 'Node.js, Express, MongoDB, JWT' },
+    promptTemplate: (inputs) => `
+أنت مطور ومتوثّق برمجيات محترف.
+اكتب ملف README احترافي باللغة العربية والإنجليزية لمشروع:
+الاسم: "${inputs.project_name}"
+الوصف: "${inputs.description}"
+التقنيات: "${inputs.tech_stack}"
+يشمل: المقدمة، المميزات، طرق التثبيت، الاستخدام، المساهمة.`
+  },
+  {
+    id: 'coding_project_structure',
+    categoryId: 'coding',
+    title: 'هيكلة مشروع برمجي',
+    description: 'اقتراح هيكل ملفات منظم لأي مشروع برمجي مع شرح كل مجلد.',
+    icon: 'FolderTree',
+    keywords: ['هيكلة', 'مشروع', 'structure', 'folders', 'تنظيم'],
+    tags: ['برمجة', 'هيكلة', 'مشاريع'],
+    inputs: [
+      { id: 'project_type', label: 'نوع المشروع', type: 'text', placeholder: 'مثلاً: Web App with React + Node.js' },
+      { id: 'features', label: 'المميزات الرئيسية', type: 'textarea', placeholder: 'المميزات اللي المشروع هيقدمها...' }
+    ],
+    exampleInput: { project_type: 'Full-stack E-commerce app (Next.js + PostgreSQL)', features: 'تسجيل دخول، سلة مشتريات، بحث، لوحة تحكم، مدفوعات أونلاين' },
+    promptTemplate: (inputs) => `
+أنت مهندس برمجيات خبير في هيكلة المشاريع.
+اقترح هيكل ملفات منظم ومتدرج (Directory Structure) لمشروع:
+النوع: "${inputs.project_type}"
+المميزات: "${inputs.features}"
+وكل مجلد اشرح وظيفته باختصار.`
+  },
+
+  // --- NEW MEDIA TOOLS (Images & Files - Frontend UI ready, backend API required) ---
+  {
+    id: 'media_image_analyzer',
+    categoryId: 'media',
+    title: 'تحليل الصور',
+    description: 'TODO: ارفع صورة واحصل على تحليل ذكي لمحتواها. (محتاج API رفع صور)',
+    icon: 'ImageUp',
+    keywords: ['صورة', 'تحليل', 'image', 'analysis', 'رفع'],
+    tags: ['صور', 'تحليل', 'ذكاء اصطناعي'],
+    isNew: true,
+    inputs: [
+      { id: 'image_url', label: 'رابط الصورة أو مسارها', type: 'text', placeholder: 'TODO: سيتم إضافة رفع الصور لاحقاً...' },
+      { id: 'question', label: 'إيه عايز تعرف عن الصورة؟', type: 'text', placeholder: 'مثلاً: إيه الموجود في الصورة دي؟' }
+    ],
+    exampleInput: { image_url: 'https://example.com/photo.jpg', question: 'وصف محتوى الصورة بالتفصيل' },
+    promptTemplate: (inputs) => `
+أنت محلل صور محترف.
+حلل الصورة التالية وأجب على السؤال: "${inputs.question}"
+رابط الصورة: "${inputs.image_url}"
+قدم وصفاً تفصيلياً وتحليلاً ذكياً.
+// TODO Future: Replace with actual image upload API with multimodal AI`
+  },
+  {
+    id: 'media_product_image',
+    categoryId: 'media',
+    title: 'وصف منتج من صورة',
+    description: 'TODO: ارفع صورة منتج واحصل على وصف تسويقي متكامل.',
+    icon: 'Package',
+    keywords: ['منتج', 'صورة', 'وصف', 'product', 'image'],
+    tags: ['صور', 'منتجات', 'تسويق'],
+    isNew: true,
+    inputs: [
+      { id: 'image_url', label: 'رابط صورة المنتج', type: 'text', placeholder: 'TODO: سيتم إضافة رفع الصور لاحقاً...' },
+      { id: 'product_name', label: 'اسم المنتج', type: 'text', placeholder: 'اسم المنتج' }
+    ],
+    exampleInput: { image_url: 'https://example.com/product.jpg', product_name: 'حذاء رياضي' },
+    promptTemplate: (inputs) => `
+أنت كاتب تسويقي محترف.
+اكتب وصف تسويقي جذاب للمنتج: "${inputs.product_name}"
+رابط الصورة: "${inputs.image_url}"
+// TODO Future: Implement image upload and analysis`
+  },
+  {
+    id: 'media_pdf_summarizer',
+    categoryId: 'media',
+    title: 'تلخيص ملفات PDF',
+    description: 'TODO: ارفع ملف PDF واحصل على ملخص ذكي لأهم النقاط.',
+    icon: 'FileText',
+    keywords: ['PDF', 'ملخص', 'ملف', 'تلخيص', 'document'],
+    tags: ['ملفات', 'PDF', 'تلخيص'],
+    isNew: true,
+    inputs: [
+      { id: 'text', label: 'الصق محتوى الملف أو النص', type: 'textarea', placeholder: 'انسخ محتوى الملف هنا...\nTODO: سيتم إضافة رفع الملفات لاحقاً' },
+      { id: 'detail', label: 'مستوى التفصيل', type: 'select', placeholder: 'اختر', options: [{ value: 'short', label: 'ملخص قصير' }, { value: 'detailed', label: 'ملخص مفصل' }], defaultValue: 'detailed' }
+    ],
+    exampleInput: { text: 'نص طويل عن التغير المناخي وأسبابه وتأثيراته على البيئة والمجتمع...', detail: 'short' },
+    promptTemplate: (inputs) => `
+أنت خبير في تلخيص المستندات.
+لخص النص التالي ${inputs.detail === 'short' ? 'في 3-5 نقاط' : 'بشكل مفصل مع النقاط الرئيسية'}:
+"${inputs.text}"
+// TODO Future: Implement file upload (PDF, DOCX, TXT) with text extraction`
+  },
+  {
+    id: 'media_file_analyzer',
+    categoryId: 'media',
+    title: 'تحليل ملفات',
+    description: 'TODO: ارفع أي ملف واستخرج أهم المعلومات والنقاط منه.',
+    icon: 'SearchCheck',
+    keywords: ['ملف', 'تحليل', 'مستند', 'file', 'analyze', 'extract'],
+    tags: ['ملفات', 'تحليل', 'استخراج'],
+    isNew: true,
+    inputs: [
+      { id: 'content', label: 'محتوى الملف', type: 'textarea', placeholder: 'الصق محتوى الملف هنا...\nTODO: رفع الملفات قيد التطوير' },
+      { id: 'extract_type', label: 'نوع الاستخراج', type: 'select', placeholder: 'عايز تستخرج إيه؟', options: [{ value: 'key_points', label: 'أهم النقاط' }, { value: 'summary', label: 'ملخص' }, { value: 'action_items', label: 'مهام وإجراءات' }], defaultValue: 'key_points' }
+    ],
+    exampleInput: { content: 'محضر اجتماع الشركة شهري فبراير 2026...', extract_type: 'action_items' },
+    promptTemplate: (inputs) => `
+أنت محلل مستندات محترف.
+حلل المحتوى التالي واستخرج منه ${inputs.extract_type === 'key_points' ? 'أهم النقاط' : inputs.extract_type === 'summary' ? 'ملخصاً شاملاً' : 'المهام والإجراءات المطلوبة'}:
+"${inputs.content}"
+// TODO Future: Implement file upload with drag-drop support`
+  },
+  {
+    id: 'media_screenshot',
+    categoryId: 'media',
+    title: 'تحليل Screenshot',
+    description: 'TODO: ارفع لقطة شاشة واحصل على شرح أو تحليل لمحتواها.',
+    icon: 'Camera',
+    keywords: ['screenshot', 'لقطة', 'شاشة', 'screen', 'capture'],
+    tags: ['صور', 'شاشة', 'تحليل'],
+    isNew: true,
+    inputs: [
+      { id: 'screenshot_url', label: 'رابط لقطة الشاشة', type: 'text', placeholder: 'TODO: سيتم إضافة رفع الصور قريباً' },
+      { id: 'context', label: 'إيه السياق أو المشكلة؟', type: 'textarea', placeholder: 'مثلاً: اللقطة دي من تطبيق والأبلكيشن معلق...' }
+    ],
+    exampleInput: { screenshot_url: 'https://example.com/screenshot.png', context: 'اللقطة دي من متصفح وفيها خطأ لا أعرف معناه' },
+    promptTemplate: (inputs) => `
+أنت خبير تحليل لقطات الشاشة.
+حلل لقطة الشاشة التالية وساعد المستخدم:
+السياق: "${inputs.context}"
+الرابط: "${inputs.screenshot_url}"
+// TODO Future: Implement screenshot upload with OCR and visual analysis`
   }
 ];
 

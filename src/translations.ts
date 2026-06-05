@@ -151,8 +151,75 @@ export interface TranslationDict {
   geminiKeyPlaceholder: string;
   openrouterKeyPlaceholder: string;
   pdfExtracting: string;
-  printGeneratedBy: string;
+    printGeneratedBy: string;
   printFooterText: string;
+  libraryNav: string;
+  workflowsNav: string;
+  communityNav: string;
+  libraryTitle: string;
+  libraryDesc: string;
+  emptyLibrary: string;
+  emptyLibraryDesc: string;
+  communityTools: string;
+  communityToolsDesc: string;
+  noCommunityTools: string;
+  noCommunityToolsDesc: string;
+  createTool: string;
+  createToolDesc: string;
+  createToolNav: string;
+  workflowsTitle: string;
+  workflowsDesc: string;
+  workflowNotFound: string;
+  workflowComplete: string;
+  workflowCompleteDesc: string;
+  generatedSuccessfully: string;
+  generatedResults: string;
+  startOver: string;
+  backToWorkflows: string;
+  estimatedTime: string;
+  basicInfo: string;
+  configuration: string;
+  preview: string;
+  toolName: string;
+  toolNamePlaceholder: string;
+  toolDesc: string;
+  toolDescPlaceholder: string;
+  promptTemplateLabel: string;
+  promptTemplateHint: string;
+  promptTemplatePlaceholder: string;
+  inputFields: string;
+  addField: string;
+  field: string;
+  fieldLabel: string;
+  fieldPlaceholder: string;
+  selectOptionsHint: string;
+  required: string;
+  tags: string;
+  tagsHint: string;
+  visibility: string;
+  untitledTool: string;
+  noDescription: string;
+  saving: string;
+  fillRequiredFields: string;
+  all: string;
+  savedResults: string;
+  recent: string;
+  popular: string;
+  uses: string;
+  useTool: string;
+  copied: string;
+  delete: string;
+  open: string;
+  back: string;
+  next: string;
+  finish: string;
+  reset: string;
+  generate: string;
+  generating: string;
+  noContent: string;
+  customToolsTitle: string;
+  backToHome: string;
+  exploreWorkflows: string;
 }
 
 export const translations: Record<Language, TranslationDict> = {
@@ -292,7 +359,74 @@ export const translations: Record<Language, TranslationDict> = {
     openrouterKeyPlaceholder: 'sk-or-v1-...',
     pdfExtracting: 'جاري استخراج النص...',
     printGeneratedBy: 'تم التصدير بواسطة AI Tools Hub - {date}',
-    printFooterText: 'تمت معالجة المستند وتصديره بواسطة الذكاء الاصطناعي © {year} جميع الحقوق محفوظة.'
+    printFooterText: 'تمت معالجة المستند وتصديره بواسطة الذكاء الاصطناعي © {year} جميع الحقوق محفوظة.',
+    libraryNav: 'المكتبة',
+    workflowsNav: 'الرحلات الذكية',
+    communityNav: 'المجتمع',
+    libraryTitle: 'المكتبة',
+    libraryDesc: 'كل نتائجك وأدواتك المخصصة ورحلاتك في مكان واحد',
+    emptyLibrary: 'مكتبتك فارغة',
+    emptyLibraryDesc: 'استخدم الأدوات وستظهر نتائجك هنا',
+    communityTools: 'أدوات المجتمع',
+    communityToolsDesc: 'أدوات مخصصة من مستخدمين آخرين، شارك واستفد',
+    noCommunityTools: 'لا توجد أدوات مجتمع بعد',
+    noCommunityToolsDesc: 'قم بإنشاء أداتك الخاصة وشاركها مع المجتمع!',
+    createTool: 'إنشاء أداة جديدة',
+    createToolDesc: 'اصنع أداتك الذكية المخصصة بخطوات بسيطة',
+    createToolNav: 'أداة جديدة',
+    workflowsTitle: 'الرحلات الذكية',
+    workflowsDesc: 'رحلات خطوة بخطوة لإنجاز مهامك المعقدة بذكاء',
+    workflowNotFound: 'الرحلة غير موجودة',
+    workflowComplete: 'أحسنت! الرحلة اكتملت 🎉',
+    workflowCompleteDesc: 'لقد أكملت جميع خطوات الرحلة بنجاح',
+    generatedSuccessfully: 'تم التوليد بنجاح',
+    generatedResults: 'النتائج المولدة',
+    startOver: 'ابدأ من جديد',
+    backToWorkflows: 'العودة للرحلات',
+    estimatedTime: 'الوقت المتوقع',
+    basicInfo: 'معلومات أساسية',
+    configuration: 'الإعدادات',
+    preview: 'مراجعة',
+    toolName: 'اسم الأداة',
+    toolNamePlaceholder: 'مثلاً: كاتب مقالات تسويقية',
+    toolDesc: 'الوصف',
+    toolDescPlaceholder: 'صف ما تفعله هذه الأداة...',
+    promptTemplateLabel: 'قالب الأمر (Prompt Template)',
+    promptTemplateHint: 'استخدم {اسم_الحقل} للإشارة للحقول',
+    promptTemplatePlaceholder: 'اكتب القالب هنا...',
+    inputFields: 'حقول الإدخال',
+    addField: 'إضافة حقل',
+    field: 'حقل',
+    fieldLabel: 'اسم الحقل',
+    fieldPlaceholder: 'نص توجيهي',
+    selectOptionsHint: 'قيمة|تسمية (كل سطر خيار)',
+    required: 'إجباري',
+    tags: 'الكلمات الدلالية',
+    tagsHint: 'كتابة, تسويق, إبداع (مفصولة بفاصلة)',
+    visibility: 'الرؤية',
+    untitledTool: 'أداة بدون اسم',
+    noDescription: 'لا يوجد وصف',
+    saving: 'جارٍ الحفظ...',
+    fillRequiredFields: 'يرجى تعبئة الحقول المطلوبة',
+    all: 'الكل',
+    savedResults: 'النتائج',
+    recent: 'الأحدث',
+    popular: 'الأكثر استخداماً',
+    uses: 'استخدام',
+    useTool: 'استخدم',
+    copied: 'تم النسخ ✓',
+    delete: 'حذف',
+    open: 'فتح',
+    back: 'السابق',
+    next: 'التالي',
+    finish: 'إنهاء',
+    reset: 'إعادة',
+    generate: 'توليد',
+    generating: 'جارٍ التوليد...',
+    noContent: 'لا يوجد محتوى',
+    customToolsTitle: 'الأدوات المخصصة',
+    backToHome: 'العودة للرئيسية',
+    exploreWorkflows: 'استكشف الرحلات'
   },
   en: {
     home: 'Home 🏠',
@@ -430,7 +564,74 @@ export const translations: Record<Language, TranslationDict> = {
     openrouterKeyPlaceholder: 'sk-or-v1-...',
     pdfExtracting: 'Extracting text from PDF...',
     printGeneratedBy: 'Generated by AI Tools Hub - {date}',
-    printFooterText: 'Processed and exported with AI © {year} All rights reserved.'
+    printFooterText: 'Processed and exported with AI © {year} All rights reserved.',
+    libraryNav: 'Library',
+    workflowsNav: 'Smart Workflows',
+    communityNav: 'Community',
+    libraryTitle: 'Library',
+    libraryDesc: 'All your saved results, custom tools, and workflows in one place',
+    emptyLibrary: 'Your library is empty',
+    emptyLibraryDesc: 'Use the tools and your results will appear here',
+    communityTools: 'Community Tools',
+    communityToolsDesc: 'Custom tools created by other users, share and benefit',
+    noCommunityTools: 'No community tools yet',
+    noCommunityToolsDesc: 'Create your own tool and share it with the community!',
+    createTool: 'Create New Tool',
+    createToolDesc: 'Build your custom AI tool in simple steps',
+    createToolNav: 'New Tool',
+    workflowsTitle: 'Smart Workflows',
+    workflowsDesc: 'Step-by-step journeys to accomplish complex tasks intelligently',
+    workflowNotFound: 'Workflow not found',
+    workflowComplete: 'Great job! Workflow complete 🎉',
+    workflowCompleteDesc: 'You have successfully completed all the workflow steps',
+    generatedSuccessfully: 'Generated successfully',
+    generatedResults: 'Generated results',
+    startOver: 'Start over',
+    backToWorkflows: 'Back to workflows',
+    estimatedTime: 'Estimated time',
+    basicInfo: 'Basic Info',
+    configuration: 'Configuration',
+    preview: 'Preview',
+    toolName: 'Tool Name',
+    toolNamePlaceholder: 'e.g., Marketing Article Writer',
+    toolDesc: 'Description',
+    toolDescPlaceholder: 'Describe what this tool does...',
+    promptTemplateLabel: 'Prompt Template',
+    promptTemplateHint: 'Use {field_name} to reference input fields',
+    promptTemplatePlaceholder: 'Write your template here...',
+    inputFields: 'Input Fields',
+    addField: 'Add Field',
+    field: 'Field',
+    fieldLabel: 'Field Label',
+    fieldPlaceholder: 'Placeholder text',
+    selectOptionsHint: 'value|label (one per line)',
+    required: 'Required',
+    tags: 'Tags',
+    tagsHint: 'writing, marketing, creative (comma separated)',
+    visibility: 'Visibility',
+    untitledTool: 'Untitled Tool',
+    noDescription: 'No description',
+    saving: 'Saving...',
+    fillRequiredFields: 'Please fill in required fields',
+    all: 'All',
+    savedResults: 'Results',
+    recent: 'Recent',
+    popular: 'Popular',
+    uses: 'uses',
+    useTool: 'Use',
+    copied: 'Copied ✓',
+    delete: 'Delete',
+    open: 'Open',
+    back: 'Back',
+    next: 'Next',
+    finish: 'Finish',
+    reset: 'Reset',
+    generate: 'Generate',
+    generating: 'Generating...',
+    noContent: 'No content',
+    customToolsTitle: 'Custom Tools',
+    backToHome: 'Back to Home',
+    exploreWorkflows: 'Explore Workflows'
   },
   de: {
     home: 'Startseite 🏠',
@@ -568,7 +769,74 @@ export const translations: Record<Language, TranslationDict> = {
     openrouterKeyPlaceholder: 'sk-or-v1-...',
     pdfExtracting: 'PDF-Text wird extrahiert...',
     printGeneratedBy: 'Generiert von AI Tools Hub - {date}',
-    printFooterText: 'Mit KI verarbeitet und exportiert © {year} Alle Rechte vorbehalten.'
+    printFooterText: 'Mit KI verarbeitet und exportiert © {year} Alle Rechte vorbehalten.',
+    libraryNav: 'Bibliothek',
+    workflowsNav: 'Workflows',
+    communityNav: 'Community',
+    libraryTitle: 'Bibliothek',
+    libraryDesc: 'Alle Ergebnisse, benutzerdefinierte Tools und Workflows an einem Ort',
+    emptyLibrary: 'Ihre Bibliothek ist leer',
+    emptyLibraryDesc: 'Nutzen Sie die Tools, Ihre Ergebnisse erscheinen hier',
+    communityTools: 'Community-Tools',
+    communityToolsDesc: 'Benutzerdefinierte Tools von anderen Nutzern',
+    noCommunityTools: 'Noch keine Community-Tools',
+    noCommunityToolsDesc: 'Erstellen Sie Ihr eigenes Tool und teilen Sie es!',
+    createTool: 'Neues Tool erstellen',
+    createToolDesc: 'Erstellen Sie Ihr KI-Tool in einfachen Schritten',
+    createToolNav: 'Neues Tool',
+    workflowsTitle: 'Smart Workflows',
+    workflowsDesc: 'Schritt-für-Schritt-Abläufe für komplexe Aufgaben',
+    workflowNotFound: 'Workflow nicht gefunden',
+    workflowComplete: 'Gut gemacht! Workflow abgeschlossen 🎉',
+    workflowCompleteDesc: 'Sie haben alle Schritte erfolgreich abgeschlossen',
+    generatedSuccessfully: 'Erfolgreich generiert',
+    generatedResults: 'Generierte Ergebnisse',
+    startOver: 'Neu starten',
+    backToWorkflows: 'Zurück zu Workflows',
+    estimatedTime: 'Geschätzte Zeit',
+    basicInfo: 'Grundinformationen',
+    configuration: 'Konfiguration',
+    preview: 'Vorschau',
+    toolName: 'Tool-Name',
+    toolNamePlaceholder: 'z.B. Marketing-Artikel-Schreiber',
+    toolDesc: 'Beschreibung',
+    toolDescPlaceholder: 'Beschreiben Sie, was dieses Tool tut...',
+    promptTemplateLabel: 'Prompt-Vorlage',
+    promptTemplateHint: 'Verwenden Sie {feldname} für Eingabefelder',
+    promptTemplatePlaceholder: 'Schreiben Sie Ihre Vorlage hier...',
+    inputFields: 'Eingabefelder',
+    addField: 'Feld hinzufügen',
+    field: 'Feld',
+    fieldLabel: 'Feldname',
+    fieldPlaceholder: 'Platzhaltertext',
+    selectOptionsHint: 'wert|bezeichnung (pro Zeile)',
+    required: 'Erforderlich',
+    tags: 'Schlagwörter',
+    tagsHint: 'schreiben, marketing, kreativ (kommagetrennt)',
+    visibility: 'Sichtbarkeit',
+    untitledTool: 'Unbenanntes Tool',
+    noDescription: 'Keine Beschreibung',
+    saving: 'Speichern...',
+    fillRequiredFields: 'Bitte füllen Sie die Pflichtfelder aus',
+    all: 'Alle',
+    savedResults: 'Ergebnisse',
+    recent: 'Neueste',
+    popular: 'Beliebt',
+    uses: 'Nutzungen',
+    useTool: 'Nutzen',
+    copied: 'Kopiert ✓',
+    delete: 'Löschen',
+    open: 'Öffnen',
+    back: 'Zurück',
+    next: 'Weiter',
+    finish: 'Abschließen',
+    reset: 'Zurücksetzen',
+    generate: 'Generieren',
+    generating: 'Generiere...',
+    noContent: 'Kein Inhalt',
+    customToolsTitle: 'Benutzerdefinierte Tools',
+    backToHome: 'Zurück zur Startseite',
+    exploreWorkflows: 'Workflows erkunden'
   },
   fr: {
     home: 'Accueil 🏠',
@@ -706,7 +974,74 @@ export const translations: Record<Language, TranslationDict> = {
     openrouterKeyPlaceholder: 'sk-or-v1-...',
     pdfExtracting: 'Extraction du texte PDF...',
     printGeneratedBy: 'Généré par AI Tools Hub - {date}',
-    printFooterText: 'Traité et exporté avec l\'IA © {year} Tous droits réservés.'
+    printFooterText: 'Traité et exporté avec l\'IA © {year} Tous droits réservés.',
+    libraryNav: 'Bibliothèque',
+    workflowsNav: 'Workflows',
+    communityNav: 'Communauté',
+    libraryTitle: 'Bibliothèque',
+    libraryDesc: 'Tous vos résultats, outils et workflows au même endroit',
+    emptyLibrary: 'Votre bibliothèque est vide',
+    emptyLibraryDesc: 'Utilisez les outils, vos résultats apparaîtront ici',
+    communityTools: 'Outils communautaires',
+    communityToolsDesc: 'Outils personnalisés créés par d\'autres utilisateurs',
+    noCommunityTools: 'Pas encore d\'outils communautaires',
+    noCommunityToolsDesc: 'Créez votre propre outil et partagez-le!',
+    createTool: 'Créer un outil',
+    createToolDesc: 'Créez votre outil IA en étapes simples',
+    createToolNav: 'Nouvel outil',
+    workflowsTitle: 'Workflows intelligents',
+    workflowsDesc: 'Parcours étape par étape pour des tâches complexes',
+    workflowNotFound: 'Workflow introuvable',
+    workflowComplete: 'Bravo! Workflow terminé 🎉',
+    workflowCompleteDesc: 'Vous avez terminé toutes les étapes avec succès',
+    generatedSuccessfully: 'Généré avec succès',
+    generatedResults: 'Résultats générés',
+    startOver: 'Recommencer',
+    backToWorkflows: 'Retour aux workflows',
+    estimatedTime: 'Temps estimé',
+    basicInfo: 'Infos de base',
+    configuration: 'Configuration',
+    preview: 'Aperçu',
+    toolName: 'Nom de l\'outil',
+    toolNamePlaceholder: 'ex: Rédacteur d\'articles marketing',
+    toolDesc: 'Description',
+    toolDescPlaceholder: 'Décrivez ce que fait cet outil...',
+    promptTemplateLabel: 'Modèle de prompt',
+    promptTemplateHint: 'Utilisez {nom_champ} pour les champs',
+    promptTemplatePlaceholder: 'Écrivez votre modèle ici...',
+    inputFields: 'Champs de saisie',
+    addField: 'Ajouter un champ',
+    field: 'Champ',
+    fieldLabel: 'Nom du champ',
+    fieldPlaceholder: 'Texte indicatif',
+    selectOptionsHint: 'valeur|étiquette (une par ligne)',
+    required: 'Requis',
+    tags: 'Mots-clés',
+    tagsHint: 'écriture, marketing, créatif (séparés par virgule)',
+    visibility: 'Visibilité',
+    untitledTool: 'Outil sans nom',
+    noDescription: 'Aucune description',
+    saving: 'Enregistrement...',
+    fillRequiredFields: 'Veuillez remplir les champs requis',
+    all: 'Tous',
+    savedResults: 'Résultats',
+    recent: 'Récents',
+    popular: 'Populaires',
+    uses: 'utilisations',
+    useTool: 'Utiliser',
+    copied: 'Copié ✓',
+    delete: 'Supprimer',
+    open: 'Ouvrir',
+    back: 'Retour',
+    next: 'Suivant',
+    finish: 'Terminer',
+    reset: 'Réinitialiser',
+    generate: 'Générer',
+    generating: 'Génération...',
+    noContent: 'Aucun contenu',
+    customToolsTitle: 'Outils personnalisés',
+    backToHome: 'Retour à l\'accueil',
+    exploreWorkflows: 'Explorer les workflows'
   },
   it: {
     home: 'Home 🏠',
@@ -844,6 +1179,73 @@ export const translations: Record<Language, TranslationDict> = {
     openrouterKeyPlaceholder: 'sk-or-v1-...',
     pdfExtracting: 'Estrazione testo PDF in corso...',
     printGeneratedBy: 'Generato da AI Tools Hub - {date}',
-    printFooterText: 'Elaborato ed esportato con l\'IA © {year} Tutti i diritti riservati.'
+    printFooterText: 'Elaborato ed esportato con l\'IA © {year} Tutti i diritti riservati.',
+    libraryNav: 'Biblioteca',
+    workflowsNav: 'Flussi di lavoro',
+    communityNav: 'Community',
+    libraryTitle: 'Biblioteca',
+    libraryDesc: 'Tutti i tuoi risultati, strumenti e flussi in un unico posto',
+    emptyLibrary: 'La tua biblioteca è vuota',
+    emptyLibraryDesc: 'Usa gli strumenti, i risultati appariranno qui',
+    communityTools: 'Strumenti della community',
+    communityToolsDesc: 'Strumenti personalizzati creati da altri utenti',
+    noCommunityTools: 'Ancora nessuno strumento',
+    noCommunityToolsDesc: 'Crea il tuo strumento e condividilo!',
+    createTool: 'Crea nuovo strumento',
+    createToolDesc: 'Crea il tuo strumento AI in semplici passi',
+    createToolNav: 'Nuovo strumento',
+    workflowsTitle: 'Flussi intelligenti',
+    workflowsDesc: 'Percorsi guidati per compiti complessi',
+    workflowNotFound: 'Flusso non trovato',
+    workflowComplete: 'Ottimo lavoro! Flusso completato 🎉',
+    workflowCompleteDesc: 'Hai completato con successo tutti i passaggi',
+    generatedSuccessfully: 'Generato con successo',
+    generatedResults: 'Risultati generati',
+    startOver: 'Ricominciare',
+    backToWorkflows: 'Torna ai flussi',
+    estimatedTime: 'Tempo stimato',
+    basicInfo: 'Informazioni base',
+    configuration: 'Configurazione',
+    preview: 'Anteprima',
+    toolName: 'Nome strumento',
+    toolNamePlaceholder: 'es: Scrittore articoli marketing',
+    toolDesc: 'Descrizione',
+    toolDescPlaceholder: 'Descrivi cosa fa questo strumento...',
+    promptTemplateLabel: 'Modello prompt',
+    promptTemplateHint: 'Usa {nome_campo} per i campi di input',
+    promptTemplatePlaceholder: 'Scrivi il tuo modello qui...',
+    inputFields: 'Campi di input',
+    addField: 'Aggiungi campo',
+    field: 'Campo',
+    fieldLabel: 'Nome campo',
+    fieldPlaceholder: 'Testo segnaposto',
+    selectOptionsHint: 'valore|etichetta (uno per riga)',
+    required: 'Obbligatorio',
+    tags: 'Tag',
+    tagsHint: 'scrittura, marketing, creativo (separati da virgola)',
+    visibility: 'Visibilità',
+    untitledTool: 'Strumento senza nome',
+    noDescription: 'Nessuna descrizione',
+    saving: 'Salvataggio...',
+    fillRequiredFields: 'Compila i campi obbligatori',
+    all: 'Tutti',
+    savedResults: 'Risultati',
+    recent: 'Recenti',
+    popular: 'Popolari',
+    uses: 'utilizzi',
+    useTool: 'Usa',
+    copied: 'Copiato ✓',
+    delete: 'Elimina',
+    open: 'Apri',
+    back: 'Indietro',
+    next: 'Avanti',
+    finish: 'Fine',
+    reset: 'Reimposta',
+    generate: 'Genera',
+    generating: 'Generazione...',
+    noContent: 'Nessun contenuto',
+    customToolsTitle: 'Strumenti personalizzati',
+    backToHome: 'Torna alla home',
+    exploreWorkflows: 'Esplora flussi'
   }
 };

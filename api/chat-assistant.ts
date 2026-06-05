@@ -6,7 +6,7 @@ export default async function handler(req: any, res: any) {
   }
 
   const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-  const { message, existingTools, customKey, language } = body || {};
+  const { message, existingTools, existingWorkflows, customKey, language } = body || {};
   const isArabic = language === 'ar';
 
   if (!message) {
@@ -29,7 +29,17 @@ export default async function handler(req: any, res: any) {
     ? existingTools.slice(0, 50).map((tool: any) => ({
         id: tool.id,
         title: tool.title,
-        description: tool.description
+        description: tool.description,
+        category: tool.categoryId || '',
+      }))
+    : [];
+
+  const formattedWorkflows = Array.isArray(existingWorkflows)
+    ? existingWorkflows.slice(0, 20).map((wf: any) => ({
+        id: wf.id,
+        title: wf.title,
+        description: wf.description,
+        category: wf.category || '',
       }))
     : [];
 
@@ -38,12 +48,6 @@ export default async function handler(req: any, res: any) {
       ? `أنت المساعد الذكي لمستخدمي منصة أدوات الذكاء الاصطناعي العربية. تواصل مع المستخدم باللغة العربية.`
       : `You are the AI assistant for the AI Tools Hub platform. Communicate with the user in ${language === 'en' ? 'English' : language === 'de' ? 'German' : language === 'fr' ? 'French' : language === 'it' ? 'Italian' : 'English'}.`;
 
-    const matchTitle = isArabic ? 'عنوان الأداة بالعربي' : 'Tool title';
-    const matchDesc = isArabic ? 'وصف الأداة' : 'Tool description';
-    const matchTopic = isArabic ? 'الموضوع' : 'Topic';
-    const matchPlaceholder = isArabic ? 'اكتب المطلوب هنا' : 'Enter your request here';
-    const matchExample = isArabic ? 'مثال عملي' : 'Practical example';
-    const matchPrompt = isArabic ? 'نفذ الطلب التالي باحتراف: {topic}' : 'Execute the following request professionally: {topic}';
     const matchExplanation = isArabic ? 'شرح قصير للمستخدم' : 'Short explanation for the user';
 
     const systemInstruction = `
@@ -51,44 +55,25 @@ ${langInstruction}
 
 Your task:
 - Understand the user's request.
-- If a suitable tool exists in existingTools, return JSON with action = "match".
-- If no suitable tool exists, design a new tool and return JSON with action = "create".
+- If a suitable tool exists in existingTools, return JSON with action = "chat".
+- Include suggested tools and workflows in your response.
+- If no tool exists and the user needs a custom one, set needCustomTool: true.
 
 Available tools:
 ${JSON.stringify(formattedTools)}
 
+Available workflows:
+${JSON.stringify(formattedWorkflows)}
+
 Return clean JSON only, no markdown.
 
-Match format:
+Response format:
 {
-  "action": "match",
+  "action": "chat",
   "explanation": "${matchExplanation}",
-  "toolId": "id of the matched tool"
-}
-
-Create format:
-{
-  "action": "create",
-  "explanation": "${matchExplanation}",
-  "newTool": {
-    "id": "unique_tool_id",
-    "categoryId": "study",
-    "title": "${matchTitle}",
-    "description": "${matchDesc}",
-    "icon": "Sparkles",
-    "inputs": [
-      {
-        "id": "topic",
-        "label": "${matchTopic}",
-        "type": "textarea",
-        "placeholder": "${matchPlaceholder}"
-      }
-    ],
-    "exampleInput": {
-      "topic": "${matchExample}"
-    },
-    "promptTemplateString": "${matchPrompt}"
-  }
+  "suggestedTools": [{ "toolId": "tool_id", "reason": "why this tool" }],
+  "suggestedWorkflows": [{ "workflowId": "wf_id", "reason": "why this workflow" }],
+  "needCustomTool": false
 }
 `;
 

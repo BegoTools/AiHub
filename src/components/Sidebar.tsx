@@ -8,7 +8,11 @@ import {
   Sun, 
   Moon, 
   Sparkles,
-  Search
+  Search,
+  Library,
+  Globe,
+  Workflow,
+  Plus
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -33,10 +37,16 @@ export default function Sidebar({
     { id: 'home', label: t.home, icon: Home },
     { id: 'chat', label: t.chatAssistant, icon: Sparkles },
     { id: 'categories', label: t.categories, icon: LayoutGrid },
+    { id: 'library', label: t.libraryNav || 'المكتبة', icon: Library },
+    { id: 'workflows', label: t.workflowsNav || 'الرحلات', icon: Workflow },
+    { id: 'community', label: t.communityNav || 'المجتمع', icon: Globe },
     { id: 'favorites', label: t.favorites, icon: Star, badge: favoritesCount > 0 ? favoritesCount : undefined },
     { id: 'history', label: t.history, icon: HistoryIcon },
     { id: 'settings', label: t.settings, icon: Settings },
   ];
+
+  // Create tool is handled separately
+  const handleCreateTool = () => setTab('create-tool');
 
   return (
     <>
@@ -84,6 +94,17 @@ export default function Sidebar({
             );
           })}
         </nav>
+
+        {/* Create Tool Button */}
+        <div className="px-4 py-2">
+          <button
+            onClick={handleCreateTool}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 cursor-pointer"
+          >
+            <Plus size={15} />
+            <span>{t.createToolNav || 'أداة جديدة'}</span>
+          </button>
+        </div>
 
         {/* Connection status section inside Sidebar (as shown in Design HTML) */}
         <div className="px-6 py-4">

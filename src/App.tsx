@@ -41,6 +41,11 @@ import ToolForm, { DynamicIcon } from './components/ToolForm';
 import OutputView from './components/OutputView';
 import Onboarding from './components/Onboarding';
 import AiChatAssistant from './components/AiChatAssistant';
+import LibraryPage from './pages/LibraryPage';
+import CommunityToolsPage from './pages/CommunityToolsPage';
+import CreateToolWizard from './pages/CreateToolWizard';
+import WorkflowRunner from './pages/WorkflowRunner';
+import { workflows } from './data/workflows';
 
 export default function App() {
   // Navigation & Screen states
@@ -134,6 +139,10 @@ export default function App() {
 
   // Mobile menu control
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // New pages state
+  const [showCreateTool, setShowCreateTool] = useState(false);
+  const [activeWorkflowId, setActiveWorkflowId] = useState<string | null>(null);
 
   // Load state from LocalStorage on mount
   useEffect(() => {
@@ -245,7 +254,30 @@ export default function App() {
     setCurrentToolOutput('');
     setGenerationError(null);
     setTab('tool');
-    // Save to recently used if not already the newest
+    setShowCreateTool(false);
+    setActiveWorkflowId(null);
+    setMobileMenuOpen(false);
+  };
+
+  const handleSetTab = (tab: string) => {
+    if (tab === 'create-tool') {
+      setShowCreateTool(true);
+      setTab('home');
+      setSelectedToolId(null);
+      setSelectedCategoryId(null);
+      setActiveWorkflowId(null);
+      setSearchQuery('');
+      setMobileMenuOpen(false);
+      return;
+    }
+    if (tab === 'workflows') {
+      setActiveWorkflowId(null);
+    }
+    setTab(tab);
+    setSelectedToolId(null);
+    setSelectedCategoryId(null);
+    setSearchQuery('');
+    setShowCreateTool(false);
     setMobileMenuOpen(false);
   };
 
@@ -351,12 +383,7 @@ export default function App() {
         {/* Core Sidebar Container */}
         <Sidebar 
           currentTab={currentTab} 
-          setTab={(tab) => {
-            setTab(tab);
-            setSelectedToolId(null);
-            setSelectedCategoryId(null);
-            setSearchQuery('');
-          }} 
+          setTab={handleSetTab}
           favoritesCount={favorites.length}
           theme={theme}
           toggleTheme={toggleTheme}
@@ -1023,13 +1050,91 @@ export default function App() {
 
     <AiChatAssistant
       allTools={allTools}
+      allWorkflows={workflows}
       settings={settings}
       onOpenTool={openTool}
+      onOpenWorkflow={(wfId) => { setActiveWorkflowId(wfId); setTab('workflows'); }}
       onAddCustomTool={handleAddCustomTool}
       language={language}
     />
   </div>
 )}
+
+            {/* --- TAB: LIBRARY PAGE --- */}
+            {currentTab === 'library' && (
+              <LibraryPage
+                t={t}
+                language={language}
+                onOpenTool={openTool}
+                onOpenWorkflow={(wfId) => { setActiveWorkflowId(wfId); setTab('workflows'); }}
+              />
+            )}
+
+            {/* --- TAB: WORKFLOWS PAGE --- */}
+            {currentTab === 'workflows' && !activeWorkflowId && (
+              <div className="space-y-6 animate-fade-in">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="font-extrabold text-xl text-slate-800 dark:text-zinc-100">{t.workflowsTitle}</h2>
+                    <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">{t.workflowsDesc}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {workflows.map((wf) => (
+                    <button
+                      key={wf.id}
+                      onClick={() => setActiveWorkflowId(wf.id)}
+                      className="p-5 bg-white dark:bg-[#18181b] border border-slate-200 dark:border-zinc-800 rounded-2xl hover:border-blue-500/40 hover:shadow-md transition-all text-right cursor-pointer group"
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2.5 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl group-hover:bg-purple-600 group-hover:text-white transition-all">
+                          <DynamicIcon name={wf.icon} size={18} />
+                        </div>
+                        <h4 className="font-bold text-sm text-slate-800 dark:text-zinc-100">{wf.title}</h4>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">{wf.description}</p>
+                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800">
+                        <span className="text-[10px] text-slate-400 dark:text-zinc-500">{wf.estimatedTime}</span>
+                        <span className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold">{wf.steps.length} خطوات</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* --- TAB: WORKFLOW RUNNER --- */}
+            {currentTab === 'workflows' && activeWorkflowId && (
+              <WorkflowRunner
+                workflowId={activeWorkflowId}
+                t={t}
+                language={language}
+                settings={settings}
+                onBack={() => setActiveWorkflowId(null)}
+              />
+            )}
+
+            {/* --- TAB: COMMUNITY TOOLS PAGE --- */}
+            {currentTab === 'community' && (
+              <CommunityToolsPage
+                t={t}
+                language={language}
+                onOpenTool={openTool}
+              />
+            )}
+
+            {/* --- TAB: CREATE TOOL WIZARD --- */}
+            {(showCreateTool || currentTab === 'create-tool') && (
+              <CreateToolWizard
+                t={t}
+                language={language}
+                onSuccess={() => { setShowCreateTool(false); setCustomTools(prev => {
+                  // Refresh custom tools from service
+                  return prev;
+                }); }}
+                onCancel={() => setShowCreateTool(false)}
+              />
+            )}
 
             {/* --- TAB 7: CONNECTION SETTINGS PAGE --- */}
             {currentTab === 'settings' && (
