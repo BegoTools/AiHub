@@ -35,6 +35,7 @@ import { createCustomTool } from './services/customToolsService';
 import { getUserSettings, upsertUserSettings } from './services/userSettingsService';
 import { languages, translations, Language } from './translations';
 
+import logoSrc from './assets/logo.png';
 import Sidebar from './components/Sidebar';
 import ToolForm, { DynamicIcon } from './components/ToolForm';
 import OutputView from './components/OutputView';
@@ -413,10 +414,8 @@ export default function App() {
           <header className="sticky top-0 z-40 bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800/85 px-3 sm:px-4 lg:px-6 py-3 lg:py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between transition-colors duration-300">
             <div className="flex items-center gap-3">
               <div className="lg:hidden flex items-center gap-2">
-                <div className="p-2 bg-blue-600 rounded-xl text-white shadow-sm">
-                  <Sparkles size={16} />
-                </div>
-                <h1 className="font-bold text-base text-slate-800 dark:text-zinc-100">{t.brandTitleMobile}</h1>
+                <img src={logoSrc} alt="AI HUB" className="w-8 h-8 object-contain rounded-lg" />
+                <h1 className="font-bold text-base text-slate-800 dark:text-zinc-100">{t.appTitle}</h1>
               </div>
 
               <div className="hidden lg:flex items-center gap-2 text-xs font-semibold text-slate-550 dark:text-zinc-500">
@@ -441,6 +440,24 @@ export default function App() {
             </div>
 
             <div className="flex items-center gap-4">
+              <div className="lg:hidden flex items-center">
+                {user ? (
+                  <button
+                    onClick={() => navigate('/settings')}
+                    className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold text-xs hover:bg-amber-400 transition-all cursor-pointer shrink-0"
+                    title={user.email || ''}
+                  >
+                    {(user.email?.[0] || 'U').toUpperCase()}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowAuthModal(true)}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 cursor-pointer whitespace-nowrap"
+                  >
+                    {t.signIn || 'تسجيل الدخول'}
+                  </button>
+                )}
+              </div>
               <div className="relative hidden md:block w-70">
                 <input
                   id="top-search-input"
