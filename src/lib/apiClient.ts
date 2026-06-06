@@ -1,4 +1,6 @@
-const DEFAULT_TIMEOUT = 30000; // 30 seconds
+import { supabase } from './supabaseClient';
+
+const DEFAULT_TIMEOUT = 30000;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 export interface ApiResponse<T = any> {
@@ -18,6 +20,14 @@ export class ApiError extends Error {
   }
 }
 
+async function getAuthHeaders(): Promise<Record<string, string>> {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.access_token) {
+    return { 'Authorization': `Bearer ${session.access_token}` };
+  }
+  return {};
+}
+
 async function request<T>(
   endpoint: string,
   options: RequestInit = {},
@@ -27,11 +37,13 @@ async function request<T>(
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
   try {
+    const authHeaders = await getAuthHeaders();
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders,
         ...options.headers,
       },
     });
@@ -75,9 +87,3 @@ export async function apiGet<T>(endpoint: string, timeout?: number): Promise<T> 
     method: 'GET',
   }, timeout);
 }
-
-// TODO Future Backend:
-// - Add auth token injection
-// - Add request retry logic
-// - Add response caching
-// - Support Supabase REST API directly

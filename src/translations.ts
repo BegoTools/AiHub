@@ -220,6 +220,25 @@ export interface TranslationDict {
   customToolsTitle: string;
   backToHome: string;
   exploreWorkflows: string;
+  signIn: string;
+  signUp: string;
+  signOut: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  createAccount: string;
+  noAccount: string;
+  haveAccount: string;
+  authError: string;
+  authSuccess: string;
+  loggingIn: string;
+  signingUp: string;
+  profile: string;
+  authModalTitle: string;
+  authModalSubtitle: string;
+  authLoginTitle: string;
+  authSignupTitle: string;
+  authEmailSent: string;
 }
 
 export const translations: Record<Language, TranslationDict> = {
@@ -426,7 +445,26 @@ export const translations: Record<Language, TranslationDict> = {
     noContent: 'لا يوجد محتوى',
     customToolsTitle: 'الأدوات المخصصة',
     backToHome: 'العودة للرئيسية',
-    exploreWorkflows: 'استكشف الرحلات'
+    exploreWorkflows: 'استكشف الرحلات',
+    signIn: 'تسجيل الدخول',
+    signUp: 'إنشاء حساب',
+    signOut: 'تسجيل الخروج',
+    email: 'البريد الإلكتروني',
+    password: 'كلمة المرور',
+    confirmPassword: 'تأكيد كلمة المرور',
+    createAccount: 'ليس لديك حساب؟',
+    haveAccount: 'لديك حساب بالفعل؟',
+    authError: 'حدث خطأ',
+    authSuccess: 'تم بنجاح',
+    loggingIn: 'جاري تسجيل الدخول...',
+    signingUp: 'جاري إنشاء الحساب...',
+    profile: 'الملف الشخصي',
+    authModalTitle: 'مرحباً بك في منصة الأدوات الذكية',
+    authModalSubtitle: 'سجل دخولك أو أنشئ حساباً جديداً لحفظ بياناتك ومزامنتها',
+    noAccount: 'ليس لديك حساب؟',
+    authLoginTitle: 'تسجيل الدخول',
+    authSignupTitle: 'إنشاء حساب جديد',
+    authEmailSent: 'تم إرسال رابط التأكيد إلى بريدك الإلكتروني'
   },
   en: {
     home: 'Home 🏠',
@@ -631,7 +669,26 @@ export const translations: Record<Language, TranslationDict> = {
     noContent: 'No content',
     customToolsTitle: 'Custom Tools',
     backToHome: 'Back to Home',
-    exploreWorkflows: 'Explore Workflows'
+    exploreWorkflows: 'Explore Workflows',
+    signIn: 'Sign In',
+    signUp: 'Sign Up',
+    signOut: 'Sign Out',
+    email: 'Email',
+    password: 'Password',
+    confirmPassword: 'Confirm Password',
+    createAccount: 'Create an account',
+    haveAccount: 'Already have an account?',
+    authError: 'An error occurred',
+    authSuccess: 'Success',
+    loggingIn: 'Signing in...',
+    signingUp: 'Creating account...',
+    profile: 'Profile',
+    authModalTitle: 'Welcome to AI Tools Hub',
+    authModalSubtitle: 'Sign in or create an account to save and sync your data',
+    noAccount: "Don't have an account?",
+    authLoginTitle: 'Sign In',
+    authSignupTitle: 'Create Account',
+    authEmailSent: 'Confirmation link sent to your email'
   },
   de: {
     home: 'Startseite 🏠',
@@ -836,7 +893,26 @@ export const translations: Record<Language, TranslationDict> = {
     noContent: 'Kein Inhalt',
     customToolsTitle: 'Benutzerdefinierte Tools',
     backToHome: 'Zurück zur Startseite',
-    exploreWorkflows: 'Workflows erkunden'
+    exploreWorkflows: 'Workflows erkunden',
+    signIn: 'Anmelden',
+    signUp: 'Registrieren',
+    signOut: 'Abmelden',
+    email: 'E-Mail',
+    password: 'Passwort',
+    confirmPassword: 'Passwort bestätigen',
+    createAccount: 'Konto erstellen',
+    haveAccount: 'Bereits ein Konto?',
+    authError: 'Ein Fehler ist aufgetreten',
+    authSuccess: 'Erfolgreich',
+    loggingIn: 'Anmeldung läuft...',
+    signingUp: 'Konto wird erstellt...',
+    profile: 'Profil',
+    authModalTitle: 'Willkommen bei AI Tools Hub',
+    authModalSubtitle: 'Melde dich an oder erstelle ein Konto, um deine Daten zu speichern',
+    noAccount: 'Kein Konto?',
+    authLoginTitle: 'Anmelden',
+    authSignupTitle: 'Konto erstellen',
+    authEmailSent: 'Bestätigungslink wurde an Ihre E-Mail gesendet'
   },
   fr: {
     home: 'Accueil 🏠',
@@ -1041,7 +1117,26 @@ export const translations: Record<Language, TranslationDict> = {
     noContent: 'Aucun contenu',
     customToolsTitle: 'Outils personnalisés',
     backToHome: 'Retour à l\'accueil',
-    exploreWorkflows: 'Explorer les workflows'
+    exploreWorkflows: 'Explorer les workflows',
+    signIn: 'Connexion',
+    signUp: "S'inscrire",
+    signOut: 'Déconnexion',
+    email: 'Email',
+    password: 'Mot de passe',
+    confirmPassword: 'Confirmer le mot de passe',
+    createAccount: 'Créer un compte',
+    haveAccount: 'Déjà un compte ?',
+    authError: 'Une erreur est survenue',
+    authSuccess: 'Succès',
+    loggingIn: 'Connexion en cours...',
+    signingUp: 'Création du compte...',
+    profile: 'Profil',
+    authModalTitle: 'Bienvenue sur AI Tools Hub',
+    authModalSubtitle: 'Connectez-vous ou créez un compte pour sauvegarder vos données',
+    noAccount: 'Pas de compte ?',
+    authLoginTitle: 'Connexion',
+    authSignupTitle: 'Créer un compte',
+    authEmailSent: 'Lien de confirmation envoyé à votre email'
   },
   it: {
     home: 'Home 🏠',
@@ -1246,6 +1341,25 @@ export const translations: Record<Language, TranslationDict> = {
     noContent: 'Nessun contenuto',
     customToolsTitle: 'Strumenti personalizzati',
     backToHome: 'Torna alla home',
-    exploreWorkflows: 'Esplora flussi'
+    exploreWorkflows: 'Esplora flussi',
+    signIn: 'Accedi',
+    signUp: 'Registrati',
+    signOut: 'Esci',
+    email: 'Email',
+    password: 'Password',
+    confirmPassword: 'Conferma password',
+    createAccount: 'Crea un account',
+    haveAccount: 'Hai già un account?',
+    authError: 'Si è verificato un errore',
+    authSuccess: 'Operazione riuscita',
+    loggingIn: 'Accesso in corso...',
+    signingUp: 'Creazione account...',
+    profile: 'Profilo',
+    authModalTitle: 'Benvenuto su AI Tools Hub',
+    authModalSubtitle: 'Accedi o crea un account per salvare i tuoi dati',
+    noAccount: 'Non hai un account?',
+    authLoginTitle: 'Accedi',
+    authSignupTitle: 'Crea account',
+    authEmailSent: 'Link di conferma inviato alla tua email'
   }
 };

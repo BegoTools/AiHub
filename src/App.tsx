@@ -41,6 +41,7 @@ import ToolForm, { DynamicIcon } from './components/ToolForm';
 import OutputView from './components/OutputView';
 import Onboarding from './components/Onboarding';
 import AiChatAssistant from './components/AiChatAssistant';
+import AuthModal from './components/AuthModal';
 import LibraryPage from './pages/LibraryPage';
 import CommunityToolsPage from './pages/CommunityToolsPage';
 import CreateToolWizard from './pages/CreateToolWizard';
@@ -52,6 +53,7 @@ export default function App() {
   const [currentTab, setTab] = useState<string>('home');
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   
   // Dynamic custom tools created by AI Assistant
   const [customTools, setCustomTools] = useState<Tool[]>(() => {
@@ -388,6 +390,7 @@ export default function App() {
           theme={theme}
           toggleTheme={toggleTheme}
           t={t}
+          onOpenAuth={() => setShowAuthModal(true)}
         />
 
         {/* Outer content display wrapper */}
@@ -1307,6 +1310,12 @@ export default function App() {
           </div>
 
         </main>
+        {/* Auth Modal */}
+        <AuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          t={t}
+        />
       </div>
     </div>
   );
