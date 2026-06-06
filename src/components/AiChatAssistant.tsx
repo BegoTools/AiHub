@@ -3,8 +3,9 @@ import {
   Sparkles, Send, MessageSquare, ArrowUpRight,
   Loader2, Copy, Check, Save, Plus,
   PanelLeftClose, PanelLeft, X, Wrench, Workflow as WorkflowIcon,
-  Bot, Clock, StopCircle
+  Bot, Clock, StopCircle, LogIn
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { Tool, ApiSettings } from '../types';
 import type { Workflow } from '../types/workflowTypes';
 import { DynamicIcon } from './ToolForm';
@@ -36,6 +37,7 @@ interface AiChatAssistantProps {
   onOpenWorkflow: (workflowId: string) => void;
   onAddCustomTool: (newTool: any) => void;
   language: string;
+  onOpenAuth?: (message: string) => void;
 }
 
 interface ChatMessage {
@@ -56,6 +58,7 @@ const chatTranslations: Record<string, {
   saveBtn: string; savedBtn: string; newChat: string; deleteChat: string;
   noSessions: string; stopBtn: string; headerTitle: string; headerSub: string;
   suggestionsTitle: string;
+  signIn: string; authLoginToContinue: string; authRequiredForChat: string;
 }> = {
   ar: {
     welcome: 'مرحباً بك في مساعد AI Hub الذكي 🤖\n\nأقدر أساعدك في:\n• استخدام أدوات المنصة المناسبة لطلبك\n• اقتراح رحلة عمل متكاملة\n• صناعة أداة مخصصة جديدة\n• الإجابة عن استفساراتك\n\nاختر مثال من الأسفل أو اكتب طلبك مباشرة!',
@@ -82,6 +85,9 @@ const chatTranslations: Record<string, {
     headerTitle: 'المساعد الذكي',
     headerSub: 'AI Hub Assistant',
     suggestionsTitle: 'اقتراحات سريعة',
+    signIn: 'تسجيل الدخول',
+    authLoginToContinue: 'تسجيل الدخول للمتابعة',
+    authRequiredForChat: 'سجل دخولك لاستخدام المساعد الذكي',
   },
   en: {
     welcome: 'Welcome to AI Hub Assistant 🤖\n\nI can help you with:\n• Using the right tools for your task\n• Suggesting a complete workflow\n• Creating a custom tool\n• Answering your questions\n\nChoose an example below or type your request!',
@@ -108,6 +114,9 @@ const chatTranslations: Record<string, {
     headerTitle: 'Smart Assistant',
     headerSub: 'AI Hub Assistant',
     suggestionsTitle: 'Quick Suggestions',
+    signIn: 'Sign In',
+    authLoginToContinue: 'Log in to continue',
+    authRequiredForChat: 'Please log in to use the AI assistant',
   },
   de: {
     welcome: 'Willkommen beim AI Hub Assistant 🤖\n\nIch kann Ihnen helfen bei:\n• Den richtigen Werkzeug für Ihre Aufgabe\n• Vorschlagen eines kompletten Workflows\n• Erstellen eines benutzerdefinierten Tools\n• Beantwortung Ihrer Fragen\n\nWählen Sie ein Beispiel unten oder geben Sie Ihre Anfrage ein!',
@@ -134,6 +143,9 @@ const chatTranslations: Record<string, {
     headerTitle: 'Intelligenter Assistent',
     headerSub: 'AI Hub Assistant',
     suggestionsTitle: 'Schnellvorschläge',
+    signIn: 'Anmelden',
+    authLoginToContinue: 'Weiter mit Anmeldung',
+    authRequiredForChat: 'Bitte melden Sie sich an, um den KI-Assistenten zu nutzen',
   },
   fr: {
     welcome: 'Bienvenue sur AI Hub Assistant 🤖\n\nJe peux vous aider avec :\n• Utiliser les bons outils pour votre tâche\n• Suggérer un workflow complet\n• Créer un outil personnalisé\n• Répondre à vos questions\n\nChoisissez un exemple ci-dessous ou tapez votre demande !',
@@ -160,6 +172,9 @@ const chatTranslations: Record<string, {
     headerTitle: 'Assistant Intelligent',
     headerSub: 'AI Hub Assistant',
     suggestionsTitle: 'Suggestions Rapides',
+    signIn: 'Connexion',
+    authLoginToContinue: 'Connectez-vous pour continuer',
+    authRequiredForChat: 'Connectez-vous pour utiliser l\'assistant IA',
   },
   it: {
     welcome: 'Benvenuto su AI Hub Assistant 🤖\n\nPosso aiutarti con:\n• Usare gli strumenti giusti per il tuo compito\n• Suggerire un flusso di lavoro completo\n• Creare uno strumento personalizzato\n• Rispondere alle tue domande\n\nScegli un esempio qui sotto o scrivi la tua richiesta!',
@@ -186,12 +201,15 @@ const chatTranslations: Record<string, {
     headerTitle: 'Assistente Intelligente',
     headerSub: 'AI Hub Assistant',
     suggestionsTitle: 'Suggerimenti Rapidi',
+    signIn: 'Accedi',
+    authLoginToContinue: 'Accedi per continuare',
+    authRequiredForChat: 'Accedi per utilizzare l\'assistente IA',
   },
 };
 
 export default function AiChatAssistant({
   allTools, allWorkflows, settings, onOpenTool,
-  onOpenWorkflow, onAddCustomTool, language
+  onOpenWorkflow, onAddCustomTool, language, onOpenAuth
 }: AiChatAssistantProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputVal, setInputVal] = useState('');
@@ -327,6 +345,7 @@ export default function AiChatAssistant({
 
   const handleSendMessage = async (textToSend: string) => {
     if (!textToSend.trim() || isLoading) return;
+    if (!user) { onOpenAuth?.(t.authRequiredForChat); return; }
 
     const userMsg: ChatMessage = {
       id: `user_${Date.now()}`,
@@ -541,6 +560,31 @@ export default function AiChatAssistant({
       handleSendMessage(inputVal);
     }
   };
+
+  const { user } = useAuth();
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="p-5 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 rounded-3xl mb-5">
+          <LogIn size={38} className="text-amber-500" />
+        </div>
+        <h3 className="font-extrabold text-lg text-slate-800 dark:text-zinc-100 mb-2">
+          {t.authLoginToContinue}
+        </h3>
+        <p className="text-sm text-slate-500 dark:text-zinc-400 mb-6 max-w-md">
+          {t.authRequiredForChat}
+        </p>
+        <button
+          onClick={() => onOpenAuth?.(t.authRequiredForChat)}
+          className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-white font-bold text-sm rounded-xl transition-all cursor-pointer flex items-center gap-2"
+        >
+          <LogIn size={16} />
+          <span>{t.signIn || 'Sign In'}</span>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={`flex gap-0 h-[calc(100vh-160px)] ${isRtl ? 'flex-row-reverse' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>

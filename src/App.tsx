@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useMemo } from 'react';
+import { useAuth } from './context/AuthContext';
 import { 
   Search, 
   Star, 
@@ -54,6 +55,9 @@ export default function App() {
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authGuardMessage, setAuthGuardMessage] = useState('');
+  const [pendingToolId, setPendingToolId] = useState<string | null>(null);
+  const { user } = useAuth();
   
   // Dynamic custom tools created by AI Assistant
   const [customTools, setCustomTools] = useState<Tool[]>(() => {
@@ -252,6 +256,12 @@ export default function App() {
 
   // Deep navigation helpers
   const openTool = (toolId: string) => {
+    if (!user) {
+      setAuthGuardMessage(t.authRequiredForTool);
+      setPendingToolId(toolId);
+      setShowAuthModal(true);
+      return;
+    }
     setSelectedToolId(toolId);
     setCurrentToolOutput('');
     setGenerationError(null);
@@ -260,6 +270,21 @@ export default function App() {
     setActiveWorkflowId(null);
     setMobileMenuOpen(false);
   };
+
+  // Auto-open pending tool after successful login
+  useEffect(() => {
+    if (user && pendingToolId) {
+      const id = pendingToolId;
+      setPendingToolId(null);
+      setSelectedToolId(id);
+      setCurrentToolOutput('');
+      setGenerationError(null);
+      setTab('tool');
+      setShowCreateTool(false);
+      setActiveWorkflowId(null);
+      setMobileMenuOpen(false);
+    }
+  }, [user]);
 
   const handleSetTab = (tab: string) => {
     if (tab === 'create-tool') {
@@ -1059,6 +1084,7 @@ export default function App() {
       onOpenWorkflow={(wfId) => { setActiveWorkflowId(wfId); setTab('workflows'); }}
       onAddCustomTool={handleAddCustomTool}
       language={language}
+      onOpenAuth={(msg) => { setAuthGuardMessage(msg); setShowAuthModal(true); }}
     />
   </div>
 )}
@@ -1313,8 +1339,9 @@ export default function App() {
         {/* Auth Modal */}
         <AuthModal
           isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
+          onClose={() => { setShowAuthModal(false); setAuthGuardMessage(''); }}
           t={t}
+          message={authGuardMessage}
         />
       </div>
     </div>

@@ -239,6 +239,10 @@ export interface TranslationDict {
   authLoginTitle: string;
   authSignupTitle: string;
   authEmailSent: string;
+  authRequiredForTool: string;
+  authRequiredForChat: string;
+  authCreateFreeAccount: string;
+  authLoginToContinue: string;
 }
 
 export const translations: Record<Language, TranslationDict> = {
@@ -464,7 +468,11 @@ export const translations: Record<Language, TranslationDict> = {
     noAccount: 'ليس لديك حساب؟',
     authLoginTitle: 'تسجيل الدخول',
     authSignupTitle: 'إنشاء حساب جديد',
-    authEmailSent: 'تم إرسال رابط التأكيد إلى بريدك الإلكتروني'
+    authEmailSent: 'تم إرسال رابط التأكيد إلى بريدك الإلكتروني',
+    authRequiredForTool: 'يجب تسجيل الدخول أولًا لاستخدام هذه الأداة',
+    authRequiredForChat: 'سجل دخولك لاستخدام المساعد الذكي',
+    authCreateFreeAccount: 'أنشئ حسابًا مجانيًا للمتابعة',
+    authLoginToContinue: 'تسجيل الدخول للمتابعة'
   },
   en: {
     home: 'Home 🏠',
@@ -688,7 +696,11 @@ export const translations: Record<Language, TranslationDict> = {
     noAccount: "Don't have an account?",
     authLoginTitle: 'Sign In',
     authSignupTitle: 'Create Account',
-    authEmailSent: 'Confirmation link sent to your email'
+    authEmailSent: 'Confirmation link sent to your email',
+    authRequiredForTool: 'You must log in first to use this tool',
+    authRequiredForChat: 'Please log in to use the AI assistant',
+    authCreateFreeAccount: 'Create a free account to continue',
+    authLoginToContinue: 'Log in to continue'
   },
   de: {
     home: 'Startseite 🏠',
@@ -912,7 +924,11 @@ export const translations: Record<Language, TranslationDict> = {
     noAccount: 'Kein Konto?',
     authLoginTitle: 'Anmelden',
     authSignupTitle: 'Konto erstellen',
-    authEmailSent: 'Bestätigungslink wurde an Ihre E-Mail gesendet'
+    authEmailSent: 'Bestätigungslink wurde an Ihre E-Mail gesendet',
+    authRequiredForTool: 'Sie müssen sich anmelden, um dieses Tool zu nutzen',
+    authRequiredForChat: 'Bitte melden Sie sich an, um den KI-Assistenten zu nutzen',
+    authCreateFreeAccount: 'Erstellen Sie ein kostenloses Konto',
+    authLoginToContinue: 'Weiter mit Anmeldung'
   },
   fr: {
     home: 'Accueil 🏠',
@@ -1136,7 +1152,11 @@ export const translations: Record<Language, TranslationDict> = {
     noAccount: 'Pas de compte ?',
     authLoginTitle: 'Connexion',
     authSignupTitle: 'Créer un compte',
-    authEmailSent: 'Lien de confirmation envoyé à votre email'
+    authEmailSent: 'Lien de confirmation envoyé à votre email',
+    authRequiredForTool: 'Vous devez vous connecter pour utiliser cet outil',
+    authRequiredForChat: 'Connectez-vous pour utiliser l\'assistant IA',
+    authCreateFreeAccount: 'Créez un compte gratuit pour continuer',
+    authLoginToContinue: 'Se connecter pour continuer'
   },
   it: {
     home: 'Home 🏠',
@@ -1360,6 +1380,10 @@ export const translations: Record<Language, TranslationDict> = {
     noAccount: 'Non hai un account?',
     authLoginTitle: 'Accedi',
     authSignupTitle: 'Crea account',
-    authEmailSent: 'Link di conferma inviato alla tua email'
+    authEmailSent: 'Link di conferma inviato alla tua email',
+    authRequiredForTool: 'Devi accedere prima di usare questo strumento',
+    authRequiredForChat: 'Accedi per utilizzare l\'assistente IA',
+    authCreateFreeAccount: 'Crea un account gratuito per continuare',
+    authLoginToContinue: 'Accedi per continuare'
   }
 };

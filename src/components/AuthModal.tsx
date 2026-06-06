@@ -7,11 +7,12 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   t: any;
+  message?: string;
 }
 
 type AuthView = 'login' | 'signup';
 
-export default function AuthModal({ isOpen, onClose, t }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProps) {
   const { signIn, signUp } = useAuth();
   const [view, setView] = useState<AuthView>('login');
   const [email, setEmail] = useState('');
@@ -102,6 +103,12 @@ export default function AuthModal({ isOpen, onClose, t }: AuthModalProps) {
                 {t.authModalSubtitle}
               </p>
             </div>
+
+            {message && (
+              <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl text-xs text-amber-700 dark:text-amber-300 mb-4 font-medium">
+                {message}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
