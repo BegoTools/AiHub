@@ -1,8 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from './context/AuthContext';
 import { 
@@ -29,14 +24,17 @@ import {
   LayoutGrid
 } from 'lucide-react';
 
-import { Category, Tool, HistoryItem, ApiSettings } from './types';
+import { Category, Tool, HistoryItem } from './types';
 import { tools as arabicTools } from './data/tools';
 import { getLocalizedTools, getLocalizedCategories } from './utils/localize-content';
-import { LOCAL_STORAGE_KEYS, DEFAULT_SETTINGS } from './config/apiConfig';
+import { LOCAL_STORAGE_KEYS } from './config/apiConfig';
 import { generateAIContent } from './services/aiService';
+import { getFavorites as loadFavoritesFromDB, toggleFavorite as toggleFavInDB } from './services/favoritesService';
+import { saveResult as saveResultToDB, deleteSavedResult, clearAllResults, getSavedResults } from './services/resultsService';
+import { createCustomTool } from './services/customToolsService';
+import { getUserSettings, upsertUserSettings } from './services/userSettingsService';
 import { languages, translations, Language } from './translations';
 
-// Component imports
 import Sidebar from './components/Sidebar';
 import ToolForm, { DynamicIcon } from './components/ToolForm';
 import OutputView from './components/OutputView';
@@ -50,69 +48,20 @@ import WorkflowRunner from './pages/WorkflowRunner';
 import { workflows } from './data/workflows';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
-import { checkAndMigrateStorage } from './utils/storageCleanup';
 
 export default function App() {
-  // Routing hooks
   const navigate = useNavigate();
   const location = useLocation();
   const pathParts = location.pathname.split('/').filter(Boolean);
   const currentRoute = pathParts[0] || 'home';
   const routeParam = pathParts[1] || null;
 
-  // Navigation & Screen states
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authGuardMessage, setAuthGuardMessage] = useState('');
   const [pendingToolId, setPendingToolId] = useState<string | null>(null);
   const { user } = useAuth();
-  
-  // Dynamic custom tools created by AI Assistant
-  const [customTools, setCustomTools] = useState<Tool[]>(() => {
-    const saved = localStorage.getItem('ai_hub_custom_tools');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return parsed.map((item: any) => ({
-          ...item,
-          promptTemplate: (inputs: Record<string, string>) => {
-            let template = item.promptTemplateString || '';
-            Object.keys(inputs).forEach(key => {
-              template = template.replace(new RegExp(`{${key}}`, 'g'), inputs[key]);
-            });
-            return template;
-          }
-        }));
-      } catch (e) {
-        console.error('Failed to parse custom tools', e);
-      }
-    }
-    return [];
-  });
 
-  const handleAddCustomTool = (newToolRaw: any) => {
-    if (arabicTools.some(t => t.id === newToolRaw.id) || customTools.some(t => t.id === newToolRaw.id)) {
-      return;
-    }
-
-    const newTool: Tool = {
-      ...newToolRaw,
-      promptTemplate: (inputs: Record<string, string>) => {
-        let template = newToolRaw.promptTemplateString || '';
-        Object.keys(inputs).forEach(key => {
-          template = template.replace(new RegExp(`{${key}}`, 'g'), inputs[key]);
-        });
-        return template;
-      }
-    };
-
-    const updated = [...customTools, newTool];
-    setCustomTools(updated);
-    try {
-      localStorage.setItem('ai_hub_custom_tools', JSON.stringify(updated.map(({ promptTemplate, ...rest }) => rest)));
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const [customTools, setCustomTools] = useState<Tool[]>([]);
 
   const [language, setLanguage] = useState<Language>(() => {
     const saved = localStorage.getItem('ai_hub_language');
@@ -126,13 +75,10 @@ export default function App() {
     return [...localizedTools, ...customTools];
   }, [localizedTools, customTools]);
 
-  // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Local Storage states
   const [favorites, setFavorites] = useState<string[]>([]);
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [settings, setSettings] = useState<ApiSettings>(DEFAULT_SETTINGS);
   const [theme, setTheme] = useState<'light' | 'dim' | 'dark'>('light');
   const [showOnboarding, setShowOnboarding] = useState(false);
 
@@ -141,75 +87,84 @@ export default function App() {
   }, [language]);
 
   useEffect(() => {
-    localStorage.setItem('ai_hub_language', language);
     document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
-  }, [language]);
+    if (user) {
+      upsertUserSettings(user.id, { language }).catch(() => {});
+    } else {
+      localStorage.setItem('ai_hub_language', language);
+    }
+  }, [language, user]);
 
-  // Active generation states
   const [currentToolOutput, setCurrentToolOutput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
 
-  // Mobile menu control
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // New pages state
   const [showCreateTool, setShowCreateTool] = useState(false);
   const [activeWorkflowId, setActiveWorkflowId] = useState<string | null>(null);
 
-  // Load state from LocalStorage on mount
+  // Load all user data from Supabase when auth state changes
   useEffect(() => {
-    // Check storage version and migrate/corrupt old data
-    checkAndMigrateStorage();
-
-    // Favorites
-const savedFavs = localStorage.getItem(LOCAL_STORAGE_KEYS.FAVORITES);
-if (savedFavs) {
-  try { const parsed = JSON.parse(savedFavs); if (Array.isArray(parsed)) setFavorites(parsed); } catch (e) { console.error(e); }
-}
-
-    // History
-const savedHistory = localStorage.getItem(LOCAL_STORAGE_KEYS.HISTORY);
-if (savedHistory) {
-  try { const parsed = JSON.parse(savedHistory); if (Array.isArray(parsed)) setHistory(parsed); } catch (e) { console.error(e); }
-}
-
-    // Settings
-    const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS);
-    if (savedSettings) {
-      try { setSettings(JSON.parse(savedSettings)); } catch (e) { console.error(e); }
-    }
-
-    // Theme
-    const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.THEME) as 'light' | 'dim' | 'dark' | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
+    if (user) {
+      loadUserData(user.id);
     } else {
-      // System selection fallback
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
-    }
+      setFavorites([]);
+      setHistory([]);
+      setCustomTools([]);
+      setShowOnboarding(false);
 
-    // Onboarding
-    const savedOnboarding = localStorage.getItem(LOCAL_STORAGE_KEYS.ONBOARDED);
-    if (!savedOnboarding) {
-      setShowOnboarding(true);
-    }
-  }, []);
+      const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.THEME) as 'light' | 'dim' | 'dark' | null;
+      if (savedTheme) setTheme(savedTheme);
+      else setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
-  // Sync theme to root DOM
+      const savedOnboarding = localStorage.getItem(LOCAL_STORAGE_KEYS.ONBOARDED);
+      if (!savedOnboarding) setShowOnboarding(true);
+    }
+  }, [user]);
+
+  async function loadUserData(userId: string) {
+    try {
+      const [settings, favs, results] = await Promise.all([
+        getUserSettings(userId),
+        loadFavoritesFromDB(),
+        getSavedResults(),
+      ]);
+
+      setLanguage(settings.language as Language || 'ar');
+      setTheme(settings.theme || 'dark');
+      if (!settings.onboarding_completed) setShowOnboarding(true);
+
+      setFavorites(favs);
+
+      const mappedHistory: HistoryItem[] = results.map(r => ({
+        id: r.id,
+        toolId: r.toolId || '',
+        inputs: r.metadata?.inputs || {},
+        output: r.content || '',
+        provider: r.metadata?.provider || 'gemini',
+        timestamp: r.createdAt,
+      }));
+      setHistory(mappedHistory);
+    } catch (e) {
+      console.error('[App] Failed to load user data:', e);
+    }
+  }
+
+  // Sync theme to DOM
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark', 'dim');
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else if (theme === 'dim') {
-      root.classList.add('dark', 'dim');
+    if (theme === 'dark') root.classList.add('dark');
+    else if (theme === 'dim') root.classList.add('dark', 'dim');
+    else root.classList.add('light');
+
+    if (user) {
+      upsertUserSettings(user.id, { theme }).catch(() => {});
     } else {
-      root.classList.add('light');
+      localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, theme);
     }
-    localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, theme);
-  }, [theme]);
+  }, [theme, user]);
 
   const toggleTheme = () => {
     setTheme(prev => {
@@ -220,36 +175,60 @@ if (savedHistory) {
   };
 
   const handleCompleteOnboarding = () => {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.ONBOARDED, 'true');
     setShowOnboarding(false);
-  };
-
-  // State savers
-  const saveFavorites = (newFavs: string[]) => {
-    setFavorites(newFavs);
-    localStorage.setItem(LOCAL_STORAGE_KEYS.FAVORITES, JSON.stringify(newFavs));
-  };
-
-  const saveHistory = (newHistory: HistoryItem[]) => {
-    setHistory(newHistory);
-    localStorage.setItem(LOCAL_STORAGE_KEYS.HISTORY, JSON.stringify(newHistory));
-  };
-
-  const handleSaveSettings = (updated: ApiSettings) => {
-    setSettings(updated);
-    localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify(updated));
-  };
-
-  // Star / Favorite Toggle
-  const toggleFavorite = (toolId: string) => {
-    if (favorites.includes(toolId)) {
-      saveFavorites(favorites.filter(id => id !== toolId));
+    if (user) {
+      upsertUserSettings(user.id, { onboarding_completed: true }).catch(() => {});
     } else {
-      saveFavorites([...favorites, toolId]);
+      localStorage.setItem(LOCAL_STORAGE_KEYS.ONBOARDED, 'true');
     }
   };
 
-  // Clear single items or total structures
+  const saveFavorites = async (newFavs: string[]) => {
+    setFavorites(newFavs);
+    if (!user) return;
+    const current = await loadFavoritesFromDB();
+    const toAdd = newFavs.filter(id => !current.includes(id));
+    const toRemove = current.filter(id => !newFavs.includes(id));
+    for (const id of toAdd) {
+      await toggleFavInDB(id);
+    }
+    for (const id of toRemove) {
+      await toggleFavInDB(id);
+    }
+  };
+
+  const saveHistory = async (newHistory: HistoryItem[]) => {
+    setHistory(newHistory);
+    if (!user) return;
+    const current = await getSavedResults();
+    const currentIds = current.map(r => r.id);
+    const newIds = newHistory.map(h => h.id);
+    const toAdd = newHistory.filter(h => !currentIds.includes(h.id));
+    const toRemove = current.filter(r => !newIds.includes(r.id));
+    for (const item of toRemove) {
+      await deleteSavedResult(item.id);
+    }
+    for (const item of toAdd) {
+      await saveResultToDB({
+        id: item.id,
+        title: `${allTools.find(t => t.id === item.toolId)?.title || 'أداة'} - ${new Date(item.timestamp).toLocaleDateString()}`,
+        toolId: item.toolId,
+        toolName: allTools.find(t => t.id === item.toolId)?.title || '',
+        content: item.output,
+        type: 'markdown',
+        isFavorite: false,
+        source: 'generation',
+        metadata: { inputs: item.inputs, provider: item.provider },
+      });
+    }
+  };
+
+  const toggleFavorite = async (toolId: string) => {
+    if (!user) return;
+    const { isFav, favorites: updated } = await toggleFavInDB(toolId);
+    setFavorites(updated);
+  };
+
   const handleClearHistory = () => {
     saveHistory([]);
   };
@@ -258,13 +237,47 @@ if (savedHistory) {
     saveHistory(history.filter(item => item.id !== id));
   };
 
-  // Find Tool details helper (from route)
+  const handleAddCustomTool = async (newToolRaw: any) => {
+    if (arabicTools.some(t => t.id === newToolRaw.id) || customTools.some(t => t.id === newToolRaw.id)) return;
+
+    const newTool: Tool = {
+      ...newToolRaw,
+      promptTemplate: (inputs: Record<string, string>) => {
+        let template = newToolRaw.promptTemplateString || '';
+        Object.keys(inputs).forEach(key => {
+          template = template.replace(new RegExp(`{${key}}`, 'g'), inputs[key]);
+        });
+        return template;
+      }
+    };
+
+    setCustomTools(prev => [...prev, newTool]);
+
+    if (user) {
+      try {
+        await createCustomTool({
+          id: newToolRaw.id,
+          title: newToolRaw.title || newToolRaw.id,
+          description: newToolRaw.description || '',
+          category: newToolRaw.categoryId || 'general',
+          icon: newToolRaw.icon || 'Sparkles',
+          visibility: 'private',
+          promptTemplateString: newToolRaw.promptTemplateString || '',
+          inputFields: newToolRaw.inputs || [],
+          tags: newToolRaw.tags || [],
+          ownerId: user.id,
+        });
+      } catch (e) {
+        console.error('[App] Failed to save custom tool:', e);
+      }
+    }
+  };
+
   const activeTool = useMemo(() => {
     if (currentRoute !== 'tools' || !routeParam) return null;
     return allTools.find(t => t.id === routeParam) || null;
   }, [currentRoute, routeParam, allTools]);
 
-  // Deep navigation helpers
   const openTool = (toolId: string) => {
     if (!user) {
       setAuthGuardMessage(t.authRequiredForTool);
@@ -280,7 +293,6 @@ if (savedHistory) {
     navigate('/tools/' + toolId);
   };
 
-  // Auto-open pending tool after successful login
   useEffect(() => {
     if (user && pendingToolId) {
       const id = pendingToolId;
@@ -299,16 +311,11 @@ if (savedHistory) {
     setShowCreateTool(false);
     setActiveWorkflowId(null);
     setMobileMenuOpen(false);
-    if (tab === 'create-tool') {
-      navigate('/create-tool');
-    } else if (tab === 'home') {
-      navigate('/home');
-    } else {
-      navigate(`/${tab}`);
-    }
+    if (tab === 'create-tool') navigate('/create-tool');
+    else if (tab === 'home') navigate('/home');
+    else navigate(`/${tab}`);
   };
 
-  // Handle generation action
   const handleGenerate = async (inputs: Record<string, string>) => {
     if (!activeTool) return;
     setIsGenerating(true);
@@ -316,26 +323,20 @@ if (savedHistory) {
     setCurrentToolOutput('');
 
     try {
-      // Build prompt from template
       const fullPrompt = activeTool.promptTemplate(inputs);
-      
-      // Execute API call
-      const textResult = await generateAIContent(fullPrompt, settings);
-      
+      const textResult = await generateAIContent(fullPrompt);
       setCurrentToolOutput(textResult);
 
-      // Auto-save this output as a dynamic history record
       const newHistoryItem: HistoryItem = {
         id: `hist_${Date.now()}`,
         toolId: activeTool.id,
         inputs: inputs,
         output: textResult,
-        provider: settings.provider,
+        provider: 'gemini',
         timestamp: new Date().toISOString()
       };
 
       saveHistory([newHistoryItem, ...history]);
-
     } catch (err: any) {
       console.error(err);
       setGenerationError(err.message || t.errorOccurred);
@@ -346,7 +347,6 @@ if (savedHistory) {
 
   const saveManualResultToHistory = () => {
     if (!activeTool || !currentToolOutput) return;
-    // Manual saving trigger for UI feedback
     const existItemIndex = history.findIndex(h => h.toolId === activeTool.id && h.output === currentToolOutput);
     if (existItemIndex === -1) {
       const newHistoryItem: HistoryItem = {
@@ -354,14 +354,13 @@ if (savedHistory) {
         toolId: activeTool.id,
         inputs: {},
         output: currentToolOutput,
-        provider: settings.provider,
+        provider: 'gemini',
         timestamp: new Date().toISOString()
       };
       saveHistory([newHistoryItem, ...history]);
     }
   };
 
-  // Search Engine Filtration
   const filteredTools = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const query = searchQuery.toLowerCase().trim();
@@ -376,14 +375,10 @@ if (savedHistory) {
     return localizedCategories.find(c => c.id === routeParam) || null;
   }, [currentRoute, routeParam, localizedCategories]);
 
-  // General statistics
   const recentToolsUsed = useMemo(() => {
-    // Extract unique tool IDs from history to find recently used
     const uniqueIds: string[] = [];
     history.forEach(item => {
-      if (!uniqueIds.includes(item.toolId)) {
-        uniqueIds.push(item.toolId);
-      }
+      if (!uniqueIds.includes(item.toolId)) uniqueIds.push(item.toolId);
     });
     return uniqueIds.slice(0, 4).map(id => allTools.find(t => t.id === id)).filter(Boolean) as Tool[];
   }, [history, allTools]);
@@ -391,12 +386,10 @@ if (savedHistory) {
   return (
     <div className="min-h-dvh bg-slate-50 dark:bg-[#09090b] text-slate-800 dark:text-zinc-100 font-sans transition-all duration-300 pb-20 lg:pb-0 overflow-x-hidden">
       
-      {/* Onboarding Overlay Screen */}
       {showOnboarding && <Onboarding onComplete={handleCompleteOnboarding} t={t} />}
 
       <div className="flex min-h-dvh lg:h-screen overflow-x-hidden lg:overflow-hidden relative">
         
-        {/* Core Sidebar Container */}
         <Sidebar 
           currentTab={currentRoute === 'create-tool' ? 'home' : (currentRoute === '' ? 'home' : currentRoute)}
           setTab={navigateToTab}
@@ -407,13 +400,10 @@ if (savedHistory) {
           onOpenAuth={() => setShowAuthModal(true)}
         />
 
-        {/* Outer content display wrapper */}
         <main className="flex-1 flex flex-col min-w-0 h-full overflow-y-auto overflow-x-hidden relative bg-slate-50 dark:bg-[#09090b] transition-colors duration-300 pb-20 lg:pb-0">
           
-          {/* Main Top Navbar */}
           <header className="sticky top-0 z-40 bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800/85 px-3 sm:px-4 lg:px-6 py-3 lg:py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between transition-colors duration-300">
             <div className="flex items-center gap-3">
-              {/* Logo / Brand on mobile header */}
               <div className="lg:hidden flex items-center gap-2">
                 <div className="p-2 bg-blue-600 rounded-xl text-white shadow-sm">
                   <Sparkles size={16} />
@@ -421,7 +411,6 @@ if (savedHistory) {
                 <h1 className="font-bold text-base text-slate-800 dark:text-zinc-100">{t.brandTitleMobile}</h1>
               </div>
 
-              {/* Breadcrumbs for deep navigation */}
               <div className="hidden lg:flex items-center gap-2 text-xs font-semibold text-slate-550 dark:text-zinc-500">
                 <span className="hover:text-slate-800 dark:hover:text-zinc-300 cursor-pointer" onClick={() => { navigate('/home'); setSearchQuery(''); }}>{t.breadcrumbHome}</span>
                 {currentRoute === 'categories' && routeParam && activeCategoryDetails && (
@@ -443,7 +432,6 @@ if (savedHistory) {
               </div>
             </div>
 
-            {/* Quick Global Search Bar */}
             <div className="flex items-center gap-4">
               <div className="relative hidden md:block w-70">
                 <input
@@ -457,7 +445,6 @@ if (savedHistory) {
                 <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500" />
               </div>
 
-              {/* Multilingual Selector with flags */}
               <div id="language-switcher-group" className="flex items-center bg-slate-200/60 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800/80 p-0.5 rounded-2xl gap-0.5">
                 {languages.map((lang) => (
                   <button
@@ -477,7 +464,6 @@ if (savedHistory) {
                 ))}
               </div>
 
-              {/* Dedicated explicit theme switcher button group */}
               <div className="flex items-center bg-slate-200/60 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800/80 p-0.5 rounded-2xl gap-0.5">
                 <button
                   id="theme-select-light"
@@ -529,7 +515,6 @@ if (savedHistory) {
 
           <div id="main-content-layout-container" className="flex-1 p-6 lg:p-8 space-y-8 max-w-7xl mx-auto w-full">
 
-                {/* ERROR HANDLER TOAST BAR */}
             {generationError && (
               <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl flex items-start gap-3 shadow-sm animate-shake">
                 <ShieldAlert className="shrink-0 mt-0.5 text-rose-500" />
@@ -540,7 +525,6 @@ if (savedHistory) {
               </div>
             )}
 
-            {/* SEARCH RESULTS VIEW OVERLAY */}
             {searchQuery.trim() !== '' && (
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-4">
@@ -581,7 +565,6 @@ if (savedHistory) {
               </div>
             )}
 
-            {/* ROUTE PAGES */}
             <AppRoutes
               t={t}
               language={language}
@@ -600,8 +583,6 @@ if (savedHistory) {
               isGenerating={isGenerating}
               saveManualResultToHistory={saveManualResultToHistory}
               workflows={workflows}
-              settings={settings}
-              handleSaveSettings={handleSaveSettings}
               onAddCustomTool={handleAddCustomTool}
               onOpenAuth={(msg) => { setAuthGuardMessage(msg); setShowAuthModal(true); }}
             />
@@ -609,7 +590,6 @@ if (savedHistory) {
           </div>
 
         </main>
-        {/* Auth Modal */}
         <AuthModal
           isOpen={showAuthModal}
           onClose={() => { setShowAuthModal(false); setAuthGuardMessage(''); }}

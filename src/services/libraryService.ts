@@ -59,8 +59,3 @@ export async function getLibraryData(): Promise<LibraryAggregate> {
     recentItems: allItems.slice(0, 20),
   };
 }
-
-// TODO Future Backend:
-// - Replace localStorageAdapter with Supabase adapter
-// - Add database queries for each section
-// - Add pagination for large libraries

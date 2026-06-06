@@ -1,49 +1,79 @@
-import { localStorageAdapter } from './storage/localStorageAdapter';
-
-const STORAGE_KEY = 'ai_tools_hub_favorites';
+import { supabase } from '../lib/supabaseClient';
 
 export async function getFavorites(): Promise<string[]> {
-  const favs = await localStorageAdapter.getItem<string[]>(STORAGE_KEY);
-  return Array.isArray(favs) ? favs : [];
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data } = await supabase
+    .from('favorites')
+    .select('item_id')
+    .eq('user_id', user.id);
+
+  return (data || []).map(f => f.item_id);
 }
 
 export async function addFavorite(toolId: string): Promise<string[]> {
-  const favs = await getFavorites();
-  if (!favs.includes(toolId)) {
-    favs.push(toolId);
-    await localStorageAdapter.setItem(STORAGE_KEY, favs);
-  }
-  return favs;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  await supabase
+    .from('favorites')
+    .insert({ user_id: user.id, item_id: toolId, item_type: 'tool' })
+    .maybeSingle();
+
+  return getFavorites();
 }
 
 export async function removeFavorite(toolId: string): Promise<string[]> {
-  const favs = await getFavorites();
-  const filtered = favs.filter(id => id !== toolId);
-  if (filtered.length !== favs.length) {
-    await localStorageAdapter.setItem(STORAGE_KEY, filtered);
-  }
-  return filtered;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  await supabase
+    .from('favorites')
+    .delete()
+    .eq('user_id', user.id)
+    .eq('item_id', toolId);
+
+  return getFavorites();
 }
 
 export async function isFavorite(toolId: string): Promise<boolean> {
-  const favs = await getFavorites();
-  return favs.includes(toolId);
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { data } = await supabase
+    .from('favorites')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('item_id', toolId)
+    .single();
+
+  return !!data;
 }
 
 export async function toggleFavorite(toolId: string): Promise<{ isFav: boolean; favorites: string[] }> {
-  const favs = await getFavorites();
-  if (favs.includes(toolId)) {
-    const updated = favs.filter(id => id !== toolId);
-    await localStorageAdapter.setItem(STORAGE_KEY, updated);
-    return { isFav: false, favorites: updated };
-  } else {
-    favs.push(toolId);
-    await localStorageAdapter.setItem(STORAGE_KEY, favs);
-    return { isFav: true, favorites: favs };
-  }
-}
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { isFav: false, favorites: [] };
 
-// TODO Future Backend:
-// - Replace localStorageAdapter with Supabase adapter
-// - Add favorites table with user_id and item_type
-// - Add unique constraint on (user_id, item_id)
+  const { data: existing } = await supabase
+    .from('favorites')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('item_id', toolId)
+    .single();
+
+  if (existing) {
+    await supabase
+      .from('favorites')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('item_id', toolId);
+  } else {
+    await supabase
+      .from('favorites')
+      .insert({ user_id: user.id, item_id: toolId, item_type: 'tool' });
+  }
+
+  const updated = await getFavorites();
+  return { isFav: !existing, favorites: updated };
+}

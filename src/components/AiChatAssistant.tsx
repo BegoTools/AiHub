@@ -6,7 +6,7 @@ import {
   Bot, Clock, StopCircle, LogIn
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { Tool, ApiSettings } from '../types';
+import { Tool } from '../types';
 import type { Workflow } from '../types/workflowTypes';
 import { DynamicIcon } from './ToolForm';
 import { analyzeIntent, getSuggestionsForResponse, ScoredItem } from '../lib/intentRouter';
@@ -32,7 +32,6 @@ interface ChatApiResponse {
 interface AiChatAssistantProps {
   allTools: Tool[];
   allWorkflows: Workflow[];
-  settings: ApiSettings;
   onOpenTool: (toolId: string) => void;
   onOpenWorkflow: (workflowId: string) => void;
   onAddCustomTool: (newTool: any) => void;
@@ -208,7 +207,7 @@ const chatTranslations: Record<string, {
 };
 
 export default function AiChatAssistant({
-  allTools, allWorkflows, settings, onOpenTool,
+  allTools, allWorkflows, onOpenTool,
   onOpenWorkflow, onAddCustomTool, language, onOpenAuth
 }: AiChatAssistantProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -419,9 +418,6 @@ export default function AiChatAssistant({
             message: textToSend,
             existingTools: allTools,
             existingWorkflows: allWorkflows,
-            customKey: settings.useCustomKeys
-              ? (settings.provider === 'gemini' ? settings.geminiKey : settings.openRouterKey)
-              : undefined,
             language,
           }, 30000);
 
@@ -474,9 +470,6 @@ export default function AiChatAssistant({
           message: textToSend,
           existingTools: allTools,
           existingWorkflows: allWorkflows,
-          customKey: settings.useCustomKeys
-            ? (settings.provider === 'gemini' ? settings.geminiKey : settings.openRouterKey)
-            : undefined,
           language,
         }, 30000);
 

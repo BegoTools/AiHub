@@ -15,11 +15,10 @@ interface WorkflowRunnerProps {
   workflowId?: string | null;
   t: any;
   language: string;
-  settings: any;
   onBack: () => void;
 }
 
-export default function WorkflowRunner({ workflowId: propWorkflowId, t, language, settings, onBack }: WorkflowRunnerProps) {
+export default function WorkflowRunner({ workflowId: propWorkflowId, t, language, onBack }: WorkflowRunnerProps) {
   const { workflowId: paramWorkflowId } = useParams<{ workflowId: string }>();
   const workflowId = propWorkflowId || paramWorkflowId || null;
   const [workflow, setWorkflow] = useState<Workflow | null>(null);
@@ -94,7 +93,7 @@ export default function WorkflowRunner({ workflowId: propWorkflowId, t, language
         Object.entries(allData).forEach(([key, val]) => {
           template = template.replace(new RegExp(`{{${key}}}`, 'g'), val);
         });
-        const result = await generateAIContent(template, settings);
+        const result = await generateAIContent(template);
         setGeneratedOutputs(prev => ({ ...prev, [currentStep.id]: result }));
         setCollectedData(prev => ({ ...prev, ...allData }));
         markComplete();

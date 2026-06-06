@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabaseClient';
+import { migrateFromLocalStorage } from '../utils/migrateLocalData';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -48,6 +50,8 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
       if (error) {
         setError(error);
       } else {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) migrateFromLocalStorage(user.id);
         onClose();
       }
     } else {

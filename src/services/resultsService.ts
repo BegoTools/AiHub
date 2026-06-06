@@ -1,89 +1,129 @@
-import { localStorageAdapter } from './storage/localStorageAdapter';
+import { supabase } from '../lib/supabaseClient';
 import { StoredResult } from '../types/storageTypes';
 
-const STORAGE_KEY = 'ai_hub_saved_results';
-const HISTORY_KEY = 'ai_tools_hub_history';
-
-function generateId(): string {
-  return `result_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-}
-
-// --- Legacy History support (for existing data migration) ---
-interface LegacyHistoryItem {
-  id: string;
-  toolId: string;
-  inputs: Record<string, string>;
-  output: string;
-  provider: string;
-  timestamp: string;
-}
-
 export async function getSavedResults(): Promise<StoredResult[]> {
-  const results = await localStorageAdapter.getItem<StoredResult[]>(STORAGE_KEY);
-  if (Array.isArray(results) && results.length > 0) return results;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
 
-  // Migrate from legacy history format if exists
-  const legacy = await localStorageAdapter.getItem<LegacyHistoryItem[]>(HISTORY_KEY);
-  if (Array.isArray(legacy) && legacy.length > 0) {
-    const migrated: StoredResult[] = legacy.map(item => ({
-      id: item.id,
-      title: `نتيجة ${item.toolId}`,
-      toolId: item.toolId,
-      toolName: item.toolId,
-      content: item.output,
-      type: 'markdown' as const,
-      isFavorite: false,
-      source: 'generation' as const,
-      metadata: { inputs: item.inputs, provider: item.provider },
-      createdAt: item.timestamp,
-    }));
-    await localStorageAdapter.setItem(STORAGE_KEY, migrated);
-    // Don't delete legacy - other code may still use it
-    return migrated;
+  const { data, error } = await supabase
+    .from('saved_results')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('[resultsService] Failed to load results:', error);
+    return [];
   }
-  return [];
+
+  return (data || []).map(mapRowToResult);
 }
 
 export async function getSavedResultById(id: string): Promise<StoredResult | null> {
-  const results = await getSavedResults();
-  return results.find(r => r.id === id) || null;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data, error } = await supabase
+    .from('saved_results')
+    .select('*')
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .single();
+
+  if (error || !data) return null;
+  return mapRowToResult(data);
 }
 
-export async function saveResult(result: Omit<StoredResult, 'createdAt' | 'updatedAt'>): Promise<StoredResult> {
-  const results = await getSavedResults();
-  const now = new Date().toISOString();
-  const newResult: StoredResult = {
-    ...result,
-    createdAt: now,
+export async function saveResult(
+  result: Omit<StoredResult, 'createdAt' | 'updatedAt'>
+): Promise<StoredResult> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
+
+  const row = {
+    user_id: user.id,
+    tool_id: result.toolId,
+    tool_name: result.toolName,
+    title: result.title,
+    content: result.content,
+    type: result.type,
+    source: result.source,
+    is_favorite: result.isFavorite,
+    metadata: result.metadata || {},
   };
-  results.unshift(newResult);
-  await localStorageAdapter.setItem(STORAGE_KEY, results);
-  return newResult;
+
+  const { data, error } = await supabase
+    .from('saved_results')
+    .insert(row)
+    .select()
+    .single();
+
+  if (error) throw new Error(`Failed to save result: ${error.message}`);
+  return mapRowToResult(data);
 }
 
-export async function updateSavedResult(id: string, updates: Partial<StoredResult>): Promise<StoredResult | null> {
-  const results = await getSavedResults();
-  const index = results.findIndex(r => r.id === id);
-  if (index === -1) return null;
-  results[index] = { ...results[index], ...updates, updatedAt: new Date().toISOString() };
-  await localStorageAdapter.setItem(STORAGE_KEY, results);
-  return results[index];
+export async function updateSavedResult(
+  id: string,
+  updates: Partial<StoredResult>
+): Promise<StoredResult | null> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const row: Record<string, any> = {};
+  if (updates.title !== undefined) row.title = updates.title;
+  if (updates.content !== undefined) row.content = updates.content;
+  if (updates.isFavorite !== undefined) row.is_favorite = updates.isFavorite;
+  if (updates.type !== undefined) row.type = updates.type;
+  if (updates.metadata !== undefined) row.metadata = updates.metadata;
+  row.updated_at = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from('saved_results')
+    .update(row)
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .select()
+    .single();
+
+  if (error || !data) return null;
+  return mapRowToResult(data);
 }
 
 export async function deleteSavedResult(id: string): Promise<boolean> {
-  const results = await getSavedResults();
-  const filtered = results.filter(r => r.id !== id);
-  if (filtered.length === results.length) return false;
-  await localStorageAdapter.setItem(STORAGE_KEY, filtered);
-  return true;
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { error } = await supabase
+    .from('saved_results')
+    .delete()
+    .eq('id', id)
+    .eq('user_id', user.id);
+
+  return !error;
 }
 
 export async function clearAllResults(): Promise<void> {
-  await localStorageAdapter.setItem(STORAGE_KEY, []);
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  await supabase
+    .from('saved_results')
+    .delete()
+    .eq('user_id', user.id);
 }
 
-// TODO Future Backend:
-// - Replace localStorageAdapter with Supabase adapter
-// - Add user_id filtering
-// - Add pagination
-// - Add full-text search on content
+function mapRowToResult(row: any): StoredResult {
+  return {
+    id: row.id,
+    title: row.title || '',
+    toolId: row.tool_id || '',
+    toolName: row.tool_name || '',
+    content: row.content || '',
+    type: row.type || 'text',
+    isFavorite: row.is_favorite || false,
+    source: row.source || 'generation',
+    metadata: row.metadata || {},
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}

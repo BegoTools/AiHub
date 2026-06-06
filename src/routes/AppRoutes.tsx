@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { Tool, HistoryItem, ApiSettings, Category } from '../types';
+import { Tool, HistoryItem, Category } from '../types';
 import { Workflow } from '../types/workflowTypes';
 
 import HomePage from '../pages/HomePage';
@@ -37,8 +37,6 @@ interface AppRoutesProps {
   isGenerating: boolean;
   saveManualResultToHistory: () => void;
   workflows: Workflow[];
-  settings: ApiSettings;
-  handleSaveSettings: (settings: ApiSettings) => void;
   onAddCustomTool: (tool: any) => void;
   onOpenAuth: (msg: string) => void;
 }
@@ -47,8 +45,7 @@ export default function AppRoutes({
   t, language, allTools, localizedCategories, favorites, toggleFavorite,
   openTool, recentToolsUsed, history, handleClearHistory, handleDeleteHistoryItem,
   handleGenerate, currentToolOutput, setCurrentToolOutput, isGenerating,
-  saveManualResultToHistory, workflows, settings, handleSaveSettings,
-  onAddCustomTool, onOpenAuth
+  saveManualResultToHistory, workflows, onAddCustomTool, onOpenAuth
 }: AppRoutesProps) {
   const navigate = useNavigate();
   return (
@@ -71,7 +68,6 @@ export default function AppRoutes({
           language={language}
           allTools={allTools}
           workflows={workflows}
-          settings={settings}
           onOpenTool={openTool}
           onOpenWorkflow={(wfId: string) => navigate(`/workflows/${wfId}`)}
           onAddCustomTool={onAddCustomTool}
@@ -132,7 +128,6 @@ export default function AppRoutes({
         <WorkflowRunner
           t={t}
           language={language}
-          settings={settings}
           onBack={() => navigate('/workflows')}
         />
       } />
@@ -169,8 +164,6 @@ export default function AppRoutes({
       <Route path="/settings" element={
         <SettingsPage
           t={t}
-          settings={settings}
-          handleSaveSettings={handleSaveSettings}
         />
       } />
       <Route path="/about" element={

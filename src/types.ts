@@ -38,14 +38,6 @@ export interface HistoryItem {
   toolId: string;
   inputs: Record<string, string>;
   output: string;
-  provider: 'gemini' | 'openrouter';
+  provider: string;
   timestamp: string;
-}
-
-export interface ApiSettings {
-  geminiKey: string;
-  openRouterKey: string;
-  provider: 'gemini' | 'openrouter';
-  useCustomKeys: boolean;
-  selectedModel?: string;
 }
