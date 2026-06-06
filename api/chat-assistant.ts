@@ -1,5 +1,29 @@
 import { GoogleGenAI } from "@google/genai";
 
+function cleanJsonResponse(raw: string): string {
+  if (!raw) return '';
+  let text = raw.trim();
+  // Remove markdown code fences (```json, ```, etc.)
+  text = text.replace(/^```[\w]*\n?/gm, '').replace(/```$/gm, '').trim();
+  // Extract only the JSON object: first { to last }
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start === -1 || end === -1 || end <= start) return '';
+  return text.slice(start, end + 1);
+}
+
+function safeResponse(isArabic: boolean, overrides: Record<string, any> = {}) {
+  return {
+    explanation: isArabic
+      ? 'حصلت مشكلة في تحليل رد المساعد، لكن أقدر أساعدك. جرّب صياغة طلبك بشكل أوضح.'
+      : 'There was an issue processing the assistant response. Try rephrasing your request.',
+    suggestedTools: [] as { toolId: string; reason: string }[],
+    suggestedWorkflows: [] as { workflowId: string; reason: string }[],
+    needCustomTool: false,
+    ...overrides,
+  };
+}
+
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -131,17 +155,14 @@ Return clean JSON only, no markdown.
             responseMimeType: "application/json"
           }
         });
-
         break;
       } catch (error: any) {
         lastError = error;
-
         const errorText = JSON.stringify(error);
         const isTemporary =
           errorText.includes("503") ||
           errorText.includes("UNAVAILABLE") ||
           errorText.includes("high demand");
-
         if (!isTemporary) {
           throw error;
         }
@@ -149,39 +170,55 @@ Return clean JSON only, no markdown.
     }
 
     if (!response) {
-      throw new Error(
-        isArabic
-          ? "موديلات Gemini عليها ضغط مؤقت حاليًا. جرّب تاني بعد دقيقة."
-          : "Gemini models are temporarily under high demand. Please try again later."
-      );
+      console.error('[chat-assistant] All models exhausted, last error:', lastError?.message);
+      return res.json(safeResponse(isArabic, {
+        explanation: isArabic
+          ? 'موديلات Gemini عليها ضغط مؤقت حاليًا. جرّب تاني بعد دقيقة.'
+          : 'Gemini models are temporarily under high demand. Please try again later.'
+      }));
     }
 
-    let text = response.text || "";
-    text = text.trim();
+    // Clean and parse the response
+    const rawText = response.text || '';
+    const cleanedJson = cleanJsonResponse(rawText);
 
-    if (text.startsWith("```")) {
-      text = text
-        .split("\n")
-        .filter((line) => !line.trim().startsWith("```"))
-        .join("\n")
-        .trim();
+    if (!cleanedJson) {
+      console.error('[chat-assistant] No JSON found in Gemini response:', rawText.slice(0, 300));
+      return res.json(safeResponse(isArabic));
     }
 
-    const result = JSON.parse(text);
+    let result: any;
+    try {
+      result = JSON.parse(cleanedJson);
+    } catch (parseError: any) {
+      console.error('[chat-assistant] JSON parse failed:', parseError.message, '| cleaned:', cleanedJson.slice(0, 300));
+      return res.json(safeResponse(isArabic));
+    }
 
-    return res.status(200).json(result);
+    // Normalize the result to always have the required fields
+    return res.json({
+      explanation: result.explanation || (isArabic ? 'تمت المعالجة!' : 'Processed!'),
+      suggestedTools: Array.isArray(result.suggestedTools) ? result.suggestedTools : [],
+      suggestedWorkflows: Array.isArray(result.suggestedWorkflows) ? result.suggestedWorkflows : [],
+      needCustomTool: result.needCustomTool === true,
+      ...(result.action === 'create' && result.newTool ? { createdTool: result.newTool } : {}),
+      ...(result.action === 'match' && result.toolId ? { toolId: result.toolId } : {}),
+    });
   } catch (error: any) {
     const errorText = String(error?.message || '');
-    const isParseError = typeof error === 'object' && error !== null && error.name === 'SyntaxError' && errorText.includes('JSON');
+    console.error('[chat-assistant] Unhandled error:', errorText.slice(0, 300));
     const isAuthError = errorText.includes('API_KEY') || errorText.includes('API key') || errorText.includes('not found');
     const isQuotaError = errorText.includes('quota') || errorText.includes('429') || errorText.includes('RATE_LIMIT');
-    const errorMsg = isParseError
-      ? (isArabic ? 'لم يتم فهم رد Gemini. حاول مرة أخرى.' : 'Gemini response was not valid JSON. Please try again.')
-      : isAuthError
-        ? (isArabic ? 'مشكلة في مفتاح API. تأكد من GEMINI_API_KEY.' : 'Invalid API key. Please check GEMINI_API_KEY.')
-        : isQuotaError
-          ? (isArabic ? 'تم تجاوز حد الاستخدام. حاول بعد قليل.' : 'API quota exceeded. Please try again later.')
-          : (error.message || (isArabic ? 'فشل مساعد الذكاء الاصطناعي.' : 'AI Assistant failed.'));
-    return res.status(500).json({ error: errorMsg });
+    if (isAuthError) {
+      return res.status(401).json({
+        error: isArabic ? 'مشكلة في مفتاح API. تأكد من GEMINI_API_KEY.' : 'Invalid API key. Please check GEMINI_API_KEY.'
+      });
+    }
+    if (isQuotaError) {
+      return res.json(safeResponse(isArabic, {
+        explanation: isArabic ? 'تم تجاوز حد الاستخدام. حاول بعد قليل.' : 'API quota exceeded. Please try again later.'
+      }));
+    }
+    return res.json(safeResponse(isArabic));
   }
 }
