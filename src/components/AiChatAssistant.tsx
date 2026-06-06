@@ -18,11 +18,13 @@ import { saveResult } from '../services/resultsService';
 import { ChatSession } from '../types/storageTypes';
 
 interface ChatApiResponse {
+  action?: 'match' | 'create' | 'chat';
   explanation?: string;
   suggestedTools?: { toolId: string; reason: string }[];
   suggestedWorkflows?: { workflowId: string; reason: string }[];
   needCustomTool?: boolean;
-  createdTool?: any;
+  toolId?: string;
+  newTool?: any;
   error?: string;
 }
 
@@ -412,9 +414,23 @@ export default function AiChatAssistant({
             id: sw.workflowId, title: sw.reason || '', description: '', score: 0.5
           }));
           needCustomTool = data.needCustomTool || false;
-          if (data.createdTool) {
-            createdTool = data.createdTool;
-            onAddCustomTool(data.createdTool);
+          if (data.action === 'match' && data.toolId && !suggestedTools.some(s => s.id === data.toolId)) {
+            suggestedTools = [{
+              id: data.toolId, title: language === 'ar' ? 'فتح الأداة' : 'Open tool', description: '', score: 1
+            }, ...suggestedTools];
+          }
+          if (data.action === 'create' && data.newTool) {
+            onAddCustomTool(data.newTool);
+            createdTool = data.newTool;
+            needCustomTool = true;
+            if (!suggestedTools.some(s => s.id === data.newTool.id)) {
+              suggestedTools = [{
+                id: data.newTool.id,
+                title: data.newTool.title || (language === 'ar' ? 'الأداة الجديدة' : 'New tool'),
+                description: data.newTool.description || '', score: 1
+              }, ...suggestedTools];
+            }
+            assistantText = (language === 'ar' ? '🎉 تم صنع أداة جديدة لك!\n\n' : '🎉 A new tool has been created for you!\n\n') + (data.explanation || '');
           }
         } catch (e: any) {
           assistantText = t.errorMsg.replace('{error}', e.message || 'Connection failed');
@@ -453,9 +469,23 @@ export default function AiChatAssistant({
           id: sw.workflowId, title: sw.reason || '', description: '', score: 0.5
         }));
         needCustomTool = data.needCustomTool || false;
-        if (data.createdTool) {
-          createdTool = data.createdTool;
-          onAddCustomTool(data.createdTool);
+        if (data.action === 'match' && data.toolId && !suggestedTools.some(s => s.id === data.toolId)) {
+          suggestedTools = [{
+            id: data.toolId, title: language === 'ar' ? 'فتح الأداة' : 'Open tool', description: '', score: 1
+          }, ...suggestedTools];
+        }
+        if (data.action === 'create' && data.newTool) {
+          onAddCustomTool(data.newTool);
+          createdTool = data.newTool;
+          needCustomTool = true;
+          if (!suggestedTools.some(s => s.id === data.newTool.id)) {
+            suggestedTools = [{
+              id: data.newTool.id,
+              title: data.newTool.title || (language === 'ar' ? 'الأداة الجديدة' : 'New tool'),
+              description: data.newTool.description || '', score: 1
+            }, ...suggestedTools];
+          }
+          assistantText = (language === 'ar' ? '🎉 تم صنع أداة جديدة لك!\n\n' : '🎉 A new tool has been created for you!\n\n') + (data.explanation || '');
         }
       } catch (e: any) {
         assistantText = t.errorMsg.replace('{error}', e.message || 'Connection failed');

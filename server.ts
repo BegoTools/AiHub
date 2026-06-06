@@ -78,9 +78,9 @@ async function startServer() {
 
   // API Route: AI Chat Assistant
   app.post('/api/chat-assistant', async (req, res) => {
+    const { message, existingTools, existingWorkflows, customKey, language } = req.body || {};
+    const isArabic = language === 'ar';
     try {
-      const { message, existingTools, existingWorkflows, customKey, language } = req.body;
-      const isArabic = language === 'ar';
 
       if (!message) {
         return res.status(400).json({ error: isArabic ? 'حقل الرسالة فارغ.' : 'Message is empty.' });
@@ -105,14 +105,22 @@ async function startServer() {
         ? 'أنت المساعد الذكي لمستخدمي منصة أدوات الذكاء الاصطناعي العربية. تواصل مع المستخدم باللغة العربية.'
         : `You are the AI assistant for the AI Tools Hub platform. Communicate with the user in ${language === 'en' ? 'English' : language === 'de' ? 'German' : language === 'fr' ? 'French' : language === 'it' ? 'Italian' : 'English'}.`;
 
+      const matchExplanation = isArabic ? 'شرح قصير للمستخدم' : 'Short explanation for the user';
+      const matchTitle = isArabic ? 'عنوان الأداة بالعربي' : 'Tool title';
+      const matchDesc = isArabic ? 'وصف الأداة' : 'Tool description';
+      const matchTopic = isArabic ? 'الموضوع' : 'Topic';
+      const matchPlaceholder = isArabic ? 'اكتب المطلوب هنا' : 'Enter your request here';
+      const matchExample = isArabic ? 'مثال عملي' : 'Practical example';
+      const matchPrompt = isArabic ? 'نفذ الطلب التالي باحتراف: {topic}' : 'Execute the following request professionally: {topic}';
+
       const systemInstruction = `
 ${langInstruction}
 
 Your task:
 - Understand the user's request.
-- If a suitable tool exists in existingTools, return JSON with action = "chat".
-- Include suggested tools and workflows in your response.
-- If no tool exists and the user needs a custom one, set needCustomTool: true.
+- If a suitable tool exists in existingTools, return JSON with action = "match" and include toolId of the best matching tool.
+- If no suitable tool exists, design a new custom tool and return JSON with action = "create" with a full newTool definition.
+- Always include suggestedTools and suggestedWorkflows in the response.
 
 Available tools:
 ${JSON.stringify(formattedTools)}
@@ -122,13 +130,42 @@ ${JSON.stringify(formattedWorkflows)}
 
 Return clean JSON only, no markdown.
 
-Response format:
+--- Use this format when an existing tool fits the request ---
 {
-  "action": "chat",
-  "explanation": "${isArabic ? 'شرح قصير للمستخدم' : 'Short explanation for the user'}",
-  "suggestedTools": [{ "toolId": "tool_id", "reason": "why this tool" }],
-  "suggestedWorkflows": [{ "workflowId": "wf_id", "reason": "why this workflow" }],
+  "action": "match",
+  "explanation": "${matchExplanation}",
+  "toolId": "study_summarizer",
+  "suggestedTools": [{ "toolId": "study_summarizer", "reason": "why this tool" }],
+  "suggestedWorkflows": [],
   "needCustomTool": false
+}
+
+--- Use this format when NO existing tool fits ---
+{
+  "action": "create",
+  "explanation": "${matchExplanation}",
+  "suggestedTools": [],
+  "suggestedWorkflows": [],
+  "needCustomTool": true,
+  "newTool": {
+    "id": "custom_ai_generated_tool",
+    "categoryId": "general",
+    "title": "${matchTitle}",
+    "description": "${matchDesc}",
+    "icon": "Sparkles",
+    "inputs": [
+      {
+        "id": "topic",
+        "label": "${matchTopic}",
+        "type": "textarea",
+        "placeholder": "${matchPlaceholder}"
+      }
+    ],
+    "exampleInput": {
+      "topic": "${matchExample}"
+    },
+    "promptTemplateString": "${matchPrompt}"
+  }
 }
 `;
 
@@ -167,7 +204,18 @@ Response format:
       return res.status(200).json(result);
     } catch (err: any) {
       console.error('Chat Assistant Error:', err);
-      return res.status(500).json({ error: `فشل المساعد: ${err.message}` });
+      const errorText = String(err?.message || '');
+      const isParseError = typeof err === 'object' && err !== null && err.name === 'SyntaxError' && errorText.includes('JSON');
+      const isAuthError = errorText.includes('API_KEY') || errorText.includes('API key') || errorText.includes('not found');
+      const isQuotaError = errorText.includes('quota') || errorText.includes('429') || errorText.includes('RATE_LIMIT');
+      const errorMsg = isParseError
+        ? (isArabic ? 'لم يتم فهم رد Gemini. حاول مرة أخرى.' : 'Gemini response was not valid JSON. Please try again.')
+        : isAuthError
+          ? (isArabic ? 'مشكلة في مفتاح API. تأكد من GEMINI_API_KEY.' : 'Invalid API key. Please check GEMINI_API_KEY.')
+          : isQuotaError
+            ? (isArabic ? 'تم تجاوز حد الاستخدام. حاول بعد قليل.' : 'API quota exceeded. Please try again later.')
+            : `فشل المساعد: ${err.message}`;
+      return res.status(500).json({ error: errorMsg });
     }
   });
 
