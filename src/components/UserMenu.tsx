@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, User, ChevronDown } from 'lucide-react';
 
@@ -8,6 +9,7 @@ interface UserMenuProps {
 
 export default function UserMenu({ t }: UserMenuProps) {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -46,6 +48,13 @@ export default function UserMenu({ t }: UserMenuProps) {
           <div className="px-3 py-2 border-b border-slate-100 dark:border-zinc-800">
             <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">{user.email}</p>
           </div>
+          <button
+            onClick={() => { navigate('/account'); setOpen(false); }}
+            className="flex items-center gap-2 w-full px-3 py-2 text-xs text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800/50 transition-all cursor-pointer"
+          >
+            <User size={13} />
+            <span>{t.profile || 'Profile'}</span>
+          </button>
           <button
             onClick={() => { signOut(); setOpen(false); }}
             className="flex items-center gap-2 w-full px-3 py-2 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all cursor-pointer"

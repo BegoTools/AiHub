@@ -443,7 +443,7 @@ export default function App() {
               <div className="lg:hidden flex items-center">
                 {user ? (
                   <button
-                    onClick={() => navigate('/settings')}
+                    onClick={() => navigate('/account')}
                     className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold text-xs hover:bg-amber-400 transition-all cursor-pointer shrink-0"
                     title={user.email || ''}
                   >

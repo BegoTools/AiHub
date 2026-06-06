@@ -11,7 +11,7 @@ import CategoryDetailPage from '../pages/CategoryDetailPage';
 import FavoritesPage from '../pages/FavoritesPage';
 import HistoryPage from '../pages/HistoryPage';
 import WorkflowsPage from '../pages/WorkflowsPage';
-import SettingsPage from '../pages/SettingsPage';
+import ProfilePage from '../pages/ProfilePage';
 import AboutPage from '../pages/AboutPage';
 import LibraryPage from '../pages/LibraryPage';
 import CommunityToolsPage from '../pages/CommunityToolsPage';
@@ -161,9 +161,10 @@ export default function AppRoutes({
           handleDeleteHistoryItem={handleDeleteHistoryItem}
         />
       } />
-      <Route path="/settings" element={
-        <SettingsPage
+      <Route path="/account" element={
+        <ProfilePage
           t={t}
+          onOpenAuth={() => onOpenAuth(t.authSignInRequired || '')}
         />
       } />
       <Route path="/about" element={

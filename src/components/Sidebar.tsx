@@ -4,7 +4,7 @@ import {
   LayoutGrid, 
   Star, 
   History as HistoryIcon, 
-  Settings, 
+  User, 
   HelpCircle, 
   Sun, 
   Moon, 
@@ -39,7 +39,7 @@ const routeForTab: Record<string, string> = {
   community: '/community',
   favorites: '/favorites',
   history: '/history',
-  settings: '/settings',
+  profile: '/account',
 };
 
 export default function Sidebar({ 
@@ -63,7 +63,7 @@ export default function Sidebar({
     { id: 'community', label: t.communityNav || 'المجتمع', icon: Globe },
     { id: 'favorites', label: t.favorites, icon: Star, badge: favoritesCount > 0 ? favoritesCount : undefined },
     { id: 'history', label: t.history, icon: HistoryIcon },
-    { id: 'settings', label: t.settings, icon: Settings },
+    { id: 'profile', label: t.profile, icon: User },
   ];
 
   const handleCreateTool = () => navigate('/create-tool');

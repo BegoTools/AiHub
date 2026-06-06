@@ -234,6 +234,10 @@ export interface TranslationDict {
   loggingIn: string;
   signingUp: string;
   profile: string;
+  accountTitle: string;
+  displayName: string;
+  memberSince: string;
+  saveChanges: string;
   authModalTitle: string;
   authModalSubtitle: string;
   authLoginTitle: string;
@@ -463,6 +467,10 @@ export const translations: Record<Language, TranslationDict> = {
     loggingIn: 'جاري تسجيل الدخول...',
     signingUp: 'جاري إنشاء الحساب...',
     profile: 'الملف الشخصي',
+    accountTitle: 'حسابي',
+    displayName: 'الاسم المعروض',
+    memberSince: 'عضو منذ',
+    saveChanges: 'حفظ التغييرات',
     authModalTitle: 'مرحباً بك في منصة الأدوات الذكية',
     authModalSubtitle: 'سجل دخولك أو أنشئ حساباً جديداً لحفظ بياناتك ومزامنتها',
     noAccount: 'ليس لديك حساب؟',
@@ -691,6 +699,10 @@ export const translations: Record<Language, TranslationDict> = {
     loggingIn: 'Signing in...',
     signingUp: 'Creating account...',
     profile: 'Profile',
+    accountTitle: 'My Account',
+    displayName: 'Display Name',
+    memberSince: 'Member since',
+    saveChanges: 'Save Changes',
     authModalTitle: 'Welcome to AI Tools Hub',
     authModalSubtitle: 'Sign in or create an account to save and sync your data',
     noAccount: "Don't have an account?",
@@ -919,6 +931,10 @@ export const translations: Record<Language, TranslationDict> = {
     loggingIn: 'Anmeldung läuft...',
     signingUp: 'Konto wird erstellt...',
     profile: 'Profil',
+    accountTitle: 'Mein Konto',
+    displayName: 'Anzeigename',
+    memberSince: 'Mitglied seit',
+    saveChanges: 'Änderungen speichern',
     authModalTitle: 'Willkommen bei AI Tools Hub',
     authModalSubtitle: 'Melde dich an oder erstelle ein Konto, um deine Daten zu speichern',
     noAccount: 'Kein Konto?',
@@ -1147,6 +1163,10 @@ export const translations: Record<Language, TranslationDict> = {
     loggingIn: 'Connexion en cours...',
     signingUp: 'Création du compte...',
     profile: 'Profil',
+    accountTitle: 'Mon Compte',
+    displayName: 'Nom d\'affichage',
+    memberSince: 'Membre depuis',
+    saveChanges: 'Enregistrer',
     authModalTitle: 'Bienvenue sur AI Tools Hub',
     authModalSubtitle: 'Connectez-vous ou créez un compte pour sauvegarder vos données',
     noAccount: 'Pas de compte ?',
@@ -1375,6 +1395,10 @@ export const translations: Record<Language, TranslationDict> = {
     loggingIn: 'Accesso in corso...',
     signingUp: 'Creazione account...',
     profile: 'Profilo',
+    accountTitle: 'Il Mio Account',
+    displayName: 'Nome visualizzato',
+    memberSince: 'Membro dal',
+    saveChanges: 'Salva modifiche',
     authModalTitle: 'Benvenuto su AI Tools Hub',
     authModalSubtitle: 'Accedi o crea un account per salvare i tuoi dati',
     noAccount: 'Non hai un account?',
