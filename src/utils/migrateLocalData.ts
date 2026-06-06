@@ -168,7 +168,7 @@ async function migrateSettings(userId: string): Promise<void> {
         .upsert({
           user_id: userId,
           language: 'ar',
-          theme: settings.theme || 'dark',
+          theme: settings.theme || 'light',
         }, { onConflict: 'user_id' });
     } catch {}
   }
@@ -181,7 +181,7 @@ async function migrateSettings(userId: string): Promise<void> {
       .upsert({
         user_id: userId,
         language: savedLang || 'ar',
-        theme: (savedTheme as 'light' | 'dim' | 'dark') || 'dark',
+        theme: (savedTheme as 'light' | 'dim' | 'dark') || 'light',
       }, { onConflict: 'user_id' });
   }
 }

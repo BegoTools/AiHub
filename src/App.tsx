@@ -116,7 +116,7 @@ export default function App() {
 
       const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.THEME) as 'light' | 'dim' | 'dark' | null;
       if (savedTheme) setTheme(savedTheme);
-      else setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      else setTheme('light');
 
       const savedOnboarding = localStorage.getItem(LOCAL_STORAGE_KEYS.ONBOARDED);
       if (!savedOnboarding) setShowOnboarding(true);
@@ -132,7 +132,7 @@ export default function App() {
       ]);
 
       setLanguage(settings.language as Language || 'ar');
-      setTheme(settings.theme || 'dark');
+      setTheme(settings.theme || 'light');
       if (!settings.onboarding_completed) setShowOnboarding(true);
 
       setFavorites(favs);
