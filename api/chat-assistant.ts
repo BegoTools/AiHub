@@ -1,5 +1,13 @@
 import { GoogleGenAI } from "@google/genai";
 
+const GEMINI_FALLBACK: string[] = [
+  'gemini-2.5-flash',
+  'gemini-2.5-flash-lite',
+  'gemini-2.0-flash',
+];
+
+const TIMEOUT_MS = 60000;
+
 function cleanJsonResponse(raw: string): string {
   if (!raw) return '';
   let text = raw.trim();
@@ -12,16 +20,42 @@ function cleanJsonResponse(raw: string): string {
   return text.slice(start, end + 1);
 }
 
+function safeParseJson(text: string): any | null {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
+
 function safeResponse(isArabic: boolean, overrides: Record<string, any> = {}) {
   return {
+    action: 'chat',
     explanation: isArabic
-      ? 'حصلت مشكلة في تحليل رد المساعد، لكن أقدر أساعدك. جرّب صياغة طلبك بشكل أوضح.'
-      : 'There was an issue processing the assistant response. Try rephrasing your request.',
+      ? 'حصلت مشكلة مؤقتة في تحليل رد المساعد، لكن أقدر أساعدك. جرّب تكتب طلبك بشكل أوضح.'
+      : 'There was a temporary issue processing the response. Please try rephrasing your request.',
     suggestedTools: [] as { toolId: string; reason: string }[],
     suggestedWorkflows: [] as { workflowId: string; reason: string }[],
     needCustomTool: false,
     ...overrides,
   };
+}
+
+function buildFinalResponse(result: any, isArabic: boolean) {
+  const response: Record<string, any> = {
+    action: 'chat',
+    explanation: result.explanation || (isArabic ? 'تمت المعالجة!' : 'Processed!'),
+    suggestedTools: Array.isArray(result.suggestedTools) ? result.suggestedTools : [],
+    suggestedWorkflows: Array.isArray(result.suggestedWorkflows) ? result.suggestedWorkflows : [],
+    needCustomTool: result.needCustomTool === true,
+  };
+  if (result.createdTool || result.newTool) {
+    response.createdTool = result.createdTool || result.newTool;
+  }
+  if (result.toolId) {
+    response.toolId = result.toolId;
+  }
+  return response;
 }
 
 export default async function handler(req: any, res: any) {
@@ -47,8 +81,6 @@ export default async function handler(req: any, res: any) {
     });
   }
 
-  const ai = new GoogleGenAI({ apiKey });
-
   const formattedTools = Array.isArray(existingTools)
     ? existingTools.slice(0, 50).map((tool: any) => ({
         id: tool.id,
@@ -69,25 +101,19 @@ export default async function handler(req: any, res: any) {
 
   try {
     const langInstruction = isArabic
-      ? `أنت المساعد الذكي لمستخدمي منصة أدوات الذكاء الاصطناعي العربية. تواصل مع المستخدم باللغة العربية.`
+      ? 'أنت المساعد الذكي لمستخدمي منصة أدوات الذكاء الاصطناعي العربية. تواصل مع المستخدم باللغة العربية.'
       : `You are the AI assistant for the AI Tools Hub platform. Communicate with the user in ${language === 'en' ? 'English' : language === 'de' ? 'German' : language === 'fr' ? 'French' : language === 'it' ? 'Italian' : 'English'}.`;
 
     const matchExplanation = isArabic ? 'شرح قصير للمستخدم' : 'Short explanation for the user';
-    const matchTitle = isArabic ? 'عنوان الأداة بالعربي' : 'Tool title';
-    const matchDesc = isArabic ? 'وصف الأداة' : 'Tool description';
-    const matchTopic = isArabic ? 'الموضوع' : 'Topic';
-    const matchPlaceholder = isArabic ? 'اكتب المطلوب هنا' : 'Enter your request here';
-    const matchExample = isArabic ? 'مثال عملي' : 'Practical example';
-    const matchPrompt = isArabic ? 'نفذ الطلب التالي باحتراف: {topic}' : 'Execute the following request professionally: {topic}';
 
     const systemInstruction = `
 ${langInstruction}
 
 Your task:
 - Understand the user's request.
-- If a suitable tool exists in existingTools, return JSON with action = "match" and include toolId of the best matching tool.
-- If no suitable tool exists, design a new custom tool and return JSON with action = "create" with a full newTool definition.
-- Always include suggestedTools and suggestedWorkflows in the response.
+- If a suitable tool exists in existingTools, include it in suggestedTools with its toolId.
+- If no suitable tool exists, set needCustomTool: true and provide a full newTool definition.
+- Always include suggestedTools and suggestedWorkflows.
 
 Available tools:
 ${JSON.stringify(formattedTools)}
@@ -97,127 +123,96 @@ ${JSON.stringify(formattedWorkflows)}
 
 Return clean JSON only, no markdown.
 
---- Use this format when an existing tool fits the request ---
+Response format:
 {
-  "action": "match",
+  "action": "chat",
   "explanation": "${matchExplanation}",
-  "toolId": "study_summarizer",
-  "suggestedTools": [{ "toolId": "study_summarizer", "reason": "why this tool" }],
-  "suggestedWorkflows": [],
-  "needCustomTool": false
-}
-
---- Use this format when NO existing tool fits ---
-{
-  "action": "create",
-  "explanation": "${matchExplanation}",
-  "suggestedTools": [],
-  "suggestedWorkflows": [],
-  "needCustomTool": true,
+  "suggestedTools": [{ "toolId": "id", "reason": "why this tool" }],
+  "suggestedWorkflows": [{ "workflowId": "id", "reason": "why this workflow" }],
+  "needCustomTool": false,
   "newTool": {
-    "id": "custom_ai_generated_tool",
+    "id": "unique_id",
     "categoryId": "general",
-    "title": "${matchTitle}",
-    "description": "${matchDesc}",
+    "title": "Tool title",
+    "description": "Tool description",
     "icon": "Sparkles",
-    "inputs": [
-      {
-        "id": "topic",
-        "label": "${matchTopic}",
-        "type": "textarea",
-        "placeholder": "${matchPlaceholder}"
-      }
-    ],
-    "exampleInput": {
-      "topic": "${matchExample}"
-    },
-    "promptTemplateString": "${matchPrompt}"
-  }
+    "inputs": [{ "id": "topic", "label": "Topic", "type": "textarea", "placeholder": "Enter your request here" }],
+    "exampleInput": { "topic": "Example" },
+    "promptTemplateString": "Execute professionally: {topic}"
+  },
+  "toolId": "study_summarizer"
 }
 `;
 
-    const modelsToTry = [
-      "gemini-2.5-flash",
-      "gemini-2.5-flash-lite",
-      "gemini-2.0-flash"
-    ];
-
-    let response: any = null;
     let lastError: any = null;
+    let response: any = null;
 
-    for (const modelName of modelsToTry) {
+    for (const modelName of GEMINI_FALLBACK) {
       try {
-        response = await ai.models.generateContent({
-          model: modelName,
-          contents: message,
-          config: {
-            systemInstruction,
-            responseMimeType: "application/json"
-          }
-        });
+        const ai = new GoogleGenAI({ apiKey });
+        response = await Promise.race([
+          ai.models.generateContent({
+            model: modelName,
+            contents: message,
+            config: { systemInstruction, responseMimeType: 'application/json' },
+          }),
+          new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('TIMEOUT')), TIMEOUT_MS)
+          ),
+        ]);
         break;
       } catch (error: any) {
         lastError = error;
-        const errorText = JSON.stringify(error);
-        const isTemporary =
-          errorText.includes("503") ||
-          errorText.includes("UNAVAILABLE") ||
-          errorText.includes("high demand");
-        if (!isTemporary) {
-          throw error;
+        const text = JSON.stringify(error).toLowerCase();
+        const isTransient =
+          text.includes('503') ||
+          text.includes('unavailable') ||
+          text.includes('overloaded') ||
+          text.includes('high demand') ||
+          text.includes('resource has been exhausted') ||
+          text.includes('quota') ||
+          text.includes('timeout');
+        if (!isTransient) {
+          console.error('[chat-assistant] Non-retryable error:', error?.message);
+          return res.json(safeResponse(isArabic));
         }
       }
     }
 
     if (!response) {
-      console.error('[chat-assistant] All models exhausted, last error:', lastError?.message);
+      console.error('[chat-assistant] All models exhausted:', lastError?.message);
       return res.json(safeResponse(isArabic, {
         explanation: isArabic
-          ? 'موديلات Gemini عليها ضغط مؤقت حاليًا. جرّب تاني بعد دقيقة.'
-          : 'Gemini models are temporarily under high demand. Please try again later.'
+          ? 'خدمة Gemini مش متاحة مؤقتًا. جرّب تاني بعد شوية.'
+          : 'Gemini service is temporarily unavailable. Please try again later.'
       }));
     }
 
-    // Clean and parse the response
     const rawText = response.text || '';
     const cleanedJson = cleanJsonResponse(rawText);
 
     if (!cleanedJson) {
-      console.error('[chat-assistant] No JSON found in Gemini response:', rawText.slice(0, 300));
+      console.error('[chat-assistant] No JSON in Gemini response:', rawText.slice(0, 300));
       return res.json(safeResponse(isArabic));
     }
 
-    let result: any;
-    try {
-      result = JSON.parse(cleanedJson);
-    } catch (parseError: any) {
-      console.error('[chat-assistant] JSON parse failed:', parseError.message, '| cleaned:', cleanedJson.slice(0, 300));
+    const result = safeParseJson(cleanedJson);
+
+    if (!result) {
+      console.error('[chat-assistant] JSON parse failed on:', cleanedJson.slice(0, 300));
       return res.json(safeResponse(isArabic));
     }
 
-    // Normalize the result to always have the required fields
-    return res.json({
-      explanation: result.explanation || (isArabic ? 'تمت المعالجة!' : 'Processed!'),
-      suggestedTools: Array.isArray(result.suggestedTools) ? result.suggestedTools : [],
-      suggestedWorkflows: Array.isArray(result.suggestedWorkflows) ? result.suggestedWorkflows : [],
-      needCustomTool: result.needCustomTool === true,
-      ...(result.action === 'create' && result.newTool ? { createdTool: result.newTool } : {}),
-      ...(result.action === 'match' && result.toolId ? { toolId: result.toolId } : {}),
-    });
+    return res.json(buildFinalResponse(result, isArabic));
+
   } catch (error: any) {
-    const errorText = String(error?.message || '');
-    console.error('[chat-assistant] Unhandled error:', errorText.slice(0, 300));
-    const isAuthError = errorText.includes('API_KEY') || errorText.includes('API key') || errorText.includes('not found');
-    const isQuotaError = errorText.includes('quota') || errorText.includes('429') || errorText.includes('RATE_LIMIT');
-    if (isAuthError) {
+    const msg = String(error?.message || '');
+    console.error('[chat-assistant] Unhandled error:', msg.slice(0, 300));
+    const isAuth = msg.includes('API_KEY') || msg.includes('API key') || msg.includes('not found');
+    if (isAuth) {
       return res.status(401).json({
-        error: isArabic ? 'مشكلة في مفتاح API. تأكد من GEMINI_API_KEY.' : 'Invalid API key. Please check GEMINI_API_KEY.'
+        error: isArabic ? 'مشكلة في مفتاح API. راجع إعدادات GEMINI_API_KEY.' : 'Invalid API key. Check GEMINI_API_KEY.'
       });
-    }
-    if (isQuotaError) {
-      return res.json(safeResponse(isArabic, {
-        explanation: isArabic ? 'تم تجاوز حد الاستخدام. حاول بعد قليل.' : 'API quota exceeded. Please try again later.'
-      }));
     }
     return res.json(safeResponse(isArabic));
   }
