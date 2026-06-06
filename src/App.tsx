@@ -95,6 +95,14 @@ export default function App() {
     }
   }, [language, user]);
 
+  // Reset saved theme to light once on first load after this update
+  useEffect(() => {
+    if (!localStorage.getItem(LOCAL_STORAGE_KEYS.THEME_RESET)) {
+      localStorage.removeItem(LOCAL_STORAGE_KEYS.THEME);
+      localStorage.setItem(LOCAL_STORAGE_KEYS.THEME_RESET, '1');
+    }
+  }, []);
+
   const [currentToolOutput, setCurrentToolOutput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);

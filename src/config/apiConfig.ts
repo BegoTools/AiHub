@@ -3,5 +3,6 @@ export const LOCAL_STORAGE_KEYS = {
   FAVORITES: 'ai_tools_hub_favorites',
   HISTORY: 'ai_tools_hub_history',
   THEME: 'ai_tools_hub_theme',
-  ONBOARDED: 'ai_tools_hub_onboarded'
+  ONBOARDED: 'ai_tools_hub_onboarded',
+  THEME_RESET: 'ai_hub_theme_reset_v2'
 };
