@@ -1,3 +1,4 @@
+import logoSrc from '../assets/logo.png';
 import { ArrowLeft, Heart, ShieldCheck, Zap } from 'lucide-react';
 import { TranslationDict } from '../translations';
 
@@ -16,7 +17,7 @@ export default function Onboarding({ onComplete, t }: OnboardingProps) {
       <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800/80 rounded-3xl p-6 lg:p-10 text-white shadow-2xl overflow-hidden self-center my-8">
         {/* Banner */}
         <div className="flex flex-col items-center text-center gap-4 mb-8 font-sans">
-          <img src="/src/assets/logo.png" alt="AI Hub" className="w-16 h-16 object-contain" />
+          <img src={logoSrc} alt="AI Hub" className="w-16 h-16 object-contain rounded-2xl shadow-lg" />
           <div>
             <span className="text-xs text-amber-400 font-bold uppercase tracking-wider bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">{t.onboardingTitle}</span>
             <h1 className="text-2xl lg:text-3xl font-black mt-2 tracking-tight bg-gradient-to-r from-amber-200 to-white bg-clip-text text-transparent">{t.appTitle}</h1>

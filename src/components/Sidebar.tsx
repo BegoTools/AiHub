@@ -1,3 +1,4 @@
+import logoSrc from '../assets/logo.png';
 import { 
   Home, 
   LayoutGrid, 
@@ -74,7 +75,7 @@ export default function Sidebar({
         {/* Header Branding */}
         <div className="p-6 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/src/assets/logo.png" alt="AI Hub" className="w-10 h-10 shrink-0 object-contain" />
+            <img src={logoSrc} alt="AI Hub" className="w-10 h-10 shrink-0 object-contain rounded-xl" />
             <div>
               <h1 className="font-bold text-base tracking-tight bg-gradient-to-l from-blue-600 dark:from-blue-400 to-slate-900 dark:to-white bg-clip-text text-transparent">{t.appTitle}</h1>
               <span className="text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-zinc-500">{t.appSubtitle}</span>

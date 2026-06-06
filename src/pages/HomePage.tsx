@@ -1,3 +1,4 @@
+import logoSrc from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, LayoutGrid, History as HistoryIcon, Star } from 'lucide-react';
 import { DynamicIcon } from '../components/ToolForm';
@@ -22,7 +23,10 @@ export default function HomePage({ t, localizedCategories, allTools, favorites, 
         <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-blue-600/10 to-transparent rounded-full blur-3xl pointer-events-none" />
         
         <div className="relative space-y-4 max-w-xl">
-          <span className="text-[10px] uppercase font-bold tracking-wider text-blue-600 dark:text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">{t.allFeatures}</span>
+          <div className="flex items-center gap-3">
+            <img src={logoSrc} alt="AI Hub" className="w-10 h-10 object-contain rounded-xl shrink-0" />
+            <span className="text-[10px] uppercase font-bold tracking-wider text-blue-600 dark:text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">{t.allFeatures}</span>
+          </div>
           <h1 className="text-2xl lg:text-3xl font-black leading-tight bg-gradient-to-l from-blue-650 via-slate-850 to-slate-900 dark:from-blue-200 dark:via-zinc-100 dark:to-white bg-clip-text text-transparent">{t.heroTitle}</h1>
           <p className="text-sm text-slate-600 dark:text-zinc-300 leading-relaxed">
             {t.heroDesc}
@@ -48,9 +52,7 @@ export default function HomePage({ t, localizedCategories, allTools, favorites, 
         <div className="hidden md:flex relative p-8 bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-3xl w-56 h-56 items-center justify-center shrink-0">
           <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/5 to-transparent animate-pulse rounded-3xl" />
           <div className="flex flex-col items-center gap-2 text-center">
-            <div className="text-blue-600 dark:text-blue-400 animate-spin-slow">
-              <Sparkles size={48} />
-            </div>
+            <img src={logoSrc} alt="AI Hub" className="w-14 h-14 object-contain" />
             <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-zinc-500 block">{t.toolsAvailable}</span>
             <span className="font-black text-2xl bg-gradient-to-l from-blue-600 to-indigo-600 bg-clip-text text-transparent mt-1">38</span>
           </div>
