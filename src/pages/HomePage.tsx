@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, LayoutGrid, History as HistoryIcon, Star, Cpu } from 'lucide-react';
+import { Sparkles, LayoutGrid, History as HistoryIcon, Star } from 'lucide-react';
 import { DynamicIcon } from '../components/ToolForm';
 import { Tool, Category } from '../types';
 
@@ -87,62 +87,44 @@ export default function HomePage({ t, localizedCategories, allTools, favorites, 
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-4">
-          <h3 className="font-extrabold text-base text-slate-800 dark:text-zinc-100 flex items-center gap-2">
-            <HistoryIcon size={16} className="text-blue-500" />
-            <span>{t.recentToolsTitle}</span>
-          </h3>
-          {recentToolsUsed.length > 0 ? (
-            <div className="space-y-3">
-              {recentToolsUsed.map((tool) => (
-                <div
-                  key={tool.id}
-                  className="p-4 bg-white dark:bg-[#18181b]/90 hover:bg-slate-50 dark:hover:bg-[#18181b] border border-slate-200 dark:border-zinc-800 rounded-2xl flex items-center justify-between gap-4 transition-all shadow-sm dark:shadow-none"
+      <div className="space-y-4">
+        <h3 className="font-extrabold text-base text-slate-800 dark:text-zinc-100 flex items-center gap-2">
+          <HistoryIcon size={16} className="text-blue-500" />
+          <span>{t.recentToolsTitle}</span>
+        </h3>
+        {recentToolsUsed.length > 0 ? (
+          <div className="space-y-3">
+            {recentToolsUsed.map((tool) => (
+              <div
+                key={tool.id}
+                className="p-4 bg-white dark:bg-[#18181b]/90 hover:bg-slate-50 dark:hover:bg-[#18181b] border border-slate-200 dark:border-zinc-800 rounded-2xl flex items-center justify-between gap-4 transition-all shadow-sm dark:shadow-none"
+              >
+                <button
+                  onClick={() => openTool(tool.id)}
+                  className="flex items-center gap-3 text-right flex-1 cursor-pointer"
                 >
-                  <button
-                    onClick={() => openTool(tool.id)}
-                    className="flex items-center gap-3 text-right flex-1 cursor-pointer"
-                  >
-                    <div className="p-2 bg-blue-500/10 text-blue-550 dark:text-blue-450 rounded-xl">
-                      <DynamicIcon name={tool.icon} size={16} />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-xs text-slate-850 dark:text-zinc-100">{tool.title}</h4>
-                      <span className="text-[10px] text-slate-500 dark:text-zinc-500 block mt-0.5">{localizedCategories.find(c => c.id === tool.categoryId)?.name}</span>
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => toggleFavorite(tool.id)}
-                    className="p-1.5 text-slate-400 dark:text-zinc-600 hover:text-blue-550 dark:hover:text-blue-400 rounded-xl transition-all cursor-pointer"
-                  >
-                    <Star size={16} fill={favorites.includes(tool.id) ? 'currentColor' : 'none'} className={favorites.includes(tool.id) ? 'text-blue-500' : 'text-slate-400 dark:text-zinc-600'} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="p-8 text-center bg-white dark:bg-[#18181b]/30 border border-slate-200 dark:border-zinc-800 rounded-2xl text-xs text-slate-500 dark:text-zinc-500 shadow-sm dark:shadow-none">
-              {t.emptyRecentTools}
-            </div>
-          )}
-        </div>
-
-        <div className="bg-[#18181b] border border-zinc-800 rounded-[2rem] p-6 flex flex-col justify-between h-full relative overflow-hidden">
-          <div className="absolute -bottom-16 -left-16 w-36 h-36 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
-          <div className="space-y-3 relative z-10">
-            <div className="p-3 bg-blue-500/10 border border-blue-505/20 text-blue-400 w-fit rounded-2xl">
-              <Cpu size={24} />
-            </div>
-            <h4 className="font-extrabold text-sm text-zinc-100">{t.connectionSecurityNotice}</h4>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              {t.connectionSecurityDesc}
-            </p>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              {t.connectionSecuritySettingsLink}
-            </p>
+                  <div className="p-2 bg-blue-500/10 text-blue-550 dark:text-blue-450 rounded-xl">
+                    <DynamicIcon name={tool.icon} size={16} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-xs text-slate-850 dark:text-zinc-100">{tool.title}</h4>
+                    <span className="text-[10px] text-slate-500 dark:text-zinc-500 block mt-0.5">{localizedCategories.find(c => c.id === tool.categoryId)?.name}</span>
+                  </div>
+                </button>
+                <button
+                  onClick={() => toggleFavorite(tool.id)}
+                  className="p-1.5 text-slate-400 dark:text-zinc-600 hover:text-blue-550 dark:hover:text-blue-400 rounded-xl transition-all cursor-pointer"
+                >
+                  <Star size={16} fill={favorites.includes(tool.id) ? 'currentColor' : 'none'} className={favorites.includes(tool.id) ? 'text-blue-500' : 'text-slate-400 dark:text-zinc-600'} />
+                </button>
+              </div>
+            ))}
           </div>
-        </div>
+        ) : (
+          <div className="p-8 text-center bg-white dark:bg-[#18181b]/30 border border-slate-200 dark:border-zinc-800 rounded-2xl text-xs text-slate-500 dark:text-zinc-500 shadow-sm dark:shadow-none">
+            {t.emptyRecentTools}
+          </div>
+        )}
       </div>
     </div>
   );

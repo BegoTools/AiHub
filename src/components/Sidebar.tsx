@@ -74,9 +74,7 @@ export default function Sidebar({
         {/* Header Branding */}
         <div className="p-6 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-lg font-black shadow-lg shadow-blue-900/40 text-white">
-              <Sparkles size={20} className="animate-pulse" />
-            </div>
+            <img src="/src/assets/logo.svg" alt="AI Hub" className="w-10 h-10 shrink-0" />
             <div>
               <h1 className="font-bold text-base tracking-tight bg-gradient-to-l from-blue-600 dark:from-blue-400 to-slate-900 dark:to-white bg-clip-text text-transparent">{t.appTitle}</h1>
               <span className="text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-zinc-500">{t.appSubtitle}</span>
