@@ -18,7 +18,8 @@
     "lucide-react": "^0.546.0",
     "motion": "^12.40.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "react-router-dom": "^7.17.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",

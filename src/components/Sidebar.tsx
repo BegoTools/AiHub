@@ -15,6 +15,7 @@ import {
   Plus,
   LogIn
 } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import UserMenu from './UserMenu';
 
@@ -28,6 +29,18 @@ interface SidebarProps {
   onOpenAuth?: () => void;
 }
 
+const routeForTab: Record<string, string> = {
+  home: '/home',
+  chat: '/assistant',
+  categories: '/categories',
+  library: '/library',
+  workflows: '/workflows',
+  community: '/community',
+  favorites: '/favorites',
+  history: '/history',
+  settings: '/settings',
+};
+
 export default function Sidebar({ 
   currentTab, 
   setTab, 
@@ -37,6 +50,7 @@ export default function Sidebar({
   t,
   onOpenAuth
 }: SidebarProps) {
+  const navigate = useNavigate();
   const { user } = useAuth();
   
   const navItems = [
@@ -51,8 +65,7 @@ export default function Sidebar({
     { id: 'settings', label: t.settings, icon: Settings },
   ];
 
-  // Create tool is handled separately
-  const handleCreateTool = () => setTab('create-tool');
+  const handleCreateTool = () => navigate('/create-tool');
 
   return (
     <>
@@ -75,20 +88,23 @@ export default function Sidebar({
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = currentTab === item.id;
+            const to = routeForTab[item.id] || `/${item.id}`;
             return (
-              <button
+              <NavLink
                 key={item.id}
+                to={to}
                 id={`nav-link-${item.id}`}
-                onClick={() => setTab(item.id)}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-250 group text-sm ${
-                  isActive 
-                    ? 'bg-blue-50 dark:bg-zinc-800/60 text-blue-600 dark:text-blue-400 border border-blue-105 dark:border-zinc-700/50 font-bold' 
-                    : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/30 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                end={item.id === 'home'}
+                className={({ isActive }) =>
+                  `w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-250 group text-sm ${
+                    isActive
+                      ? 'bg-blue-50 dark:bg-zinc-800/60 text-blue-600 dark:text-blue-400 border border-blue-105 dark:border-zinc-700/50 font-bold'
+                      : 'text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/30 hover:text-slate-900 dark:hover:text-white'
+                  }`
+                }
               >
                 <div className="flex items-center gap-3 font-medium">
-                  <Icon size={17} className={`transition-colors ${isActive ? 'text-blue-500 dark:text-blue-400' : 'text-slate-400 dark:text-zinc-500 group-hover:text-slate-900 group-hover:dark:text-white'}`} />
+                  <Icon size={17} className="transition-colors group-hover:text-inherit" />
                   <span>{item.label}</span>
                 </div>
                 {item.badge !== undefined && (
@@ -96,7 +112,7 @@ export default function Sidebar({
                     {item.badge}
                   </span>
                 )}
-              </button>
+              </NavLink>
             );
           })}
         </nav>
@@ -175,24 +191,27 @@ export default function Sidebar({
       >
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = currentTab === item.id;
+          const to = routeForTab[item.id] || `/${item.id}`;
           return (
-            <button
+            <NavLink
               key={item.id}
+              to={to}
               id={`nav-mobile-${item.id}`}
-              onClick={() => setTab(item.id)}
-              className={`flex flex-col items-center justify-center relative flex-1 py-1.5 px-1 rounded-lg transition-all ${
-                isActive ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900 hover:dark:text-white'
-              }`}
+              end={item.id === 'home'}
+              className={({ isActive }) =>
+                `flex flex-col items-center justify-center relative flex-1 py-1.5 px-1 rounded-lg transition-all ${
+                  isActive ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900 hover:dark:text-white'
+                }`
+              }
             >
-              <Icon size={18} className={`mb-1 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-zinc-500'}`} />
+              <Icon size={18} className="mb-1" />
               <span className="text-[9px] tracking-tight truncate">{item.label}</span>
               {item.badge !== undefined && (
                 <span className="absolute -top-1 right-2/4 translate-x-3 bg-blue-600 text-white text-[9px] font-bold h-4 min-w-[16px] flex items-center justify-center rounded-full px-1">
                   {item.badge}
                 </span>
               )}
-            </button>
+            </NavLink>
           );
         })}
         

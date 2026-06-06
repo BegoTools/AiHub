@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   ArrowRight, ArrowLeft, Check, Play, Sparkles, RefreshCw, Save,
   FileText, ListChecks, HelpCircle, RotateCcw
@@ -11,14 +12,16 @@ import { saveWorkflowProgress, getWorkflowProgress, clearWorkflowProgress } from
 import { DynamicIcon } from '../components/ToolForm';
 
 interface WorkflowRunnerProps {
-  workflowId: string | null;
+  workflowId?: string | null;
   t: any;
   language: string;
   settings: any;
   onBack: () => void;
 }
 
-export default function WorkflowRunner({ workflowId, t, language, settings, onBack }: WorkflowRunnerProps) {
+export default function WorkflowRunner({ workflowId: propWorkflowId, t, language, settings, onBack }: WorkflowRunnerProps) {
+  const { workflowId: paramWorkflowId } = useParams<{ workflowId: string }>();
+  const workflowId = propWorkflowId || paramWorkflowId || null;
   const [workflow, setWorkflow] = useState<Workflow | null>(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [collectedData, setCollectedData] = useState<Record<string, string>>({});

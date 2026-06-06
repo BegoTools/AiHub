@@ -135,11 +135,19 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
                   {tool.usesCount} {t.uses || 'استخدام'}
                 </span>
                 <div className="flex items-center gap-1">
+                  {onOpenTool && (
+                    <button
+                      onClick={() => onOpenTool(tool.id)}
+                      className="px-3 py-1.5 text-[10px] font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-all cursor-pointer"
+                    >
+                      {t.useTool || 'استخدم الأداة'}
+                    </button>
+                  )}
                   <button
                     onClick={() => handleCopyTool(tool)}
                     className="px-3 py-1.5 text-[10px] font-semibold rounded-lg border border-slate-200 dark:border-zinc-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-500/30 text-slate-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
                   >
-                    {copiedId === tool.id ? (t.copied || 'تم النسخ ✓') : (t.useTool || 'استخدم')}
+                    {copiedId === tool.id ? (t.copied || 'تم النسخ ✓') : (t.copy || 'نسخ')}
                   </button>
                 </div>
               </div>
