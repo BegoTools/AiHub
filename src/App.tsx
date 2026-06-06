@@ -50,6 +50,7 @@ import WorkflowRunner from './pages/WorkflowRunner';
 import { workflows } from './data/workflows';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
+import { checkAndMigrateStorage } from './utils/storageCleanup';
 
 export default function App() {
   // Routing hooks
@@ -158,17 +159,20 @@ export default function App() {
 
   // Load state from LocalStorage on mount
   useEffect(() => {
+    // Check storage version and migrate/corrupt old data
+    checkAndMigrateStorage();
+
     // Favorites
-    const savedFavs = localStorage.getItem(LOCAL_STORAGE_KEYS.FAVORITES);
-    if (savedFavs) {
-      try { setFavorites(JSON.parse(savedFavs)); } catch (e) { console.error(e); }
-    }
+const savedFavs = localStorage.getItem(LOCAL_STORAGE_KEYS.FAVORITES);
+if (savedFavs) {
+  try { const parsed = JSON.parse(savedFavs); if (Array.isArray(parsed)) setFavorites(parsed); } catch (e) { console.error(e); }
+}
 
     // History
-    const savedHistory = localStorage.getItem(LOCAL_STORAGE_KEYS.HISTORY);
-    if (savedHistory) {
-      try { setHistory(JSON.parse(savedHistory)); } catch (e) { console.error(e); }
-    }
+const savedHistory = localStorage.getItem(LOCAL_STORAGE_KEYS.HISTORY);
+if (savedHistory) {
+  try { const parsed = JSON.parse(savedHistory); if (Array.isArray(parsed)) setHistory(parsed); } catch (e) { console.error(e); }
+}
 
     // Settings
     const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS);

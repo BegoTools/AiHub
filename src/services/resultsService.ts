@@ -20,11 +20,11 @@ interface LegacyHistoryItem {
 
 export async function getSavedResults(): Promise<StoredResult[]> {
   const results = await localStorageAdapter.getItem<StoredResult[]>(STORAGE_KEY);
-  if (results && results.length > 0) return results;
+  if (Array.isArray(results) && results.length > 0) return results;
 
   // Migrate from legacy history format if exists
   const legacy = await localStorageAdapter.getItem<LegacyHistoryItem[]>(HISTORY_KEY);
-  if (legacy && legacy.length > 0) {
+  if (Array.isArray(legacy) && legacy.length > 0) {
     const migrated: StoredResult[] = legacy.map(item => ({
       id: item.id,
       title: `نتيجة ${item.toolId}`,

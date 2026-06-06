@@ -4,7 +4,7 @@ const STORAGE_KEY = 'ai_tools_hub_favorites';
 
 export async function getFavorites(): Promise<string[]> {
   const favs = await localStorageAdapter.getItem<string[]>(STORAGE_KEY);
-  return favs || [];
+  return Array.isArray(favs) ? favs : [];
 }
 
 export async function addFavorite(toolId: string): Promise<string[]> {

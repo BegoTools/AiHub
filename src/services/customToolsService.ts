@@ -9,7 +9,7 @@ function generateId(): string {
 
 export async function getCustomTools(): Promise<StoredCustomTool[]> {
   const tools = await localStorageAdapter.getItem<StoredCustomTool[]>(STORAGE_KEY);
-  return tools || [];
+  return Array.isArray(tools) ? tools : [];
 }
 
 export async function getCustomToolById(id: string): Promise<StoredCustomTool | null> {

@@ -44,10 +44,10 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
   const filtered = tools.filter(t => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
-    return t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q) || t.tags.some(tag => tag.toLowerCase().includes(q));
+    return t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q) || (t.tags || []).some(tag => tag.toLowerCase().includes(q));
   }).sort((a, b) => {
-    if (sort === 'popular') return b.usesCount - a.usesCount;
-    if (sort === 'recent') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    if (sort === 'popular') return (b.usesCount || 0) - (a.usesCount || 0);
+    if (sort === 'recent') return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
     return 0;
   });
 
@@ -120,13 +120,13 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
               </div>
               <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 leading-relaxed mb-3">{tool.description}</p>
               <div className="flex items-center gap-1.5 flex-wrap mb-3">
-                {tool.tags.slice(0, 3).map((tag, i) => (
+                {(tool.tags || []).slice(0, 3).map((tag, i) => (
                   <span key={i} className="text-[9px] px-2 py-0.5 bg-slate-100 dark:bg-zinc-950 text-slate-500 dark:text-zinc-500 rounded-lg">
                     #{tag}
                   </span>
                 ))}
-                {tool.tags.length > 3 && (
-                  <span className="text-[9px] text-slate-400 dark:text-zinc-600">+{tool.tags.length - 3}</span>
+                {(tool.tags || []).length > 3 && (
+                  <span className="text-[9px] text-slate-400 dark:text-zinc-600">+{(tool.tags || []).length - 3}</span>
                 )}
               </div>
               <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-100 dark:border-zinc-800">

@@ -17,6 +17,7 @@ import LibraryPage from '../pages/LibraryPage';
 import CommunityToolsPage from '../pages/CommunityToolsPage';
 import CreateToolWizard from '../pages/CreateToolWizard';
 import WorkflowRunner from '../pages/WorkflowRunner';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 interface AppRoutesProps {
   t: any;
@@ -136,11 +137,13 @@ export default function AppRoutes({
         />
       } />
       <Route path="/community" element={
-        <CommunityToolsPage
-          t={t}
-          language={language}
-          onOpenTool={openTool}
-        />
+        <ErrorBoundary>
+          <CommunityToolsPage
+            t={t}
+            language={language}
+            onOpenTool={openTool}
+          />
+        </ErrorBoundary>
       } />
       <Route path="/favorites" element={
         <FavoritesPage

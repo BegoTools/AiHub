@@ -50,7 +50,7 @@ export async function getLibraryData(): Promise<LibraryAggregate> {
   }));
 
   const allItems = [...resultItems, ...customToolItems, ...workflowItems];
-  allItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  allItems.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
   return {
     results,

@@ -9,7 +9,7 @@ function generateId(): string {
 
 export async function getChatSessions(): Promise<ChatSession[]> {
   const sessions = await localStorageAdapter.getItem<ChatSession[]>(STORAGE_KEY);
-  return sessions || [];
+  return Array.isArray(sessions) ? sessions : [];
 }
 
 export async function getChatSessionById(id: string): Promise<ChatSession | null> {
