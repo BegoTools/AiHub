@@ -79,50 +79,92 @@ async function startServer() {
   // API Route: AI Chat Assistant
   app.post('/api/chat-assistant', async (req, res) => {
     try {
-      const { message, existingTools, customKey, language } = req.body;
-      const userLang = language || 'ar';
+      const { message, existingTools, existingWorkflows, customKey, language } = req.body;
+      const isArabic = language === 'ar';
 
       if (!message) {
-        return res.status(400).json({ error: 'حقل الرسالة فارغ.' });
+        return res.status(400).json({ error: isArabic ? 'حقل الرسالة فارغ.' : 'Message is empty.' });
       }
 
       const apiKey = customKey || process.env.GEMINI_API_KEY;
       if (!apiKey || apiKey.trim() === '') {
-        return res.status(401).json({ error: 'مفتاح Gemini API غير متوفر.' });
+        return res.status(401).json({ error: isArabic ? 'مفتاح Gemini API غير متوفر.' : 'Gemini API key not available.' });
       }
 
       const ai = new GoogleGenAI({ apiKey });
-      const formattedTools = Array.isArray(existingTools) 
-        ? existingTools.slice(0, 50).map(t => ({ id: t.id, title: t.title, description: t.description }))
+
+      const formattedTools = Array.isArray(existingTools)
+        ? existingTools.slice(0, 50).map((t: any) => ({ id: t.id, title: t.title, description: t.description, category: t.categoryId || '' }))
         : [];
 
+      const formattedWorkflows = Array.isArray(existingWorkflows)
+        ? existingWorkflows.slice(0, 20).map((wf: any) => ({ id: wf.id, title: wf.title, description: wf.description, category: wf.category || '' }))
+        : [];
+
+      const langInstruction = isArabic
+        ? 'أنت المساعد الذكي لمستخدمي منصة أدوات الذكاء الاصطناعي العربية. تواصل مع المستخدم باللغة العربية.'
+        : `You are the AI assistant for the AI Tools Hub platform. Communicate with the user in ${language === 'en' ? 'English' : language === 'de' ? 'German' : language === 'fr' ? 'French' : language === 'it' ? 'Italian' : 'English'}.`;
+
       const systemInstruction = `
-        You are an AI assistant for "Arabic AI Tools Hub". 
-        Language Preference: ${userLang}. 
-        Current Tools: ${JSON.stringify(formattedTools)}
-        
-        Task: 
-        1. If request matches an existing tool, return JSON: {"action": "match", "explanation": "...", "toolId": "..."}
-        2. If no match, create a new tool JSON: {"action": "create", "explanation": "...", "newTool": {...}}
-        
-        New Tool Schema: {id, categoryId, title, description, icon, inputs: [{id, label, type, placeholder, options, defaultValue}], exampleInput, promptTemplateString}
-        Return clean JSON only.
-      `;
+${langInstruction}
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
-        contents: message,
-        config: {
-          systemInstruction
+Your task:
+- Understand the user's request.
+- If a suitable tool exists in existingTools, return JSON with action = "chat".
+- Include suggested tools and workflows in your response.
+- If no tool exists and the user needs a custom one, set needCustomTool: true.
+
+Available tools:
+${JSON.stringify(formattedTools)}
+
+Available workflows:
+${JSON.stringify(formattedWorkflows)}
+
+Return clean JSON only, no markdown.
+
+Response format:
+{
+  "action": "chat",
+  "explanation": "${isArabic ? 'شرح قصير للمستخدم' : 'Short explanation for the user'}",
+  "suggestedTools": [{ "toolId": "tool_id", "reason": "why this tool" }],
+  "suggestedWorkflows": [{ "workflowId": "wf_id", "reason": "why this workflow" }],
+  "needCustomTool": false
+}
+`;
+
+      const modelsToTry = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
+
+      let response: any = null;
+      let lastError: any = null;
+
+      for (const modelName of modelsToTry) {
+        try {
+          response = await ai.models.generateContent({
+            model: modelName,
+            contents: message,
+            config: { systemInstruction, responseMimeType: 'application/json' }
+          });
+          break;
+        } catch (error: any) {
+          lastError = error;
+          const errorText = JSON.stringify(error);
+          const isTemporary =
+            errorText.includes('503') || errorText.includes('UNAVAILABLE') || errorText.includes('high demand');
+          if (!isTemporary) throw error;
         }
-      });
-      let text = (response.text || "").trim();
-      
-      // Clean markdown
-      if (text.startsWith('```json')) text = text.replace(/```json|```/g, '').trim();
-      else if (text.startsWith('```')) text = text.replace(/```/g, '').trim();
+      }
 
-      return res.json(JSON.parse(text));
+      if (!response) {
+        throw new Error(isArabic ? 'موديلات Gemini عليها ضغط مؤقت حاليًا. جرّب تاني بعد دقيقة.' : 'Gemini models are temporarily under high demand. Please try again later.');
+      }
+
+      let text = (response.text || '').trim();
+      if (text.startsWith('```')) {
+        text = text.split('\n').filter((line: string) => !line.trim().startsWith('```')).join('\n').trim();
+      }
+
+      const result = JSON.parse(text);
+      return res.status(200).json(result);
     } catch (err: any) {
       console.error('Chat Assistant Error:', err);
       return res.status(500).json({ error: `فشل المساعد: ${err.message}` });
