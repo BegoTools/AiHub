@@ -318,7 +318,7 @@ export const translations: Record<Language, TranslationDict> = {
     connectionSecuritySettingsLink: 'إذا لم تكن تتوفر على مفتاح تشغيل، يرجى تزويد صفحة (أدوات الاتصال) بمفاتيح Gemini الخاصة بك للحصول على عمل مجاني وتوليد غير محدود.',
     sectionsTitle: 'أقسام الفئات الكبرى والذكاء الفئوي',
     sectionsDesc: 'تصفح الفئات المتكاملة التي تم ترشيحها لتسهيل حياتك وعملك اليومي.',
-    toolsAvailable: '38 أداة جاهزة للعمل',
+    toolsAvailable: 'عدد الأدوات المتاحة الآن',
     tryNow: 'جرب الأداة الآن 🚀',
     removeFromFavorites: 'إزالة من المفضلة 🌟',
     saveToFavorites: 'إضافة للمفضلة 🌟',
