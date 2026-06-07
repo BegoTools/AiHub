@@ -49,7 +49,7 @@ export default function HomePage({ t, localizedCategories, allTools, favorites, 
           </div>
         </div>
 
-        <div className="hidden md:flex relative p-8 bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-3xl w-56 h-56 items-center justify-center shrink-0">
+        <div className="flex relative p-8 bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-3xl w-56 h-56 items-center justify-center shrink-0">
           <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/5 to-transparent animate-pulse rounded-3xl" />
           <div className="flex flex-col items-center gap-2 text-center">
             <img src={logoSrc} alt="AI Hub" className="w-14 h-14 object-contain" />

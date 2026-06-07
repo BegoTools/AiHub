@@ -14,7 +14,8 @@ import {
   Globe,
   Workflow,
   Plus,
-  LogIn
+  LogIn,
+  Wrench
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -28,6 +29,7 @@ interface SidebarProps {
   toggleTheme: () => void;
   t: any;
   onOpenAuth?: () => void;
+  toolsCount?: number;
 }
 
 const routeForTab: Record<string, string> = {
@@ -37,6 +39,7 @@ const routeForTab: Record<string, string> = {
   library: '/library',
   workflows: '/workflows',
   community: '/community',
+  'my-tools': '/my-tools',
   favorites: '/favorites',
   history: '/history',
   profile: '/account',
@@ -49,7 +52,8 @@ export default function Sidebar({
   theme, 
   toggleTheme,
   t,
-  onOpenAuth
+  onOpenAuth,
+  toolsCount
 }: SidebarProps) {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -61,6 +65,7 @@ export default function Sidebar({
     { id: 'library', label: t.libraryNav || 'المكتبة', icon: Library },
     { id: 'workflows', label: t.workflowsNav || 'الرحلات', icon: Workflow },
     { id: 'community', label: t.communityNav || 'المجتمع', icon: Globe },
+    { id: 'my-tools', label: t.myToolsNav || 'أدواتي', icon: Wrench, badge: toolsCount && toolsCount > 0 ? toolsCount : undefined },
     { id: 'favorites', label: t.favorites, icon: Star, badge: favoritesCount > 0 ? favoritesCount : undefined },
     { id: 'history', label: t.history, icon: HistoryIcon },
     { id: 'profile', label: t.profile, icon: User },

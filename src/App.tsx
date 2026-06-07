@@ -452,6 +452,7 @@ export default function App() {
           toggleTheme={toggleTheme}
           t={t}
           onOpenAuth={() => setShowAuthModal(true)}
+          toolsCount={customTools.length}
         />
 
         <main className="flex-1 flex flex-col min-w-0 h-full overflow-y-auto overflow-x-hidden relative bg-slate-50 dark:bg-[#09090b] transition-colors duration-300 pb-20 lg:pb-0">

@@ -156,6 +156,7 @@ export interface TranslationDict {
   libraryNav: string;
   workflowsNav: string;
   communityNav: string;
+  myToolsNav: string;
   libraryTitle: string;
   libraryDesc: string;
   emptyLibrary: string;
@@ -305,7 +306,7 @@ export const translations: Record<Language, TranslationDict> = {
     searchResultTitle: 'نتائج البحث عن',
     allFeatures: 'كل ما تحتاج في مكان واحد',
     heroTitle: 'صديقك الذكي للمهام المعقدة والمستعصية! 🚀',
-    heroDesc: 'اختر من بين 38 أداة متخصصة مبنية بأقوى نماذج الذكاء الاصطناعي لمساعدتك في التلخيص، الكتابة، التسويق، وصحة بدنك مجاناً وبكل أمان.',
+    heroDesc: 'اختر من بين جميع أدوات المتخصصة المبنية بأقوى نماذج الذكاء الاصطناعي وأدوات المستخدمين لمساعدتك في التلخيص، الكتابة، التسويق، وصحة بدنك مجاناً وبكل أمان.',
     exploreTools: 'اكتشف أدوات المنصة 🔍',
     techDetails: 'تعرف على تكنولوجيا المنصة 🧪',
     categoriesGridTitle: 'تصفح الفئات والأقسام الرئيسية 📁',
@@ -393,6 +394,7 @@ export const translations: Record<Language, TranslationDict> = {
     libraryNav: 'المكتبة',
     workflowsNav: 'الرحلات الذكية',
     communityNav: 'المجتمع',
+    myToolsNav: 'أدواتي',
     libraryTitle: 'المكتبة',
     libraryDesc: 'كل نتائجك وأدواتك المخصصة ورحلاتك في مكان واحد',
     emptyLibrary: 'مكتبتك فارغة',
@@ -628,6 +630,7 @@ export const translations: Record<Language, TranslationDict> = {
     libraryNav: 'Library',
     workflowsNav: 'Smart Workflows',
     communityNav: 'Community',
+    myToolsNav: 'My Tools',
     libraryTitle: 'Library',
     libraryDesc: 'All your saved results, custom tools, and workflows in one place',
     emptyLibrary: 'Your library is empty',
@@ -863,6 +866,7 @@ export const translations: Record<Language, TranslationDict> = {
     libraryNav: 'Bibliothek',
     workflowsNav: 'Workflows',
     communityNav: 'Community',
+    myToolsNav: 'Meine Werkzeuge',
     libraryTitle: 'Bibliothek',
     libraryDesc: 'Alle Ergebnisse, benutzerdefinierte Tools und Workflows an einem Ort',
     emptyLibrary: 'Ihre Bibliothek ist leer',
@@ -1098,6 +1102,7 @@ export const translations: Record<Language, TranslationDict> = {
     libraryNav: 'Bibliothèque',
     workflowsNav: 'Workflows',
     communityNav: 'Communauté',
+    myToolsNav: 'Mes Outils',
     libraryTitle: 'Bibliothèque',
     libraryDesc: 'Tous vos résultats, outils et workflows au même endroit',
     emptyLibrary: 'Votre bibliothèque est vide',
@@ -1333,6 +1338,7 @@ export const translations: Record<Language, TranslationDict> = {
     libraryNav: 'Biblioteca',
     workflowsNav: 'Flussi di lavoro',
     communityNav: 'Community',
+    myToolsNav: 'I Miei Strumenti',
     libraryTitle: 'Biblioteca',
     libraryDesc: 'Tutti i tuoi risultati, strumenti e flussi in un unico posto',
     emptyLibrary: 'La tua biblioteca è vuota',

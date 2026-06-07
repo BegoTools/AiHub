@@ -19,6 +19,7 @@ import TermsPage from '../pages/TermsPage';
 import DataDeletionPage from '../pages/DataDeletionPage';
 import LibraryPage from '../pages/LibraryPage';
 import CommunityToolsPage from '../pages/CommunityToolsPage';
+import MyToolsPage from '../pages/MyToolsPage';
 import CreateToolWizard from '../pages/CreateToolWizard';
 import WorkflowRunner from '../pages/WorkflowRunner';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -138,6 +139,15 @@ export default function AppRoutes({
       <Route path="/community" element={
         <ErrorBoundary>
           <CommunityToolsPage
+            t={t}
+            language={language}
+            onOpenTool={openTool}
+          />
+        </ErrorBoundary>
+      } />
+      <Route path="/my-tools" element={
+        <ErrorBoundary>
+          <MyToolsPage
             t={t}
             language={language}
             onOpenTool={openTool}
