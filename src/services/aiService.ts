@@ -1,11 +1,14 @@
+import { getGeminiKey } from '../utils/apiKeyManager';
+
 export async function generateAIContent(prompt: string): Promise<string> {
   try {
+    const customKey = getGeminiKey();
     const response = await fetch('/api/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ prompt })
+      body: JSON.stringify({ prompt, customKey: customKey || undefined })
     });
 
     const data = await response.json();
