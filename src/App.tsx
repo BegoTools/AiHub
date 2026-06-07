@@ -100,7 +100,12 @@ export default function App() {
 
   // Load public community tools on mount (no auth required)
   useEffect(() => {
-    getAllPublicTools().then(publicTools => {
+    refreshPublicTools();
+  }, []);
+
+  async function refreshPublicTools() {
+    try {
+      const publicTools = await getAllPublicTools();
       if (publicTools.length > 0) {
         setCustomTools(prev => {
           const existingIds = new Set(prev.map(t => t.id));
@@ -110,8 +115,8 @@ export default function App() {
           return [...prev, ...newTools];
         });
       }
-    }).catch(() => {});
-  }, []);
+    } catch {}
+  }
 
   function storedToRuntimeTool(st: StoredCustomTool): Tool {
     return {
@@ -314,6 +319,7 @@ export default function App() {
           ownerId: user.id,
           createdByName: newToolRaw.createdByName || getFirstName(undefined, user.user_metadata, user.email),
         });
+        await refreshPublicTools();
       } catch (e) {
         console.error('[App] Failed to save custom tool:', e);
       }

@@ -58,8 +58,21 @@ const intentKeywords: Record<string, string[]> = {
   social: ['بوست', 'منشور', 'فيسبوك', 'تيك توك', 'post', 'facebook', 'social'],
   analysis: ['تحليل', 'analysis', 'decision', 'قرار'],
   reply: ['رد', 'عميل', 'client', 'customer', 'reply'],
-  tool: ['أداة', 'اداة', 'tool', 'make', 'اصنع', 'صنع', 'create'],
+  tool: ['اصنع', 'صنع', 'أنشئ', 'أنشاء', 'create', 'build', 'make', 'أداة', 'اداة', 'tool'],
 };
+
+export function isToolCreationIntent(text: string): boolean {
+  const creationKeywords = [
+    'اصنع', 'صنع', 'أنشئ', 'أنشاء', 'إنشاء',
+    'create', 'build', 'make', 'construct',
+    'أداة', 'اداة', 'tool', 'اداه',
+    'اعمل', 'عمل', 'do', 'make',
+  ];
+  const normalized = normalize(text);
+  const hasCreationVerb = creationKeywords.some(kw => normalized.includes(kw));
+  const hasToolNoun = ['أداة', 'اداة', 'اداه', 'tool', 'tools'].some(kw => normalized.includes(kw));
+  return hasCreationVerb && hasToolNoun;
+}
 
 function detectIntents(query: string): string[] {
   const tokens = tokenize(query);

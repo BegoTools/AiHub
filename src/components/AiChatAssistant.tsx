@@ -10,7 +10,7 @@ import { Tool } from '../types';
 import type { Workflow } from '../types/workflowTypes';
 import { DynamicIcon } from './ToolForm';
 import { getFirstName } from '../utils/getFirstName';
-import { analyzeIntent, getSuggestionsForResponse, ScoredItem } from '../lib/intentRouter';
+import { analyzeIntent, getSuggestionsForResponse, isToolCreationIntent, ScoredItem } from '../lib/intentRouter';
 import { apiPost } from '../lib/apiClient';
 import {
   getChatSessions, createChatSession, addMessageToSession,
@@ -207,6 +207,85 @@ const chatTranslations: Record<string, {
   },
 };
 
+function generateToolFromMessage(text: string, language: string): any {
+  const normalized = text.toLowerCase();
+  const isAr = language === 'ar';
+  const toolNoun = isAr ? 'أداة' : 'tool';
+  const forWord = isAr ? ['لـ', 'ل', 'تعمل', 'تقوم', 'اللي', 'بت'] : ['for', 'to', 'that'];
+
+  let purpose = text;
+  for (const marker of [toolNoun, ...forWord]) {
+    const idx = isAr ? purpose.lastIndexOf(marker) : purpose.indexOf(marker);
+    if (idx !== -1) {
+      purpose = isAr ? purpose.substring(idx + marker.length) : purpose.substring(idx + marker.length);
+      break;
+    }
+  }
+  purpose = purpose.replace(/^(لـ|ل|:|"|'| )/, '').replace(/["']/g, '').trim().slice(0, 80);
+
+  let title = '';
+  let description = '';
+  let categoryId = 'general';
+  const defaultFields: { id: string; label: string; type: string; placeholder: string; required: boolean }[] = [];
+
+  if (/لخص|تلخيص|ملخص|summarize|summary|موجز/i.test(text)) {
+    categoryId = 'writing';
+    title = isAr ? `ملخص ${purpose || 'النصوص'}` : `${purpose || 'Text'} Summarizer`;
+    description = isAr ? `أداة ذكية لتلخيص ${purpose || 'النصوص والمقالات'} بشكل احترافي` : `Smart tool to summarize ${purpose || 'texts and articles'} professionally`;
+    defaultFields.push({ id: 'text', label: isAr ? 'النص المراد تلخيصه' : 'Text to summarize', type: 'textarea', placeholder: isAr ? 'ألصق النص هنا...' : 'Paste text here...', required: true });
+  } else if (/كتب|كتابة|مقال|write|article|essay/i.test(text)) {
+    categoryId = 'writing';
+    title = isAr ? `كاتب ${purpose || 'المحتوى'}` : `${purpose || 'Content'} Writer`;
+    description = isAr ? `أداة متخصصة في كتابة ${purpose || 'المقالات والمحتوى الإبداعي'}` : `Specialized tool for writing ${purpose || 'articles and creative content'}`;
+    defaultFields.push({ id: 'topic', label: isAr ? 'الموضوع' : 'Topic', type: 'textarea', placeholder: isAr ? 'اكتب الموضوع هنا...' : 'Enter topic here...', required: true });
+  } else if (/ترجم|translation|translate/i.test(text)) {
+    categoryId = 'writing';
+    title = isAr ? `مترجم ${purpose || 'النصوص'}` : `${purpose || 'Text'} Translator`;
+    description = isAr ? `أداة ترجمة ذكية لـ ${purpose || 'النصوص بين اللغات'}` : `Smart translation tool for ${purpose || 'texts between languages'}`;
+    defaultFields.push({ id: 'text', label: isAr ? 'النص المراد ترجمته' : 'Text to translate', type: 'textarea', placeholder: isAr ? 'ألصق النص...' : 'Paste text...', required: true });
+  } else if (/كود|برمجة|code|programming|develop/i.test(text)) {
+    categoryId = 'coding';
+    title = isAr ? `مبرمج ${purpose || 'الأكواد'}` : `${purpose || 'Code'} Generator`;
+    description = isAr ? `أداة برمجية ذكية لـ ${purpose || 'كتابة وتوليد الأكواد'}` : `Smart coding tool for ${purpose || 'writing and generating code'}`;
+    defaultFields.push({ id: 'request', label: isAr ? 'الطلب' : 'Request', type: 'textarea', placeholder: isAr ? 'صف الكود المطلوب...' : 'Describe the code...', required: true });
+  } else if (/تسويق|إعلان|marketing|advertisement|promot/i.test(text)) {
+    categoryId = 'marketing';
+    title = isAr ? `مسوق ${purpose || 'المنتجات'}` : `${purpose || 'Product'} Marketer`;
+    description = isAr ? `أداة تسويقية متكاملة لـ ${purpose || 'كتابة الإعلانات والحملات'}` : `Complete marketing tool for ${purpose || 'writing ads and campaigns'}`;
+    defaultFields.push({ id: 'product', label: isAr ? 'المنتج' : 'Product', type: 'textarea', placeholder: isAr ? 'صف المنتج...' : 'Describe the product...', required: true });
+  } else if (/سيرة|ذاتية|cv|resume/i.test(text)) {
+    categoryId = 'career';
+    title = isAr ? 'كاتب السيرة الذاتية' : 'CV Writer';
+    description = isAr ? 'أداة احترافية لكتابة السيرة الذاتية' : 'Professional CV writing tool';
+    defaultFields.push({ id: 'experience', label: isAr ? 'الخبرات' : 'Experience', type: 'textarea', placeholder: isAr ? 'اكتب خبراتك...' : 'Enter your experience...', required: true });
+  } else {
+    categoryId = 'general';
+    title = isAr ? `أداة ${purpose || 'مخصصة'}` : `${purpose || 'Custom'} Tool`;
+    description = isAr ? `أداة ذكية لـ ${purpose || 'مهمتك الخاصة'}` : `Smart tool for ${purpose || 'your custom task'}`;
+    defaultFields.push({ id: 'input', label: isAr ? 'الإدخال' : 'Input', type: 'textarea', placeholder: isAr ? 'اكتب متطلباتك...' : 'Enter your requirements...', required: true });
+  }
+
+  if (!title.trim()) title = isAr ? 'أداة مخصصة' : 'Custom Tool';
+  if (!description.trim()) description = isAr ? 'أداة ذكية لمساعدتك في مهامك' : 'Smart tool to help you with your tasks';
+
+  const inputPlaceholder = defaultFields[0]?.placeholder || (isAr ? 'أدخل النص' : 'Enter text');
+
+  return {
+    id: `custom_${Date.now()}`,
+    title,
+    description,
+    categoryId,
+    icon: 'Sparkles',
+    inputs: defaultFields,
+    promptTemplateString: isAr
+      ? `نفذ المهمة التالية باحترافية:\n\n{${defaultFields[0]?.id || 'input'}}`
+      : `Execute the following task professionally:\n\n{${defaultFields[0]?.id || 'input'}}`,
+    visibility: 'public',
+    tags: [categoryId, 'chat-created', language],
+    createdByName: undefined,
+  };
+}
+
 export default function AiChatAssistant({
   allTools, allWorkflows, onOpenTool,
   onOpenWorkflow, onAddCustomTool, language, onOpenAuth
@@ -349,6 +428,35 @@ export default function AiChatAssistant({
 
   const handleSendMessage = async (textToSend: string) => {
     if (!textToSend.trim() || isLoading) return;
+
+    // Tool creation intent: specific auth message + client-side tool generation
+    if (isToolCreationIntent(textToSend)) {
+      if (!user) {
+        onOpenAuth?.(language === 'ar' ? 'سجل دخولك أولًا لإنشاء أداة' : 'Please log in first to create a tool');
+        return;
+      }
+      const newTool = generateToolFromMessage(textToSend, language);
+      setPendingTool(newTool);
+      const assistantText = language === 'ar'
+        ? `✅ تم اقتراح أداة جديدة!\n\n**${newTool.title}**\n${newTool.description}\n\nيمكنك مراجعة التفاصيل أدناه وتعديلها قبل النشر.`
+        : `✅ A new tool has been suggested!\n\n**${newTool.title}**\n${newTool.description}\n\nYou can review the details below and edit before publishing.`;
+      const assistantMsg: ChatMessage = {
+        id: `assistant_${Date.now()}`,
+        sender: 'assistant',
+        text: assistantText,
+        timestamp: new Date(),
+        needCustomTool: true,
+        createdTool: newTool,
+      };
+      setMessages(prev => [...prev, userMsg, assistantMsg]);
+      if (activeSessionId) {
+        await addMessageToSession(activeSessionId, 'user', textToSend);
+        await addMessageToSession(activeSessionId, 'assistant', assistantText, { needCustomTool: true, createdTool: newTool });
+      }
+      setSuggestions(getSuggestionsForResponse(language));
+      return;
+    }
+
     if (!user) { onOpenAuth?.(t.authRequiredForChat); return; }
 
     const userMsg: ChatMessage = {

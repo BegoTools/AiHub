@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import { ArrowRight, ArrowLeft, Plus, Trash2, Save, Sparkles, Wrench, Eye, EyeOff, GripVertical, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, ArrowLeft, Plus, Trash2, Save, Sparkles, Wrench, Eye, EyeOff, GripVertical, Check, Globe } from 'lucide-react';
 import { createCustomTool } from '../services/customToolsService';
 import { DynamicIcon } from '../components/ToolForm';
+import { useAuth } from '../context/AuthContext';
+import { getFirstName } from '../utils/getFirstName';
 
 interface CreateToolWizardProps {
   t: any;
@@ -22,12 +25,14 @@ interface FieldDef {
 const ICONS = ['Wand', 'Sparkles', 'Heart', 'Star', 'Zap', 'Cloud', 'Sun', 'Moon', 'Globe', 'Lock', 'Bell', 'Book', 'Camera', 'Clock', 'Compass', 'Cpu', 'FileText', 'Flag', 'Gift', 'Hash', 'Home', 'Image', 'Key', 'Layers', 'Lightbulb', 'Link', 'List', 'Mail', 'Map', 'MessageCircle', 'Music', 'Pen', 'Phone', 'Rocket', 'Search', 'Settings', 'Shield', 'ShoppingBag', 'Smartphone', 'Smile', 'Target', 'Terminal', 'Tool', 'TrendingUp', 'Trophy', 'Umbrella', 'User', 'Video', 'Volume2', 'Watch'];
 
 export default function CreateToolWizard({ t, language, onSuccess, onCancel }: CreateToolWizardProps) {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [step, setStep] = useState(0);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('daily');
   const [icon, setIcon] = useState('Wand');
-  const [visibility, setVisibility] = useState<'private' | 'public'>('private');
+  const [visibility, setVisibility] = useState<'private' | 'public'>('public');
   const [promptTemplate, setPromptTemplate] = useState('');
   const [fields, setFields] = useState<FieldDef[]>([
     { id: 'input_1', label: '', type: 'textarea', placeholder: '', options: '', required: false },
@@ -59,13 +64,14 @@ export default function CreateToolWizard({ t, language, onSuccess, onCancel }: C
     setError(null);
     try {
       const tagList = tags.split(',').map(s => s.trim()).filter(Boolean);
+      const createdByName = getFirstName(undefined, user?.user_metadata, user?.email);
       await createCustomTool({
         id: `custom_${Date.now()}`,
         title: title.trim(),
         description: description.trim(),
         category,
         icon,
-        visibility,
+        visibility: 'public',
         promptTemplateString: promptTemplate.trim(),
         inputFields: fields.map(f => ({
           id: f.id,
@@ -79,8 +85,10 @@ export default function CreateToolWizard({ t, language, onSuccess, onCancel }: C
           required: f.required,
         })),
         tags: tagList,
+        createdByName,
       });
       onSuccess();
+      navigate('/community');
     } catch (e: any) {
       setError(e.message || 'حدث خطأ أثناء الحفظ');
     }
