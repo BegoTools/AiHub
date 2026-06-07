@@ -83,7 +83,9 @@ export default function ProfilePage({ t, onOpenAuth }: ProfilePageProps) {
           </div>
           <div>
             <h1 className="text-xl font-extrabold text-slate-800 dark:text-zinc-100">{t.accountTitle}</h1>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">{user.email}</p>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+              {user.email || (t.facebookNoEmail || 'لم يوفر Facebook البريد الإلكتروني لهذا الحساب')}
+            </p>
           </div>
         </div>
 
@@ -106,7 +108,7 @@ export default function ProfilePage({ t, onOpenAuth }: ProfilePageProps) {
             <div className="flex items-center gap-3 text-sm min-w-0">
               <Mail size={15} className="text-slate-400 shrink-0" />
               <span className="text-slate-600 dark:text-zinc-400 shrink-0">{t.email || 'Email'}:</span>
-              <span className="text-slate-800 dark:text-zinc-200 font-medium ms-auto break-all min-w-0 text-left">{user.email}</span>
+              <span className="text-slate-800 dark:text-zinc-200 font-medium ms-auto break-all min-w-0 text-left">{user.email || (t.facebookNoEmail || 'لم يوفر Facebook البريد الإلكتروني لهذا الحساب')}</span>
             </div>
             <div className="flex items-center gap-3 text-sm">
               <Calendar size={15} className="text-slate-400 shrink-0" />

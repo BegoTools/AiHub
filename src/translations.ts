@@ -249,6 +249,7 @@ export interface TranslationDict {
   authLoginToContinue: string;
   signInWithFacebook: string;
   facebookAuthFailed: string;
+  facebookNoEmail: string;
 }
 
 export const translations: Record<Language, TranslationDict> = {
@@ -484,7 +485,8 @@ export const translations: Record<Language, TranslationDict> = {
     authCreateFreeAccount: 'أنشئ حسابًا مجانيًا للمتابعة',
     authLoginToContinue: 'تسجيل الدخول للمتابعة',
     signInWithFacebook: 'تسجيل الدخول باستخدام Facebook',
-    facebookAuthFailed: 'حدث خطأ أثناء تسجيل الدخول باستخدام Facebook، حاول مرة أخرى.'
+    facebookAuthFailed: 'حدث خطأ أثناء تسجيل الدخول باستخدام Facebook، حاول مرة أخرى.',
+    facebookNoEmail: 'لم يوفر Facebook البريد الإلكتروني لهذا الحساب'
   },
   en: {
     home: 'Home 🏠',
@@ -718,7 +720,8 @@ export const translations: Record<Language, TranslationDict> = {
     authCreateFreeAccount: 'Create a free account to continue',
     authLoginToContinue: 'Log in to continue',
     signInWithFacebook: 'Sign in with Facebook',
-    facebookAuthFailed: 'Facebook login failed. Please try again.'
+    facebookAuthFailed: 'Facebook login failed. Please try again.',
+    facebookNoEmail: 'Facebook did not provide an email for this account'
   },
   de: {
     home: 'Startseite 🏠',
@@ -952,7 +955,8 @@ export const translations: Record<Language, TranslationDict> = {
     authCreateFreeAccount: 'Erstellen Sie ein kostenloses Konto',
     authLoginToContinue: 'Weiter mit Anmeldung',
     signInWithFacebook: 'Mit Facebook anmelden',
-    facebookAuthFailed: 'Facebook-Login fehlgeschlagen. Bitte versuchen Sie es erneut.'
+    facebookAuthFailed: 'Facebook-Login fehlgeschlagen. Bitte versuchen Sie es erneut.',
+    facebookNoEmail: 'Facebook hat keine E-Mail-Adresse für dieses Konto bereitgestellt'
   },
   fr: {
     home: 'Accueil 🏠',
@@ -1186,7 +1190,8 @@ export const translations: Record<Language, TranslationDict> = {
     authCreateFreeAccount: 'Créez un compte gratuit pour continuer',
     authLoginToContinue: 'Se connecter pour continuer',
     signInWithFacebook: 'Se connecter avec Facebook',
-    facebookAuthFailed: 'Échec de la connexion Facebook. Veuillez réessayer.'
+    facebookAuthFailed: 'Échec de la connexion Facebook. Veuillez réessayer.',
+    facebookNoEmail: "Facebook n'a pas fourni d'email pour ce compte"
   },
   it: {
     home: 'Home 🏠',
@@ -1420,6 +1425,7 @@ export const translations: Record<Language, TranslationDict> = {
     authCreateFreeAccount: 'Crea un account gratuito per continuare',
     authLoginToContinue: 'Accedi per continuare',
     signInWithFacebook: 'Accedi con Facebook',
-    facebookAuthFailed: 'Accesso Facebook fallito. Riprova.'
+    facebookAuthFailed: 'Accesso Facebook fallito. Riprova.',
+    facebookNoEmail: 'Facebook non ha fornito un\'email per questo account'
   }
 };

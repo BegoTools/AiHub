@@ -47,11 +47,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithFacebook = async (): Promise<{ error: string | null }> => {
     try {
+      const redirectTo = `${window.location.origin}/auth/callback`;
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
-        options: {
-          redirectTo: window.location.origin
-        }
+        options: { redirectTo }
       });
       return { error: error?.message ?? null };
     } catch (e: any) {

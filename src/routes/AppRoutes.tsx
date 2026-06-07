@@ -13,6 +13,10 @@ import HistoryPage from '../pages/HistoryPage';
 import WorkflowsPage from '../pages/WorkflowsPage';
 import ProfilePage from '../pages/ProfilePage';
 import AboutPage from '../pages/AboutPage';
+import AuthCallback from '../pages/AuthCallback';
+import PrivacyPage from '../pages/PrivacyPage';
+import TermsPage from '../pages/TermsPage';
+import DataDeletionPage from '../pages/DataDeletionPage';
 import LibraryPage from '../pages/LibraryPage';
 import CommunityToolsPage from '../pages/CommunityToolsPage';
 import CreateToolWizard from '../pages/CreateToolWizard';
@@ -166,6 +170,16 @@ export default function AppRoutes({
           t={t}
           onOpenAuth={() => onOpenAuth(t.authSignInRequired || '')}
         />
+      } />
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route path="/privacy" element={
+        <PrivacyPage t={t} language={language} />
+      } />
+      <Route path="/terms" element={
+        <TermsPage t={t} language={language} />
+      } />
+      <Route path="/data-deletion" element={
+        <DataDeletionPage t={t} language={language} />
       } />
       <Route path="/about" element={
         <AboutPage t={t} />
