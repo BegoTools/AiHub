@@ -247,6 +247,8 @@ export interface TranslationDict {
   authRequiredForChat: string;
   authCreateFreeAccount: string;
   authLoginToContinue: string;
+  signInWithFacebook: string;
+  facebookAuthFailed: string;
 }
 
 export const translations: Record<Language, TranslationDict> = {
@@ -480,7 +482,9 @@ export const translations: Record<Language, TranslationDict> = {
     authRequiredForTool: 'يجب تسجيل الدخول أولًا لاستخدام هذه الأداة',
     authRequiredForChat: 'سجل دخولك لاستخدام المساعد الذكي',
     authCreateFreeAccount: 'أنشئ حسابًا مجانيًا للمتابعة',
-    authLoginToContinue: 'تسجيل الدخول للمتابعة'
+    authLoginToContinue: 'تسجيل الدخول للمتابعة',
+    signInWithFacebook: 'تسجيل الدخول باستخدام Facebook',
+    facebookAuthFailed: 'حدث خطأ أثناء تسجيل الدخول باستخدام Facebook، حاول مرة أخرى.'
   },
   en: {
     home: 'Home 🏠',
@@ -712,7 +716,9 @@ export const translations: Record<Language, TranslationDict> = {
     authRequiredForTool: 'You must log in first to use this tool',
     authRequiredForChat: 'Please log in to use the AI assistant',
     authCreateFreeAccount: 'Create a free account to continue',
-    authLoginToContinue: 'Log in to continue'
+    authLoginToContinue: 'Log in to continue',
+    signInWithFacebook: 'Sign in with Facebook',
+    facebookAuthFailed: 'Facebook login failed. Please try again.'
   },
   de: {
     home: 'Startseite 🏠',
@@ -944,7 +950,9 @@ export const translations: Record<Language, TranslationDict> = {
     authRequiredForTool: 'Sie müssen sich anmelden, um dieses Tool zu nutzen',
     authRequiredForChat: 'Bitte melden Sie sich an, um den KI-Assistenten zu nutzen',
     authCreateFreeAccount: 'Erstellen Sie ein kostenloses Konto',
-    authLoginToContinue: 'Weiter mit Anmeldung'
+    authLoginToContinue: 'Weiter mit Anmeldung',
+    signInWithFacebook: 'Mit Facebook anmelden',
+    facebookAuthFailed: 'Facebook-Login fehlgeschlagen. Bitte versuchen Sie es erneut.'
   },
   fr: {
     home: 'Accueil 🏠',
@@ -1176,7 +1184,9 @@ export const translations: Record<Language, TranslationDict> = {
     authRequiredForTool: 'Vous devez vous connecter pour utiliser cet outil',
     authRequiredForChat: 'Connectez-vous pour utiliser l\'assistant IA',
     authCreateFreeAccount: 'Créez un compte gratuit pour continuer',
-    authLoginToContinue: 'Se connecter pour continuer'
+    authLoginToContinue: 'Se connecter pour continuer',
+    signInWithFacebook: 'Se connecter avec Facebook',
+    facebookAuthFailed: 'Échec de la connexion Facebook. Veuillez réessayer.'
   },
   it: {
     home: 'Home 🏠',
@@ -1408,6 +1418,8 @@ export const translations: Record<Language, TranslationDict> = {
     authRequiredForTool: 'Devi accedere prima di usare questo strumento',
     authRequiredForChat: 'Accedi per utilizzare l\'assistente IA',
     authCreateFreeAccount: 'Crea un account gratuito per continuare',
-    authLoginToContinue: 'Accedi per continuare'
+    authLoginToContinue: 'Accedi per continuare',
+    signInWithFacebook: 'Accedi con Facebook',
+    facebookAuthFailed: 'Accesso Facebook fallito. Riprova.'
   }
 };

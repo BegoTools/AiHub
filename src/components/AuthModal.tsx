@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -15,14 +15,22 @@ interface AuthModalProps {
 type AuthView = 'login' | 'signup';
 
 export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProps) {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, signInWithFacebook, user } = useAuth();
   const [view, setView] = useState<AuthView>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [fbLoading, setFbLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (user && isOpen) {
+      if (user) migrateFromLocalStorage(user.id);
+      onClose();
+    }
+  }, [user, isOpen, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,11 +75,22 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
     setLoading(false);
   };
 
+  const handleFacebookSignIn = async () => {
+    setFbLoading(true);
+    setError(null);
+    const { error } = await signInWithFacebook();
+    if (error) {
+      setError(t.facebookAuthFailed || 'حدث خطأ أثناء تسجيل الدخول باستخدام Facebook، حاول مرة أخرى.');
+      setFbLoading(false);
+    }
+  };
+
   const switchView = () => {
     setView(view === 'login' ? 'signup' : 'login');
     setError(null);
     setPassword('');
     setConfirmPassword('');
+    setFbLoading(false);
   };
 
   return (
@@ -193,6 +212,33 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
                 }
               </button>
             </form>
+
+            <div className="relative my-5">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200 dark:border-zinc-800" />
+              </div>
+              <div className="relative flex justify-center">
+                <span className="px-3 bg-white dark:bg-[#18181b] text-xs text-slate-400 dark:text-zinc-500">
+                  {t.continueWith || 'أو'}
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleFacebookSignIn}
+              disabled={fbLoading}
+              className="w-full py-2.5 bg-[#1877F2] hover:bg-[#166FE5] text-white font-bold text-sm rounded-xl transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              {fbLoading ? (
+                <Loader2 size={15} className="animate-spin" />
+              ) : (
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" className="shrink-0">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+              )}
+              {t.signInWithFacebook || 'تسجيل الدخول باستخدام Facebook'}
+            </button>
 
             <div className="mt-4 text-center">
               <button

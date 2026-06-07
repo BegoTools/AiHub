@@ -48,7 +48,9 @@ export default function ProfilePage({ t, onOpenAuth }: ProfilePageProps) {
     );
   }
 
-  const avatarLetter = (user.email?.[0] || 'U').toUpperCase();
+  const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || '';
+  const displayNameFromMeta = user.user_metadata?.full_name || user.user_metadata?.name || '';
+  const avatarLetter = (displayNameFromMeta?.[0] || user.email?.[0] || 'U').toUpperCase();
   const memberDate = profile?.created_at || user.created_at || '';
 
   const handleSave = async () => {
@@ -72,8 +74,12 @@ export default function ProfilePage({ t, onOpenAuth }: ProfilePageProps) {
     <div className="max-w-lg mx-auto space-y-6 animate-fade-in font-sans">
       <div className="bg-white dark:bg-[#18181b] border border-slate-200 dark:border-zinc-800 rounded-[2rem] p-6 lg:p-8 shadow-sm">
         <div className="flex flex-col items-center text-center gap-4 mb-8">
-          <div className="w-20 h-20 rounded-full bg-amber-500 flex items-center justify-center text-white font-black text-2xl shadow-lg">
-            {avatarLetter}
+          <div className="w-20 h-20 rounded-full bg-amber-500 flex items-center justify-center text-white font-black text-2xl shadow-lg overflow-hidden">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+            ) : (
+              avatarLetter
+            )}
           </div>
           <div>
             <h1 className="text-xl font-extrabold text-slate-800 dark:text-zinc-100">{t.accountTitle}</h1>
