@@ -10,7 +10,6 @@ import { Tool } from '../types';
 import type { Workflow } from '../types/workflowTypes';
 import { DynamicIcon } from './ToolForm';
 import { getFirstName } from '../utils/getFirstName';
-import { getGeminiKey } from '../utils/apiKeyManager';
 import { analyzeIntent, getSuggestionsForResponse, isToolCreationIntent, ScoredItem } from '../lib/intentRouter';
 import { apiPost } from '../lib/apiClient';
 import {
@@ -539,7 +538,6 @@ export default function AiChatAssistant({
             existingTools: allTools,
             existingWorkflows: allWorkflows,
             language,
-            customKey: getGeminiKey() || undefined,
           }, 30000);
 
           assistantText = data.explanation || (language === 'ar' ? 'تمت المعالجة!' : 'Processed!');
@@ -598,7 +596,6 @@ export default function AiChatAssistant({
           existingTools: allTools,
           existingWorkflows: allWorkflows,
           language,
-          customKey: getGeminiKey() || undefined,
         }, 30000);
 
         assistantText = data.explanation || (language === 'ar' ? 'تمت المعالجة!' : 'Processed!');

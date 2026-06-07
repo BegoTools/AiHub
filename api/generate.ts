@@ -38,7 +38,7 @@ export default async function handler(req: any, res: any) {
 
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-    const { prompt, provider, model, customKey } = body;
+    const { prompt, provider, model } = body;
 
     if (!prompt || String(prompt).trim() === "") {
       return res.status(400).json({ error: "حقل النص المطلوب فارغ." });
@@ -47,12 +47,12 @@ export default async function handler(req: any, res: any) {
     const selectedProvider = provider || 'gemini';
 
     if (selectedProvider === 'gemini') {
-      const apiKey = customKey || process.env.GEMINI_API_KEY;
+      const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey || apiKey.trim() === "") {
-        return res.status(401).json({ error: "مفتاح Gemini API غير متوفر." });
+        console.error('Missing GEMINI_API_KEY in server environment');
+        return res.status(500).json({ error: "مفتاح Gemini API غير متوفر في الخادم." });
       }
 
-      // Build model list: user's custom model first, then standard fallbacks
       const modelsToTry = model
         ? [model, ...GEMINI_FALLBACK.filter(m => m !== model)]
         : GEMINI_FALLBACK;
@@ -73,14 +73,14 @@ export default async function handler(req: any, res: any) {
 
       console.error('[generate] All Gemini models exhausted:', lastError?.message);
       return res.status(503).json({
-        error: 'تعذر الاتصال بـ Gemini حاليًا. جرّب مرة أخرى أو استخدم مفتاح API آخر.'
+        error: 'تعذر الاتصال بخدمة الذكاء الاصطناعي حاليًا. حاول مرة أخرى لاحقًا.'
       });
     }
 
     if (selectedProvider === 'openrouter') {
-      const apiKey = customKey || process.env.OPENROUTER_API_KEY;
+      const apiKey = process.env.OPENROUTER_API_KEY;
       if (!apiKey || apiKey.trim() === "") {
-        return res.status(401).json({ error: "مفتاح OpenRouter API غير متوفر." });
+        return res.status(500).json({ error: "مفتاح OpenRouter API غير متوفر في الخادم." });
       }
 
       const selectedModel = model || 'google/gemini-2.5-flash:free';
@@ -120,7 +120,7 @@ export default async function handler(req: any, res: any) {
   } catch (error: any) {
     console.error('[generate] Fatal error:', error?.message || error);
     return res.status(503).json({
-      error: 'تعذر الاتصال بـ Gemini حاليًا. جرّب مرة أخرى أو استخدم مفتاح API آخر.'
+      error: 'تعذر الاتصال بخدمة الذكاء الاصطناعي حاليًا. حاول مرة أخرى لاحقًا.'
     });
   }
 }

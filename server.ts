@@ -16,7 +16,7 @@ async function startServer() {
   // API Route: Generate AI Content
   app.post('/api/generate', async (req, res) => {
     try {
-      const { prompt, provider, model, customKey } = req.body;
+      const { prompt, provider, model } = req.body;
 
       if (!prompt) {
         return res.status(400).json({ error: 'حقل النص المطلوب (prompt) فارغ.' });
@@ -25,9 +25,10 @@ async function startServer() {
       const selectedProvider = provider || 'gemini';
       
       if (selectedProvider === 'gemini') {
-        const apiKey = customKey || process.env.GEMINI_API_KEY;
+        const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey || apiKey.trim() === '') {
-          return res.status(401).json({ error: 'مفتاح Gemini API غير متوفر.' });
+          console.error('Missing GEMINI_API_KEY in server environment');
+          return res.status(500).json({ error: 'مفتاح Gemini API غير متوفر في الخادم.' });
         }
 
         const ai = new GoogleGenAI({ apiKey });
@@ -40,9 +41,9 @@ async function startServer() {
       } 
       
       else if (selectedProvider === 'openrouter') {
-        const apiKey = customKey || process.env.OPENROUTER_API_KEY;
+        const apiKey = process.env.OPENROUTER_API_KEY;
         if (!apiKey || apiKey.trim() === '') {
-          return res.status(401).json({ error: 'مفتاح OpenRouter API غير متوفر.' });
+          return res.status(500).json({ error: 'مفتاح OpenRouter API غير متوفر في الخادم.' });
         }
 
         const chosenModel = model || 'google/gemini-2.5-flash:free';
@@ -78,7 +79,7 @@ async function startServer() {
 
   // API Route: AI Chat Assistant
   app.post('/api/chat-assistant', async (req, res) => {
-    const { message, existingTools, existingWorkflows, customKey, language } = req.body || {};
+    const { message, existingTools, existingWorkflows, language } = req.body || {};
     const isArabic = language === 'ar';
     try {
 
@@ -86,9 +87,10 @@ async function startServer() {
         return res.status(400).json({ error: isArabic ? 'حقل الرسالة فارغ.' : 'Message is empty.' });
       }
 
-      const apiKey = customKey || process.env.GEMINI_API_KEY;
+      const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey || apiKey.trim() === '') {
-        return res.status(401).json({ error: isArabic ? 'مفتاح Gemini API غير متوفر.' : 'Gemini API key not available.' });
+        console.error('Missing GEMINI_API_KEY in server environment');
+        return res.status(500).json({ error: isArabic ? 'مفتاح Gemini API غير متوفر في الخادم.' : 'Gemini API key not available on server.' });
       }
 
       const ai = new GoogleGenAI({ apiKey });

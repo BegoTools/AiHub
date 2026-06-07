@@ -22,7 +22,6 @@ import CommunityToolsPage from '../pages/CommunityToolsPage';
 import MyToolsPage from '../pages/MyToolsPage';
 import CreateToolWizard from '../pages/CreateToolWizard';
 import WorkflowRunner from '../pages/WorkflowRunner';
-import ConnectionSettingsPage from '../pages/ConnectionSettingsPage';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 interface AppRoutesProps {
@@ -202,9 +201,6 @@ export default function AppRoutes({
           onSuccess={() => navigate('/home')}
           onCancel={() => navigate('/home')}
         />
-      } />
-      <Route path="/settings" element={
-        <ConnectionSettingsPage t={t} language={language} />
       } />
     </Routes>
   );

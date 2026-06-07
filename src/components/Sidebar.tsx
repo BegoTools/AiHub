@@ -15,13 +15,11 @@ import {
   Workflow,
   Plus,
   LogIn,
-  Wrench,
-  Settings
+  Wrench
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import UserMenu from './UserMenu';
-import { hasAnyKey } from '../utils/apiKeyManager';
 
 interface SidebarProps {
   currentTab: string;
@@ -142,10 +140,8 @@ export default function Sidebar({
           >
             <p className="text-[10px] text-slate-500 dark:text-zinc-500 mb-2 uppercase tracking-widest font-black">{t.serviceStatus}</p>
             <div className="flex items-center gap-2">
-              <div className={`w-2.5 h-2.5 rounded-full ${hasAnyKey() ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`}></div>
-              <span className="text-xs font-bold text-slate-700 dark:text-zinc-300">
-                {hasAnyKey() ? (t.geminiActiveStatus || 'Gemini AI Active') : 'غير مضبوط'}
-              </span>
+              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
+              <span className="text-xs font-bold text-slate-700 dark:text-zinc-300">{t.geminiActiveStatus || 'Gemini AI Active'}</span>
             </div>
           </div>
         </div>
@@ -166,26 +162,28 @@ export default function Sidebar({
         </div>
 
         {/* Footer Settings & Theme */}
-        <div className="p-4 border-t border-slate-200 dark:border-zinc-800 flex items-center gap-2">
+        <div className="p-4 border-t border-slate-200 dark:border-zinc-800 flex items-center justify-between">
           <button
             id="theme-toggle-desktop"
             onClick={toggleTheme}
-            className="flex items-center gap-2 text-xs text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-800/10 hover:bg-slate-200 dark:hover:bg-zinc-800/50 transition-all flex-1 justify-center border border-slate-200 dark:border-zinc-800/50"
+            className="flex items-center gap-2 text-xs text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-800/10 hover:bg-slate-200 dark:hover:bg-zinc-800/50 transition-all w-full justify-center border border-slate-200 dark:border-zinc-800/50"
           >
             {theme === 'light' ? (
-              <><Sun size={15} className="text-amber-500" /><span>{t.lightMode}</span></>
+              <>
+                <Sun size={15} className="text-amber-500" />
+                <span>{t.lightMode}</span>
+              </>
             ) : theme === 'dim' ? (
-              <><Moon size={15} className="text-yellow-500 animate-pulse" /><span>{t.dimMode}</span></>
+              <>
+                <Moon size={15} className="text-yellow-500 animate-pulse" />
+                <span>{t.dimMode}</span>
+              </>
             ) : (
-              <><Sparkles size={15} className="text-violet-500" /><span>{t.darkMode}</span></>
+              <>
+                <Sparkles size={15} className="text-violet-500" />
+                <span>{t.darkMode}</span>
+              </>
             )}
-          </button>
-          <button
-            onClick={() => navigate('/settings')}
-            className="flex items-center gap-2 text-xs text-slate-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-800/10 hover:bg-slate-200 dark:hover:bg-zinc-800/50 transition-all border border-slate-200 dark:border-zinc-800/50"
-            title={t.connectionSettingsTitle || 'الإعدادات'}
-          >
-            <Settings size={15} />
           </button>
         </div>
       </aside>

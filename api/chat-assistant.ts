@@ -11,9 +11,7 @@ const TIMEOUT_MS = 60000;
 function cleanJsonResponse(raw: string): string {
   if (!raw) return '';
   let text = raw.trim();
-  // Remove markdown code fences (```json, ```, etc.)
   text = text.replace(/^```[\w]*\n?/gm, '').replace(/```$/gm, '').trim();
-  // Extract only the JSON object: first { to last }
   const start = text.indexOf('{');
   const end = text.lastIndexOf('}');
   if (start === -1 || end === -1 || end <= start) return '';
@@ -64,7 +62,7 @@ export default async function handler(req: any, res: any) {
   }
 
   const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-  const { message, existingTools, existingWorkflows, customKey, language } = body || {};
+  const { message, existingTools, existingWorkflows, language } = body || {};
   const isArabic = language === 'ar';
 
   if (!message) {
@@ -73,10 +71,11 @@ export default async function handler(req: any, res: any) {
     });
   }
 
-  const apiKey = customKey || process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey || apiKey.trim() === "") {
-    return res.status(401).json({
+    console.error('Missing GEMINI_API_KEY in server environment');
+    return res.status(500).json({
       error: isArabic ? "GEMINI_API_KEY مش متضاف في Vercel." : "GEMINI_API_KEY not set in Vercel."
     });
   }
@@ -210,7 +209,7 @@ Response format:
     console.error('[chat-assistant] Unhandled error:', msg.slice(0, 300));
     const isAuth = msg.includes('API_KEY') || msg.includes('API key') || msg.includes('not found');
     if (isAuth) {
-      return res.status(401).json({
+      return res.status(500).json({
         error: isArabic ? 'مشكلة في مفتاح API. راجع إعدادات GEMINI_API_KEY.' : 'Invalid API key. Check GEMINI_API_KEY.'
       });
     }
