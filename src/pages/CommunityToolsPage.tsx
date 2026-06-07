@@ -18,6 +18,7 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
   const [searchQuery, setSearchQuery] = useState('');
   const [sort, setSort] = useState<SortFilter>('all');
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const { user } = useAuth();
 
@@ -30,11 +31,14 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
 
   const loadTools = async () => {
     setIsLoading(true);
+    setLoadError(false);
     try {
       const all = await getAllPublicTools();
-      setTools(all);
+      setTools(all || []);
     } catch (e) {
       console.error('Failed to load tools:', e);
+      setLoadError(true);
+      setTools([]);
     }
     setIsLoading(false);
   };
@@ -66,6 +70,26 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
     return (
       <div className="flex items-center justify-center py-20">
         <div className="animate-spin text-blue-500"><Wrench size={32} /></div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div>
+          <h2 className="font-extrabold text-xl text-slate-800 dark:text-zinc-100">{t.communityTools || 'أدوات المجتمع'}</h2>
+        </div>
+        <div className="p-12 text-center bg-white dark:bg-[#18181b] border border-slate-200 dark:border-zinc-800 rounded-3xl">
+          <div className="p-4 bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/30 rounded-3xl text-rose-400 mb-4 inline-block">
+            <Globe size={36} />
+          </div>
+          <h4 className="font-bold text-sm text-slate-800 dark:text-zinc-200">{t.communityError || 'تعذر تحميل أدوات المجتمع حاليًا'}</h4>
+          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-2">{t.communityErrorDesc || 'قد يكون بسبب مشكلة في الاتصال. حاول مرة أخرى لاحقًا.'}</p>
+          <button onClick={loadTools} className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all cursor-pointer">
+            {t.retry || 'إعادة المحاولة'}
+          </button>
+        </div>
       </div>
     );
   }

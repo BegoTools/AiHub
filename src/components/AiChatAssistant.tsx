@@ -448,6 +448,12 @@ export default function AiChatAssistant({
         needCustomTool: true,
         createdTool: newTool,
       };
+      const userMsg: ChatMessage = {
+        id: `user_${Date.now()}`,
+        sender: 'user',
+        text: textToSend,
+        timestamp: new Date(),
+      };
       setMessages(prev => [...prev, userMsg, assistantMsg]);
       if (activeSessionId) {
         await addMessageToSession(activeSessionId, 'user', textToSend);

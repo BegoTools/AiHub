@@ -139,21 +139,22 @@ export async function duplicateCustomTool(id: string): Promise<StoredCustomTool 
 }
 
 function mapRowToTool(row: any): StoredCustomTool {
+  if (!row) return null as any;
   return {
-    id: row.id,
-    ownerId: row.user_id,
+    id: row.id || '',
+    ownerId: row.user_id || '',
     title: row.title || '',
     description: row.description || '',
     category: row.category || 'general',
     icon: row.icon || 'Sparkles',
     visibility: row.visibility || 'private',
     promptTemplateString: row.prompt_template_string || '',
-    inputFields: row.input_fields || [],
-    tags: row.tags || [],
-    likesCount: row.likes_count || 0,
-    usesCount: row.uses_count || 0,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-    createdByName: row.created_by_name || '',
+    inputFields: Array.isArray(row.input_fields) ? row.input_fields : [],
+    tags: Array.isArray(row.tags) ? row.tags : [],
+    likesCount: typeof row.likes_count === 'number' ? row.likes_count : 0,
+    usesCount: typeof row.uses_count === 'number' ? row.uses_count : 0,
+    createdAt: row.created_at || new Date().toISOString(),
+    updatedAt: row.updated_at || new Date().toISOString(),
+    createdByName: row.created_by_name || 'مستخدم',
   };
 }

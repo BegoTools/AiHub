@@ -44,6 +44,7 @@ import OutputView from './components/OutputView';
 import Onboarding from './components/Onboarding';
 import AiChatAssistant from './components/AiChatAssistant';
 import AuthModal from './components/AuthModal';
+import ErrorBoundary from './components/ErrorBoundary';
 import LibraryPage from './pages/LibraryPage';
 import CommunityToolsPage from './pages/CommunityToolsPage';
 import CreateToolWizard from './pages/CreateToolWizard';
@@ -591,6 +592,7 @@ export default function App() {
           </header>
 
           <div id="main-content-layout-container" className="flex-1 p-6 lg:p-8 space-y-8 max-w-7xl mx-auto w-full">
+            <ErrorBoundary fallbackTitle="حدث خطأ أثناء تحميل الصفحة" fallbackMessage="قد يكون بسبب خطأ مؤقت. حاول إعادة التحميل أو العودة للصفحة الرئيسية.">
 
             {generationError && (
               <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl flex items-start gap-3 shadow-sm animate-shake">
@@ -664,6 +666,7 @@ export default function App() {
               onOpenAuth={(msg) => { setAuthGuardMessage(msg); setShowAuthModal(true); }}
             />
 
+            </ErrorBoundary>
           </div>
 
         </main>
