@@ -32,7 +32,8 @@ import { LOCAL_STORAGE_KEYS } from './config/apiConfig';
 import { generateAIContent } from './services/aiService';
 import { getFavorites as loadFavoritesFromDB, toggleFavorite as toggleFavInDB } from './services/favoritesService';
 import { saveResult as saveResultToDB, deleteSavedResult, clearAllResults, getSavedResults } from './services/resultsService';
-import { createCustomTool } from './services/customToolsService';
+import { createCustomTool, getAllPublicTools } from './services/customToolsService';
+import { StoredCustomTool } from './types/storageTypes';
 import { getUserSettings, upsertUserSettings } from './services/userSettingsService';
 import { languages, translations, Language } from './translations';
 
@@ -96,6 +97,41 @@ export default function App() {
       localStorage.setItem('ai_hub_language', language);
     }
   }, [language, user]);
+
+  // Load public community tools on mount (no auth required)
+  useEffect(() => {
+    getAllPublicTools().then(publicTools => {
+      if (publicTools.length > 0) {
+        setCustomTools(prev => {
+          const existingIds = new Set(prev.map(t => t.id));
+          const newTools = publicTools
+            .filter(st => !existingIds.has(st.id))
+            .map(storedToRuntimeTool);
+          return [...prev, ...newTools];
+        });
+      }
+    }).catch(() => {});
+  }, []);
+
+  function storedToRuntimeTool(st: StoredCustomTool): Tool {
+    return {
+      id: st.id,
+      categoryId: st.category,
+      title: st.title,
+      description: st.description,
+      icon: st.icon || 'Sparkles',
+      inputs: st.inputFields || [],
+      exampleInput: {},
+      promptTemplate: (inputs: Record<string, string>) => {
+        let template = st.promptTemplateString || '';
+        Object.keys(inputs).forEach(key => {
+          template = template.replace(new RegExp(`\\{${key}\\}`, 'g'), inputs[key]);
+        });
+        return template;
+      },
+      tags: st.tags,
+    };
+  }
 
   // Reset saved theme to light once on first load after this update
   useEffect(() => {
@@ -271,11 +307,12 @@ export default function App() {
           description: newToolRaw.description || '',
           category: newToolRaw.categoryId || 'general',
           icon: newToolRaw.icon || 'Sparkles',
-          visibility: 'private',
+          visibility: 'public',
           promptTemplateString: newToolRaw.promptTemplateString || '',
           inputFields: newToolRaw.inputs || [],
           tags: newToolRaw.tags || [],
           ownerId: user.id,
+          createdByName: newToolRaw.createdByName || getFirstName(undefined, user.user_metadata, user.email),
         });
       } catch (e) {
         console.error('[App] Failed to save custom tool:', e);

@@ -21,6 +21,7 @@ export interface StoredCustomTool {
   usesCount: number;
   createdAt: string;
   updatedAt: string;
+  createdByName?: string;
 }
 
 export interface StoredResult {

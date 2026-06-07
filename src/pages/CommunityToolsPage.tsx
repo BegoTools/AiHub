@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Globe, Search, Heart, Download, Clock, Filter, Wrench, Sparkles } from 'lucide-react';
-import { getCustomTools, deleteCustomTool } from '../services/customToolsService';
+import { Globe, Search, Heart, Clock, Wrench, Sparkles, LogIn, Trash2, Edit3, User } from 'lucide-react';
+import { getAllPublicTools, deleteCustomTool, incrementToolUseCount } from '../services/customToolsService';
 import { StoredCustomTool } from '../types/storageTypes';
 import { DynamicIcon } from '../components/ToolForm';
+import { useAuth } from '../context/AuthContext';
 
 interface CommunityToolsPageProps {
   t: any;
@@ -10,14 +11,18 @@ interface CommunityToolsPageProps {
   onOpenTool?: (toolId: string) => void;
 }
 
-type SortFilter = 'all' | 'popular' | 'recent' | 'mine';
+type SortFilter = 'all' | 'popular' | 'recent';
 
 export default function CommunityToolsPage({ t, language, onOpenTool }: CommunityToolsPageProps) {
   const [tools, setTools] = useState<StoredCustomTool[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sort, setSort] = useState<SortFilter>('all');
   const [isLoading, setIsLoading] = useState(true);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const { user } = useAuth();
+
+  const userId = user?.id || '';
+  const isRtl = language === 'ar';
 
   useEffect(() => {
     loadTools();
@@ -26,7 +31,7 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
   const loadTools = async () => {
     setIsLoading(true);
     try {
-      const all = await getCustomTools();
+      const all = await getAllPublicTools();
       setTools(all);
     } catch (e) {
       console.error('Failed to load tools:', e);
@@ -34,11 +39,17 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
     setIsLoading(false);
   };
 
-  const handleCopyTool = (tool: StoredCustomTool) => {
-    const text = `أداة: ${tool.title}\nالوصف: ${tool.description}\nالتصنيف: ${tool.category}\nالحقول: ${tool.inputFields.map(f => f.label).join(', ')}`;
-    navigator.clipboard.writeText(text);
-    setCopiedId(tool.id);
-    setTimeout(() => setCopiedId(null), 2000);
+  const handleDeleteTool = async (toolId: string) => {
+    const ok = await deleteCustomTool(toolId);
+    if (ok) {
+      setTools(prev => prev.filter(t => t.id !== toolId));
+    }
+    setConfirmDeleteId(null);
+  };
+
+  const handleUseTool = (toolId: string) => {
+    incrementToolUseCount(toolId).catch(() => {});
+    onOpenTool?.(toolId);
   };
 
   const filtered = tools.filter(t => {
@@ -99,7 +110,7 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
           {filtered.map((tool) => (
             <div
               key={tool.id}
-              className="p-5 bg-white dark:bg-[#18181b] border border-slate-200 dark:border-zinc-800 rounded-2xl hover:border-blue-500/40 hover:shadow-md transition-all group"
+              className="p-5 bg-white dark:bg-[#18181b] border border-slate-200 dark:border-zinc-800 rounded-2xl hover:border-blue-500/40 hover:shadow-md transition-all group flex flex-col"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -119,6 +130,13 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
                 </div>
               </div>
               <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 leading-relaxed mb-3">{tool.description}</p>
+
+              {/* Author */}
+              <div className="flex items-center gap-1.5 mb-2 text-[10px] text-slate-400 dark:text-zinc-500">
+                <User size={11} />
+                <span>{t.createdBy || 'بواسطة'}: {tool.createdByName || (isRtl ? 'مستخدم' : 'User')}</span>
+              </div>
+
               <div className="flex items-center gap-1.5 flex-wrap mb-3">
                 {(tool.tags || []).slice(0, 3).map((tag, i) => (
                   <span key={i} className="text-[9px] px-2 py-0.5 bg-slate-100 dark:bg-zinc-950 text-slate-500 dark:text-zinc-500 rounded-lg">
@@ -135,20 +153,48 @@ export default function CommunityToolsPage({ t, language, onOpenTool }: Communit
                   {tool.usesCount} {t.uses || 'استخدام'}
                 </span>
                 <div className="flex items-center gap-1">
-                  {onOpenTool && (
-                    <button
-                      onClick={() => onOpenTool(tool.id)}
-                      className="px-3 py-1.5 text-[10px] font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-all cursor-pointer"
-                    >
-                      {t.useTool || 'استخدم الأداة'}
-                    </button>
-                  )}
                   <button
-                    onClick={() => handleCopyTool(tool)}
-                    className="px-3 py-1.5 text-[10px] font-semibold rounded-lg border border-slate-200 dark:border-zinc-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-500/30 text-slate-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all cursor-pointer"
+                    onClick={() => {
+                      if (!user) {
+                        onOpenTool?.(tool.id);
+                        return;
+                      }
+                      handleUseTool(tool.id);
+                    }}
+                    className="px-3 py-1.5 text-[10px] font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-all cursor-pointer"
                   >
-                    {copiedId === tool.id ? (t.copied || 'تم النسخ ✓') : (t.copy || 'نسخ')}
+                    {t.useTool || 'استخدم الأداة'}
                   </button>
+
+                  {/* Owner-only controls */}
+                  {userId && tool.ownerId === userId && (
+                    <>
+                      {confirmDeleteId === tool.id ? (
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => handleDeleteTool(tool.id)}
+                            className="px-2 py-1.5 text-[10px] font-semibold rounded-lg bg-red-600 hover:bg-red-500 text-white transition-all cursor-pointer"
+                          >
+                            {t.confirmDelete || 'تأكيد'}
+                          </button>
+                          <button
+                            onClick={() => setConfirmDeleteId(null)}
+                            className="px-2 py-1.5 text-[10px] font-semibold rounded-lg border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-all cursor-pointer"
+                          >
+                            {t.cancel || 'إلغاء'}
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => setConfirmDeleteId(tool.id)}
+                          className="p-1.5 text-rose-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-lg transition-all"
+                          title={t.deleteTool || 'حذف'}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </div>

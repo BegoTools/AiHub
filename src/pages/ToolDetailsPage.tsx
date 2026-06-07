@@ -1,9 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { ArrowRight, Star } from 'lucide-react';
 import ToolForm from '../components/ToolForm';
 import OutputView from '../components/OutputView';
 import { Tool, Category } from '../types';
+import { getCustomToolById } from '../services/customToolsService';
+import { StoredCustomTool } from '../types/storageTypes';
 
 interface ToolDetailsPageProps {
   t: any;
@@ -18,6 +20,26 @@ interface ToolDetailsPageProps {
   saveManualResultToHistory: () => void;
 }
 
+function storedToTool(st: StoredCustomTool): Tool {
+  return {
+    id: st.id,
+    categoryId: st.category,
+    title: st.title,
+    description: st.description,
+    icon: st.icon || 'Sparkles',
+    inputs: st.inputFields || [],
+    exampleInput: {},
+    promptTemplate: (inputs: Record<string, string>) => {
+      let template = st.promptTemplateString || '';
+      Object.keys(inputs).forEach(key => {
+        template = template.replace(new RegExp(`\\{${key}\\}`, 'g'), inputs[key]);
+      });
+      return template;
+    },
+    tags: st.tags,
+  };
+}
+
 export default function ToolDetailsPage({
   t, allTools, localizedCategories, favorites, toggleFavorite,
   handleGenerate, currentToolOutput, setCurrentToolOutput,
@@ -25,11 +47,34 @@ export default function ToolDetailsPage({
 }: ToolDetailsPageProps) {
   const { toolId } = useParams<{ toolId: string }>();
   const navigate = useNavigate();
+  const [fallbackTool, setFallbackTool] = useState<Tool | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!toolId) return;
+    const exists = allTools.find(t => t.id === toolId);
+    if (exists) {
+      setFallbackTool(null);
+      return;
+    }
+    setLoading(true);
+    getCustomToolById(toolId).then(st => {
+      if (st) setFallbackTool(storedToTool(st));
+    }).catch(() => {}).finally(() => setLoading(false));
+  }, [toolId, allTools]);
 
   const activeTool = useMemo(() => {
     if (!toolId) return null;
-    return allTools.find(t => t.id === toolId) || null;
-  }, [toolId, allTools]);
+    return allTools.find(t => t.id === toolId) || fallbackTool || null;
+  }, [toolId, allTools, fallbackTool]);
+
+  if (loading) {
+    return (
+      <div className="p-12 text-center">
+        <div className="animate-spin inline-block w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full" />
+      </div>
+    );
+  }
 
   if (!activeTool) {
     return (

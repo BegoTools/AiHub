@@ -54,7 +54,7 @@ export default function HomePage({ t, localizedCategories, allTools, favorites, 
           <div className="flex flex-col items-center gap-2 text-center">
             <img src={logoSrc} alt="AI Hub" className="w-14 h-14 object-contain" />
             <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-zinc-500 block">{t.toolsAvailable}</span>
-            <span className="font-black text-2xl bg-gradient-to-l from-blue-600 to-indigo-600 bg-clip-text text-transparent mt-1">38</span>
+            <span className="font-black text-2xl bg-gradient-to-l from-blue-600 to-indigo-600 bg-clip-text text-transparent mt-1">{allTools.length}</span>
           </div>
         </div>
       </div>

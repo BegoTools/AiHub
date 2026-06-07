@@ -19,19 +19,35 @@ export async function getCustomTools(): Promise<StoredCustomTool[]> {
   return (data || []).map(mapRowToTool);
 }
 
-export async function getCustomToolById(id: string): Promise<StoredCustomTool | null> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
+export async function getAllPublicTools(): Promise<StoredCustomTool[]> {
+  const { data, error } = await supabase
+    .from('custom_tools')
+    .select('*')
+    .eq('visibility', 'public')
+    .order('created_at', { ascending: false });
 
+  if (error) {
+    console.error('[customToolsService] Failed to load public tools:', error);
+    return [];
+  }
+
+  return (data || []).map(mapRowToTool);
+}
+
+export async function getCustomToolById(id: string): Promise<StoredCustomTool | null> {
   const { data, error } = await supabase
     .from('custom_tools')
     .select('*')
     .eq('id', id)
-    .eq('user_id', user.id)
     .single();
 
   if (error || !data) return null;
   return mapRowToTool(data);
+}
+
+export async function incrementToolUseCount(toolId: string): Promise<boolean> {
+  const { error } = await supabase.rpc('increment_tool_uses', { tool_id: toolId });
+  return !error;
 }
 
 export async function createCustomTool(
@@ -40,7 +56,7 @@ export async function createCustomTool(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('User not authenticated');
 
-  const row = {
+  const row: Record<string, any> = {
     user_id: user.id,
     title: tool.title,
     description: tool.description,
@@ -51,6 +67,9 @@ export async function createCustomTool(
     input_fields: tool.inputFields as any,
     tags: tool.tags,
   };
+  if (tool.createdByName) {
+    row.created_by_name = tool.createdByName;
+  }
 
   const { data, error } = await supabase
     .from('custom_tools')
@@ -135,5 +154,6 @@ function mapRowToTool(row: any): StoredCustomTool {
     usesCount: row.uses_count || 0,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    createdByName: row.created_by_name || '',
   };
 }

@@ -3,12 +3,13 @@ import {
   Sparkles, Send, MessageSquare, ArrowUpRight,
   Loader2, Copy, Check, Save, Plus,
   PanelLeftClose, PanelLeft, X, Wrench, Workflow as WorkflowIcon,
-  Bot, Clock, StopCircle, LogIn
+  Bot, Clock, StopCircle, LogIn, Pencil
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Tool } from '../types';
 import type { Workflow } from '../types/workflowTypes';
 import { DynamicIcon } from './ToolForm';
+import { getFirstName } from '../utils/getFirstName';
 import { analyzeIntent, getSuggestionsForResponse, ScoredItem } from '../lib/intentRouter';
 import { apiPost } from '../lib/apiClient';
 import {
@@ -219,6 +220,9 @@ export default function AiChatAssistant({
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [savedId, setSavedId] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<{ label: string; action: string }[]>([]);
+  const [pendingTool, setPendingTool] = useState<any>(null);
+  const [editingField, setEditingField] = useState<'title' | 'description' | 'category' | null>(null);
+  const [editValue, setEditValue] = useState('');
   const abortRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -264,6 +268,7 @@ export default function AiChatAssistant({
     setMessages([]);
     setSuggestions([]);
     setShowSessions(false);
+    setPendingTool(null);
   };
 
   const handleDeleteSession = async (sessionId: string) => {
@@ -435,7 +440,13 @@ export default function AiChatAssistant({
             }, ...suggestedTools];
           }
           if (data.action === 'create' && data.newTool) {
-            onAddCustomTool(data.newTool);
+            setPendingTool({
+              ...data.newTool,
+              id: data.newTool.id || `custom_${Date.now()}`,
+              icon: data.newTool.icon || 'Sparkles',
+              tags: data.newTool.tags || [],
+              inputs: data.newTool.inputs || data.newTool.inputFields || [],
+            });
             createdTool = data.newTool;
             needCustomTool = true;
             if (!suggestedTools.some(s => s.id === data.newTool.id)) {
@@ -445,7 +456,7 @@ export default function AiChatAssistant({
                 description: data.newTool.description || '', score: 1
               }, ...suggestedTools];
             }
-            assistantText = (language === 'ar' ? '🎉 تم صنع أداة جديدة لك!\n\n' : '🎉 A new tool has been created for you!\n\n') + (data.explanation || '');
+            assistantText = (language === 'ar' ? '🎉 تم اقتراح أداة جديدة! راجع التفاصيل وانشرها 👇\n\n' : '🎉 A new tool was suggested! Review and publish it 👇\n\n') + (data.explanation || '');
           }
         } catch (e: any) {
           assistantText = t.errorMsg.replace('{error}', e.message || 'Connection failed');
@@ -815,6 +826,143 @@ export default function AiChatAssistant({
                   <StopCircle size={14} className="text-red-400" />
                 </button>
               </div>
+            </div>
+          )}
+
+          {/* Pending tool preview card */}
+          {pendingTool && (
+            <div className="border-2 border-amber-400 dark:border-amber-500 rounded-2xl p-4 bg-amber-50 dark:bg-amber-950/20 space-y-3 animate-fade-in">
+              <div className="flex items-center gap-2">
+                <Sparkles size={16} className="text-amber-500" />
+                <h4 className="font-bold text-xs text-amber-800 dark:text-amber-300">
+                  {language === 'ar' ? '🔎 مراجعة الأداة قبل النشر' : '🔎 Review tool before publishing'}
+                </h4>
+              </div>
+
+              {/* Title */}
+              <div>
+                <span className="text-[10px] font-bold text-slate-500 dark:text-zinc-400 block mb-1">
+                  {language === 'ar' ? 'العنوان' : 'Title'}
+                </span>
+                {editingField === 'title' ? (
+                  <input
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onBlur={() => { setPendingTool((prev: any) => ({ ...prev, title: editValue })); setEditingField(null); }}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { setPendingTool((prev: any) => ({ ...prev, title: editValue })); setEditingField(null); } }}
+                    className="w-full bg-white dark:bg-zinc-900 border border-amber-300 dark:border-amber-700 rounded-lg px-3 py-1.5 text-xs outline-none"
+                    autoFocus
+                  />
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-slate-800 dark:text-zinc-100">{pendingTool.title || '...'}</span>
+                    <button onClick={() => { setEditValue(pendingTool.title || ''); setEditingField('title'); }} className="p-1 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded transition-colors">
+                      <Pencil size={12} className="text-slate-400" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Description */}
+              <div>
+                <span className="text-[10px] font-bold text-slate-500 dark:text-zinc-400 block mb-1">
+                  {language === 'ar' ? 'الوصف' : 'Description'}
+                </span>
+                {editingField === 'description' ? (
+                  <textarea
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onBlur={() => { setPendingTool((prev: any) => ({ ...prev, description: editValue })); setEditingField(null); }}
+                    className="w-full bg-white dark:bg-zinc-900 border border-amber-300 dark:border-amber-700 rounded-lg px-3 py-1.5 text-xs outline-none resize-none"
+                    rows={2}
+                    autoFocus
+                  />
+                ) : (
+                  <div className="flex items-start gap-2">
+                    <span className="text-xs text-slate-600 dark:text-zinc-400 flex-1">{pendingTool.description || '...'}</span>
+                    <button onClick={() => { setEditValue(pendingTool.description || ''); setEditingField('description'); }} className="p-1 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded transition-colors shrink-0">
+                      <Pencil size={12} className="text-slate-400" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Category */}
+              <div>
+                <span className="text-[10px] font-bold text-slate-500 dark:text-zinc-400 block mb-1">
+                  {language === 'ar' ? 'التصنيف' : 'Category'}
+                </span>
+                {editingField === 'category' ? (
+                  <select
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onBlur={() => { setPendingTool((prev: any) => ({ ...prev, categoryId: editValue })); setEditingField(null); }}
+                    className="w-full bg-white dark:bg-zinc-900 border border-amber-300 dark:border-amber-700 rounded-lg px-3 py-1.5 text-xs outline-none"
+                    autoFocus
+                  >
+                    <option value="general">{language === 'ar' ? 'عام' : 'General'}</option>
+                    <option value="writing">{language === 'ar' ? 'كتابة' : 'Writing'}</option>
+                    <option value="coding">{language === 'ar' ? 'برمجة' : 'Coding'}</option>
+                    <option value="business">{language === 'ar' ? 'أعمال' : 'Business'}</option>
+                    <option value="marketing">{language === 'ar' ? 'تسويق' : 'Marketing'}</option>
+                    <option value="education">{language === 'ar' ? 'تعليم' : 'Education'}</option>
+                  </select>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">{pendingTool.categoryId || 'general'}</span>
+                    <button onClick={() => { setEditValue(pendingTool.categoryId || 'general'); setEditingField('category'); }} className="p-1 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded transition-colors">
+                      <Pencil size={12} className="text-slate-400" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Input fields summary */}
+              {(pendingTool.inputs || []).length > 0 && (
+                <div>
+                  <span className="text-[10px] font-bold text-slate-500 dark:text-zinc-400 block mb-1">
+                    {language === 'ar' ? 'الحقول' : 'Input fields'} ({(pendingTool.inputs || []).length})
+                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {(pendingTool.inputs || []).map((f: any, i: number) => (
+                      <span key={i} className="text-[9px] px-2 py-0.5 bg-slate-100 dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 rounded border border-slate-200 dark:border-zinc-700">
+                        {f.label || f.id}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  onClick={() => {
+                    const isValid = pendingTool.title && pendingTool.title.trim() && pendingTool.description && pendingTool.description.trim() && pendingTool.categoryId;
+                    if (!isValid) return;
+                    onAddCustomTool({
+                      ...pendingTool,
+                      promptTemplateString: pendingTool.promptTemplateString || '',
+                      id: pendingTool.id || `custom_${Date.now()}`,
+                    });
+                    setPendingTool(null);
+                  }}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5"
+                >
+                  <Check size={14} />
+                  {language === 'ar' ? 'نشر الأداة' : 'Publish Tool'}
+                </button>
+                <button
+                  onClick={() => setPendingTool(null)}
+                  className="px-3 py-2 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 text-xs font-medium rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 transition-all"
+                >
+                  {language === 'ar' ? 'إلغاء' : 'Cancel'}
+                </button>
+              </div>
+              {(!pendingTool.title || !pendingTool.description || !pendingTool.categoryId) && (
+                <p className="text-[10px] text-amber-600 dark:text-amber-400">
+                  {language === 'ar' ? '⚠️ يرجى إدخال العنوان والوصف والتصنيف قبل النشر' : '⚠️ Please enter title, description, and category before publishing'}
+                </p>
+              )}
             </div>
           )}
 
