@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from './context/AuthContext';
+import { getFirstName } from './utils/getFirstName';
 import { 
   Search, 
   Star, 
@@ -444,10 +445,18 @@ export default function App() {
                 {user ? (
                   <button
                     onClick={() => navigate('/account')}
-                    className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold text-xs hover:bg-amber-400 transition-all cursor-pointer shrink-0"
-                    title={user.email || ''}
+                    className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold text-xs hover:bg-amber-400 transition-all cursor-pointer shrink-0 overflow-hidden"
+                    title={getFirstName(undefined, user.user_metadata, user.email)}
                   >
-                    {(user.email?.[0] || 'U').toUpperCase()}
+                    {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
+                      <img
+                        src={user.user_metadata?.avatar_url || user.user_metadata?.picture}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      getFirstName(undefined, user.user_metadata, user.email)[0].toUpperCase()
+                    )}
                   </button>
                 ) : (
                   <button
