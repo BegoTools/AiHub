@@ -25,11 +25,13 @@ export async function updateProfile(
 ): Promise<void> {
   const { error } = await supabase
     .from('profiles')
-    .update({ ...updates, updated_at: new Date().toISOString() })
-    .eq('id', userId);
+    .upsert(
+      { id: userId, ...updates },
+      { onConflict: 'id' }
+    );
 
   if (error) {
-    console.error('[profileService] Failed to update profile:', error);
-    throw error;
+    console.error('[profileService] upsert error:', error.message, error.details, error.hint);
+    throw new Error(error.message);
   }
 }

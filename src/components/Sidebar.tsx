@@ -182,53 +182,55 @@ export default function Sidebar({
 
       {/* Mobile Bottom Navigation */}
       <nav 
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#f8fafc]/95 dark:bg-[#111113]/95 backdrop-blur-md border-t border-slate-250 dark:border-zinc-800 text-slate-800 dark:text-zinc-100 flex justify-around px-3 transition-colors duration-300 shadow-lg"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#f8fafc]/95 dark:bg-[#111113]/95 backdrop-blur-md border-t border-slate-250 dark:border-zinc-800 text-slate-800 dark:text-zinc-100 transition-colors duration-300 shadow-lg"
         style={{ 
           paddingTop: '0.5rem', 
           paddingBottom: 'calc(0.5rem + var(--safe-area-inset-bottom))' 
         }}
       >
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const to = routeForTab[item.id] || `/${item.id}`;
-          return (
-            <NavLink
-              key={item.id}
-              to={to}
-              id={`nav-mobile-${item.id}`}
-              end={item.id === 'home'}
-              className={({ isActive }) =>
-                `flex flex-col items-center justify-center relative flex-1 py-1.5 px-1 rounded-lg transition-all ${
-                  isActive ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900 hover:dark:text-white'
-                }`
-              }
-            >
-              <Icon size={18} className="mb-1" />
-              <span className="text-[9px] tracking-tight truncate">{item.label}</span>
-              {item.badge !== undefined && (
-                <span className="absolute -top-1 right-2/4 translate-x-3 bg-blue-600 text-white text-[9px] font-bold h-4 min-w-[16px] flex items-center justify-center rounded-full px-1">
-                  {item.badge}
-                </span>
-              )}
-            </NavLink>
-          );
-        })}
-        
-        {/* Mobile Quick Theme Toggle */}
-        <button
-          id="theme-toggle-mobile"
-          onClick={toggleTheme}
-          className="flex flex-col items-center justify-center flex-1 py-1.5 text-slate-500 dark:text-zinc-400 hover:text-slate-900 hover:dark:text-white"
-        >
-          {theme === 'light' ? (
-            <Sun size={18} className="text-amber-500" />
-          ) : theme === 'dim' ? (
-            <Moon size={18} className="text-yellow-500 animate-pulse" />
-          ) : (
-            <Sparkles size={18} className="text-violet-500" />
-          )}
-          <span className="text-[9px] font-bold tracking-tight">{t.dimMode || 'Theme'}</span>
-        </button>
+        <div className="flex overflow-x-auto flex-nowrap gap-0.5 px-2 scrollbar-none">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const to = routeForTab[item.id] || `/${item.id}`;
+            return (
+              <NavLink
+                key={item.id}
+                to={to}
+                id={`nav-mobile-${item.id}`}
+                end={item.id === 'home'}
+                className={({ isActive }) =>
+                  `flex flex-col items-center justify-center relative shrink-0 py-1 px-1.5 rounded-lg transition-all ${
+                    isActive ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900 hover:dark:text-white'
+                  }`
+                }
+              >
+                <Icon size={15} className="mb-0.5" />
+                <span className="text-[8px] leading-tight tracking-tight truncate max-w-[50px]">{item.label}</span>
+                {item.badge !== undefined && (
+                  <span className="absolute -top-0.5 right-1/2 translate-x-2 bg-blue-600 text-white text-[7px] font-bold h-3.5 min-w-[14px] flex items-center justify-center rounded-full px-0.5">
+                    {item.badge}
+                  </span>
+                )}
+              </NavLink>
+            );
+          })}
+          
+          {/* Mobile Quick Theme Toggle */}
+          <button
+            id="theme-toggle-mobile"
+            onClick={toggleTheme}
+            className="flex flex-col items-center justify-center shrink-0 py-1 px-1.5 text-slate-500 dark:text-zinc-400 hover:text-slate-900 hover:dark:text-white"
+          >
+            {theme === 'light' ? (
+              <Sun size={15} className="text-amber-500 mb-0.5" />
+            ) : theme === 'dim' ? (
+              <Moon size={15} className="text-yellow-500 animate-pulse mb-0.5" />
+            ) : (
+              <Sparkles size={15} className="text-violet-500 mb-0.5" />
+            )}
+            <span className="text-[8px] leading-tight tracking-tight">{t.dimMode || 'Theme'}</span>
+          </button>
+        </div>
       </nav>
     </>
   );

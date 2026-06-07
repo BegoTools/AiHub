@@ -59,8 +59,10 @@ export default function ProfilePage({ t, onOpenAuth }: ProfilePageProps) {
       await updateProfile(user.id, { display_name: displayName });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
-    } catch {
-      setError(t.errorOccurred || 'حدث خطأ');
+    } catch (e: any) {
+      const msg = e?.message || t.errorOccurred || 'حدث خطأ';
+      console.error('[ProfilePage] Save error:', msg);
+      setError(msg);
     } finally {
       setSaving(false);
     }
@@ -94,11 +96,11 @@ export default function ProfilePage({ t, onOpenAuth }: ProfilePageProps) {
             </div>
           </div>
 
-          <div className="bg-slate-50 dark:bg-zinc-950/50 rounded-xl p-4 space-y-3">
-            <div className="flex items-center gap-3 text-sm">
+          <div className="bg-slate-50 dark:bg-zinc-950/50 rounded-xl p-4 space-y-3 overflow-hidden">
+            <div className="flex items-center gap-3 text-sm min-w-0">
               <Mail size={15} className="text-slate-400 shrink-0" />
-              <span className="text-slate-600 dark:text-zinc-400">{t.email || 'Email'}:</span>
-              <span className="text-slate-800 dark:text-zinc-200 font-medium ms-auto">{user.email}</span>
+              <span className="text-slate-600 dark:text-zinc-400 shrink-0">{t.email || 'Email'}:</span>
+              <span className="text-slate-800 dark:text-zinc-200 font-medium ms-auto break-all min-w-0 text-left">{user.email}</span>
             </div>
             <div className="flex items-center gap-3 text-sm">
               <Calendar size={15} className="text-slate-400 shrink-0" />
