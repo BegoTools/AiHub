@@ -1,8 +1,6 @@
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
+import { registerFile, deleteFile } from './temp-storage'
+
+export const config = { api: { bodyParser: false } }
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024
 
@@ -49,16 +47,27 @@ export default async function handler(req: any, res: any) {
 
     const base64 = buffer.toString('base64')
 
+    const tempFile = registerFile(
+      String(fileName),
+      fileSize,
+      contentType,
+      category,
+      base64,
+      30 * 60 * 1000,
+    )
+
     return res.status(200).json({
       success: true,
       data: {
-        id: `file_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-        name: fileName,
-        size: fileSize,
-        type: contentType,
-        category,
-        base64,
-        createdAt: new Date().toISOString(),
+        id: tempFile.id,
+        name: tempFile.name,
+        size: tempFile.size,
+        type: tempFile.type,
+        category: tempFile.category,
+        base64: tempFile.data,
+        createdAt: new Date(tempFile.createdAt).toISOString(),
+        ttl: tempFile.ttl,
+        isTemporary: true,
       },
     })
   } catch (error: any) {

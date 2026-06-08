@@ -18,6 +18,11 @@ export interface FileInfo {
   previewUrl?: string
 }
 
+export const TEMP_FILE_NOTICE = 'هذا الملف مؤقت وسيتم حذفه تلقائياً بعد المعالجة.'
+export const TEMP_FILE_NOTICE_EN = 'This file is temporary and will be deleted automatically after processing.'
+
+const activeObjectUrls = new Set<string>()
+
 export function getCategoryForType(mimeType: string): string | null {
   for (const [cat, types] of Object.entries(ALLOWED_TYPES)) {
     if (types.includes(mimeType)) return cat
@@ -52,7 +57,24 @@ export function readFileAsBase64(file: File): Promise<string> {
 }
 
 export function getFilePreviewUrl(file: File): string {
-  return URL.createObjectURL(file)
+  const url = URL.createObjectURL(file)
+  activeObjectUrls.add(url)
+  return url
+}
+
+export function clearFile(file: FileInfo): void {
+  if (file.previewUrl) {
+    URL.revokeObjectURL(file.previewUrl)
+    activeObjectUrls.delete(file.previewUrl)
+  }
+  file.base64 = ''
+}
+
+export function clearAllTempFiles(): void {
+  for (const url of activeObjectUrls) {
+    URL.revokeObjectURL(url)
+  }
+  activeObjectUrls.clear()
 }
 
 export async function processUploadedFile(file: File): Promise<FileInfo> {

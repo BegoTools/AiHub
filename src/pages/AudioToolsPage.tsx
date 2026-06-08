@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Mic, Loader2, AlertCircle, Download, FileText } from 'lucide-react'
 import { routeRequest } from '../services/aiRouter'
 import type { AiRouterResponse } from '../types/aiTypes'
 import FileUpload from '../components/FileUpload'
 import FilePreview from '../components/FilePreview'
+import { clearFile, clearAllTempFiles } from '../services/fileService'
 import type { FileInfo } from '../services/fileService'
 
 export default function AudioToolsPage() {
@@ -11,19 +12,28 @@ export default function AudioToolsPage() {
   const [result, setResult] = useState<AiRouterResponse | null>(null)
   const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    return () => { if (audioFile) clearFile(audioFile); clearAllTempFiles() }
+  }, [])
+
   const handleTranscribe = async () => {
     if (!audioFile) return
     setLoading(true)
     setResult(null)
+    const file = audioFile
 
     const resp = await routeRequest({
       taskType: 'audio',
-      file: audioFile.base64,
-      fileName: audioFile.name,
-      mimeType: audioFile.type,
+      file: file.base64,
+      fileName: file.name,
+      mimeType: file.type,
     })
 
     setLoading(false)
+    if (resp.success) {
+      clearFile(file)
+      setAudioFile(null)
+    }
     setResult(resp)
   }
 

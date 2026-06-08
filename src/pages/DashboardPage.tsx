@@ -1,11 +1,12 @@
-import { useState } from 'react'
-import { Sparkles, Mic, Image, Search, FileText, ArrowRight, Zap, Globe, Music, Braces } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Sparkles, Mic, Image, Search, FileText, Zap, Globe } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { routeRequest } from '../services/aiRouter'
 import type { AiRouterResponse } from '../types/aiTypes'
 import FileUpload from '../components/FileUpload'
 import FilePreview from '../components/FilePreview'
 import OutputView from '../components/OutputView'
+import { clearFile, clearAllTempFiles } from '../services/fileService'
 import type { FileInfo } from '../services/fileService'
 
 interface DashboardPageProps {
@@ -26,18 +27,24 @@ export default function DashboardPage({ t }: DashboardPageProps) {
   const [loading, setLoading] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<FileInfo | null>(null)
 
+  useEffect(() => {
+    return () => { if (uploadedFile) clearFile(uploadedFile); clearAllTempFiles() }
+  }, [])
+
   const handleSubmit = async () => {
     if (!prompt.trim() && !uploadedFile) return
     setLoading(true)
     setResult('')
+    const file = uploadedFile
 
-    const resp = uploadedFile
-      ? await routeRequest({ taskType: 'audio', prompt: prompt || 'حول هذا الملف الصوتي إلى نص', file: uploadedFile.base64, fileName: uploadedFile.name, mimeType: uploadedFile.type })
+    const resp = file
+      ? await routeRequest({ taskType: 'audio', prompt: prompt || 'حول هذا الملف الصوتي إلى نص', file: file.base64, fileName: file.name, mimeType: file.type })
       : await routeRequest({ taskType: 'text', prompt })
 
     setLoading(false)
     if (resp.success) {
       setResult(resp.imageUrl ? `![Generated Image](${resp.imageUrl})` : (resp.result || ''))
+      if (file) { clearFile(file); setUploadedFile(null) }
     } else {
       setResult(`**خطأ**: ${resp.error}`)
     }

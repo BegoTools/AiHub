@@ -3,6 +3,7 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
+import { registerFile, getFile, deleteFile, cleanupExpired, getStats } from './api/temp-storage';
 
 dotenv.config();
 
@@ -117,7 +118,7 @@ async function startServer() {
     }
   });
 
-  // API Route: File Upload
+  // API Route: File Upload (ephemeral — temp storage with TTL)
   app.post('/api/upload', async (req, res) => {
     try {
       const { file, fileName, fileType, fileSize } = req.body
@@ -125,7 +126,11 @@ async function startServer() {
       if (fileSize > MAX_FILE_SIZE) return res.status(413).json({ error: 'حجم الملف يتجاوز 50MB.' })
       const category = Object.entries(ALLOWED_TYPES).find(([, types]) => types.includes(fileType))?.[0]
       if (!category) return res.status(400).json({ error: 'نوع الملف غير مدعوم.' })
-      return res.status(200).json({ success: true, data: { id: `file_${Date.now()}`, name: fileName, size: fileSize, type: fileType, category, base64: file, createdAt: new Date().toISOString() } })
+      const tempFile = registerFile(fileName || 'file', fileSize || 0, fileType || '', category, file, 30 * 60 * 1000)
+      return res.status(200).json({
+        success: true,
+        data: { id: tempFile.id, name: tempFile.name, size: tempFile.size, type: tempFile.type, category: tempFile.category, base64: tempFile.data, createdAt: new Date(tempFile.createdAt).toISOString(), ttl: tempFile.ttl, isTemporary: true },
+      })
     } catch (error: any) {
       return res.status(500).json({ error: error.message || 'فشل رفع الملف.' })
     }
@@ -226,6 +231,24 @@ async function startServer() {
       return res.status(500).json({ error: error.message || 'فشل البحث.' })
     }
   })
+
+  // Temp Storage: Cleanup endpoint
+  app.post('/api/temp/cleanup', async (_req, res) => {
+    const removed = cleanupExpired()
+    const stats = getStats()
+    return res.json({ cleaned: removed, active: stats.total })
+  })
+
+  // Temp Storage: Stats endpoint
+  app.get('/api/temp/stats', async (_req, res) => {
+    return res.json(getStats())
+  })
+
+  // Run periodic cleanup every 10 minutes
+  setInterval(() => {
+    const removed = cleanupExpired()
+    if (removed > 0) console.log(`[temp] Cleaned ${removed} expired temp files.`)
+  }, 10 * 60 * 1000)
 
   // API Route: AI Chat Assistant
   app.post('/api/chat-assistant', async (req, res) => {
