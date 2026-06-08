@@ -5,18 +5,6 @@ import { AuthProvider } from './context/AuthContext';
 import App from './App.tsx';
 import './index.css';
 
-(async () => {
-  try {
-    const { Capacitor } = await import('@capacitor/core');
-    if (Capacitor.isNativePlatform()) {
-      const { SplashScreen } = await import('@capacitor/splash-screen');
-      await SplashScreen.hide();
-    }
-  } catch {
-    // Not running in Capacitor
-  }
-})();
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>

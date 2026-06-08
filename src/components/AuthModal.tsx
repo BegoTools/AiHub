@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -27,24 +27,12 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
   const [fbStage, setFbStage] = useState<FbStage>('idle');
   const [showPassword, setShowPassword] = useState(false);
 
-  const isNative = typeof (window as any)?.Capacitor !== 'undefined';
-
-  const closeBrowser = useCallback(async () => {
-    try {
-      const { Browser } = await import('@capacitor/browser');
-      await Browser.close();
-    } catch {
-      // Not in Capacitor
-    }
-  }, []);
-
   useEffect(() => {
     if (user && isOpen) {
       if (user) migrateFromLocalStorage(user.id);
-      closeBrowser();
       onClose();
     }
-  }, [user, isOpen, onClose, closeBrowser]);
+  }, [user, isOpen, onClose]);
 
   // Update fbStage messages over time
   useEffect(() => {
@@ -64,18 +52,7 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
   }, [fbLoading]);
 
   const getFbMessage = () => {
-    if (!isNative) return t.signInWithFacebook || 'تسجيل الدخول باستخدام Facebook';
-
-    switch (fbStage) {
-      case 'opening':
-        return 'جاري فتح نافذة تسجيل الدخول إلى Facebook...';
-      case 'waiting':
-        return 'في انتظار إتمام تسجيل الدخول عبر Facebook...';
-      case 'success':
-        return 'تم تسجيل الدخول بنجاح! جاري العودة...';
-      default:
-        return t.signInWithFacebook || 'تسجيل الدخول باستخدام Facebook';
-    }
+    return t.signInWithFacebook || 'تسجيل الدخول باستخدام Facebook';
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -8,20 +8,9 @@
     "dev:server": "tsx server.ts",
     "build": "vite build",
     "start": "vite preview",
-    "lint": "tsc --noEmit",
-    "cap:sync": "npm run build && npx cap sync",
-    "cap:open:android": "npx cap open android",
-    "cap:build:debug": "npm run build && npx cap sync && cd android && ./gradlew assembleDebug",
-    "cap:build:release": "npm run build && npx cap sync && cd android && ./gradlew bundleRelease",
-    "cap:logs": "adb logcat -s \"Capacitor/Console\" | findstr \"OAuth DeepLink AuthCallback Redirect Auth\""
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@capacitor/android": "^8.4.0",
-    "@capacitor/app": "^8.1.0",
-    "@capacitor/browser": "^8.0.3",
-    "@capacitor/cli": "^8.4.0",
-    "@capacitor/core": "^8.4.0",
-    "@capacitor/splash-screen": "^8.0.1",
     "@google/genai": "^2.7.0",
     "@supabase/supabase-js": "^2.107.0",
     "framer-motion": "^12.40.0",
@@ -45,7 +34,6 @@
     "tailwindcss": "^4.3.0",
     "tsx": "^4.22.4",
     "typescript": "~5.8.3",
-    "vite": "^6.4.3",
-    "vite-plugin-pwa": "^1.3.0"
+    "vite": "^6.4.3"
   }
 }
