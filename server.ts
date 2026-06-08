@@ -26,6 +26,12 @@ function isTransientError(error: any): boolean {
 async function callGemini(apiKey: string, prompt: string, model?: string, imageBase64?: string, imageMimeType?: string): Promise<string> {
   const ai = new GoogleGenAI({ apiKey })
   const chosenModel = model || 'gemini-2.0-flash'
+  console.log("=== callGemini INSPECTION ===");
+  console.log("imageBase64 truthy?", !!imageBase64);
+  console.log("imageBase64 length:", imageBase64 ? imageBase64.length : 0);
+  console.log("imageMimeType:", imageMimeType);
+  console.log("prompt sample:", prompt?.substring(0, 100));
+  console.log("chosenModel:", chosenModel);
   const contents = imageBase64
     ? [{ role: 'user', parts: [{ text: prompt }, { inlineData: { mimeType: imageMimeType || 'image/jpeg', data: imageBase64 } }] }]
     : prompt
@@ -88,6 +94,13 @@ async function startServer() {
   app.post('/api/generate', async (req, res) => {
     try {
       const { prompt, provider, model, imageBase64, imageMimeType } = req.body;
+      console.log("=== IMAGE INCOMING INSPECTION ===");
+      console.log("Headers Content-Type:", req.headers['content-type']);
+      console.log("Body Keys:", Object.keys(req.body));
+      console.log("imageBase64 present?", !!imageBase64);
+      console.log("imageMimeType:", imageMimeType);
+      console.log("imageBase64 length:", imageBase64 ? imageBase64.length : 0);
+      console.log("prompt length:", prompt?.length || 0);
       if (!prompt) return res.status(400).json({ error: 'حقل النص المطلوب (prompt) فارغ.' });
       const result = await generateText(prompt, imageBase64, imageMimeType)
       return res.json(result)

@@ -380,16 +380,24 @@ export default function App() {
       let imageBase64: string | undefined;
       let imageMimeType: string | undefined;
       for (const input of activeTool.inputs) {
-        if (input.type === 'image' && inputs[input.id]?.startsWith('data:')) {
-          const dataUrl = inputs[input.id];
-          const parts = dataUrl.split(',');
-          imageBase64 = parts[1];
-          imageMimeType = parts[0].split(':')[1]?.split(';')[0] || 'image/jpeg';
+        if (input.type === 'image') {
+          console.log("=== HANDLEGENERATE: Found image input ===", input.id);
+          console.log("input value (first 80):", inputs[input.id]?.substring(0, 80));
+          console.log("starts with 'data:'?", inputs[input.id]?.startsWith('data:'));
+          if (inputs[input.id]?.startsWith('data:')) {
+            const dataUrl = inputs[input.id];
+            const parts = dataUrl.split(',');
+            imageBase64 = parts[1];
+            imageMimeType = parts[0].split(':')[1]?.split(';')[0] || 'image/jpeg';
+            console.log("Extracted base64 length:", imageBase64.length);
+            console.log("Extracted mimeType:", imageMimeType);
+          }
           break;
         }
       }
 
       const fullPrompt = activeTool.promptTemplate(inputs);
+      console.log("Calling generateAIContent with imageBase64 present:", !!imageBase64);
       const textResult = await generateAIContent(fullPrompt, imageBase64, imageMimeType);
       setCurrentToolOutput(textResult);
 

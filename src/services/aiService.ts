@@ -4,6 +4,12 @@ export async function generateAIContent(prompt: string, imageBase64?: string, im
     if (imageBase64) body.imageBase64 = imageBase64;
     if (imageMimeType) body.imageMimeType = imageMimeType;
 
+    console.log("=== aiService: Sending request ===");
+    console.log("Body keys:", Object.keys(body));
+    console.log("imageBase64 present:", !!body.imageBase64);
+    console.log("imageBase64 length:", body.imageBase64?.length);
+    console.log("Full body size (approx):", JSON.stringify(body).length, "bytes");
+
     const response = await fetch('/api/generate', {
       method: 'POST',
       headers: {
