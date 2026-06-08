@@ -14,6 +14,10 @@ import WorkflowsPage from '../pages/WorkflowsPage';
 import ProfilePage from '../pages/ProfilePage';
 import AboutPage from '../pages/AboutPage';
 import AuthCallback from '../pages/AuthCallback';
+import DashboardPage from '../pages/DashboardPage';
+import AudioToolsPage from '../pages/AudioToolsPage';
+import ImageToolsPage from '../pages/ImageToolsPage';
+import SearchPage from '../pages/SearchPage';
 import PrivacyPage from '../pages/PrivacyPage';
 import TermsPage from '../pages/TermsPage';
 import DataDeletionPage from '../pages/DataDeletionPage';
@@ -67,6 +71,10 @@ export default function AppRoutes({
           recentToolsUsed={recentToolsUsed}
         />
       } />
+      <Route path="/dashboard" element={<DashboardPage t={t} />} />
+      <Route path="/audio-tools" element={<AudioToolsPage />} />
+      <Route path="/image-tools" element={<ImageToolsPage />} />
+      <Route path="/search" element={<SearchPage />} />
       <Route path="/assistant" element={
         <AssistantPage
           t={t}

@@ -15,7 +15,10 @@ import {
   Workflow,
   Plus,
   LogIn,
-  Wrench
+  Wrench,
+  Mic,
+  Image,
+  Zap
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -34,6 +37,10 @@ interface SidebarProps {
 
 const routeForTab: Record<string, string> = {
   home: '/home',
+  dashboard: '/dashboard',
+  'audio-tools': '/audio-tools',
+  'image-tools': '/image-tools',
+  search: '/search',
   chat: '/assistant',
   categories: '/categories',
   library: '/library',
@@ -60,6 +67,10 @@ export default function Sidebar({
   
   const navItems = [
     { id: 'home', label: t.home, icon: Home },
+    { id: 'dashboard', label: t.dashboardNav || 'AI Workspace', icon: Zap },
+    { id: 'audio-tools', label: t.audioToolsNav || 'الصوتيات', icon: Mic },
+    { id: 'image-tools', label: t.imageToolsNav || 'الصور', icon: Image },
+    { id: 'search', label: t.searchNav || 'البحث الذكي', icon: Search },
     { id: 'chat', label: t.chatAssistant, icon: Sparkles },
     { id: 'categories', label: t.categories, icon: LayoutGrid },
     { id: 'library', label: t.libraryNav || 'المكتبة', icon: Library },
@@ -135,7 +146,7 @@ export default function Sidebar({
         {/* Connection status section */}
         <div className="px-6 py-4">
           <div
-            onClick={() => navigate('/settings')}
+            onClick={() => navigate('/home')}
             className="bg-slate-100 dark:bg-zinc-900/65 rounded-2xl p-4 border border-slate-200 dark:border-zinc-800/80 cursor-pointer hover:bg-slate-200 dark:hover:bg-zinc-800/80 transition-all"
           >
             <p className="text-[10px] text-slate-500 dark:text-zinc-500 mb-2 uppercase tracking-widest font-black">{t.serviceStatus}</p>

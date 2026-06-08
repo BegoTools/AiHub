@@ -251,6 +251,15 @@ export interface TranslationDict {
   signInWithFacebook: string;
   facebookAuthFailed: string;
   facebookNoEmail: string;
+  dashboardNav: string;
+  dashboardTitle: string;
+  dashboardDesc: string;
+  audioToolsNav: string;
+  imageToolsNav: string;
+  searchNav: string;
+  aiPromptTitle: string;
+  aiPromptPlaceholder: string;
+  dropFilesHere: string;
 }
 
 export const translations: Record<Language, TranslationDict> = {
@@ -488,7 +497,16 @@ export const translations: Record<Language, TranslationDict> = {
     authLoginToContinue: 'تسجيل الدخول للمتابعة',
     signInWithFacebook: 'تسجيل الدخول باستخدام Facebook',
     facebookAuthFailed: 'حدث خطأ أثناء تسجيل الدخول باستخدام Facebook، حاول مرة أخرى.',
-    facebookNoEmail: 'لم يوفر Facebook البريد الإلكتروني لهذا الحساب'
+    facebookNoEmail: 'لم يوفر Facebook البريد الإلكتروني لهذا الحساب',
+    dashboardNav: 'مسرح AI',
+    dashboardTitle: 'مسرح الذكاء الاصطناعي',
+    dashboardDesc: 'مساحة عمل ذكية متكاملة. ارفع، اكتب، واترك للذكاء الاصطناعي الباقي.',
+    audioToolsNav: 'الصوتيات',
+    imageToolsNav: 'توليد الصور',
+    searchNav: 'البحث الذكي',
+    aiPromptTitle: 'اطلب أي شيء',
+    aiPromptPlaceholder: 'اكتب طلبك هنا... توليد نص، تحليل، ترجمة، بحث، أو أي شيء!',
+    dropFilesHere: 'اسحب وأفلت الملف هنا أو اضغط للاختيار'
   },
   en: {
     home: 'Home 🏠',
@@ -724,7 +742,16 @@ export const translations: Record<Language, TranslationDict> = {
     authLoginToContinue: 'Log in to continue',
     signInWithFacebook: 'Sign in with Facebook',
     facebookAuthFailed: 'Facebook login failed. Please try again.',
-    facebookNoEmail: 'Facebook did not provide an email for this account'
+    facebookNoEmail: 'Facebook did not provide an email for this account',
+    dashboardNav: 'AI Workspace',
+    dashboardTitle: 'AI Workspace',
+    dashboardDesc: 'Your unified AI workspace. Upload, write, and let AI handle the rest.',
+    audioToolsNav: 'Audio Tools',
+    imageToolsNav: 'Image Gen',
+    searchNav: 'AI Search',
+    aiPromptTitle: 'Ask Anything',
+    aiPromptPlaceholder: 'Type your request here... Text generation, analysis, translation, search, or anything!',
+    dropFilesHere: 'Drag & drop files here or click to browse'
   },
   de: {
     home: 'Startseite 🏠',
@@ -960,7 +987,16 @@ export const translations: Record<Language, TranslationDict> = {
     authLoginToContinue: 'Weiter mit Anmeldung',
     signInWithFacebook: 'Mit Facebook anmelden',
     facebookAuthFailed: 'Facebook-Login fehlgeschlagen. Bitte versuchen Sie es erneut.',
-    facebookNoEmail: 'Facebook hat keine E-Mail-Adresse für dieses Konto bereitgestellt'
+    facebookNoEmail: 'Facebook hat keine E-Mail-Adresse für dieses Konto bereitgestellt',
+    dashboardNav: 'AI-Arbeitsbereich',
+    dashboardTitle: 'KI-Arbeitsbereich',
+    dashboardDesc: 'Ihr vereinheitlichter KI-Arbeitsbereich. Hochladen, schreiben und KI den Rest erledigen lassen.',
+    audioToolsNav: 'Audio-Tools',
+    imageToolsNav: 'Bildgenerierung',
+    searchNav: 'KI-Suche',
+    aiPromptTitle: 'Alles Fragen',
+    aiPromptPlaceholder: 'Geben Sie Ihre Anfrage ein... Textgenerierung, Analyse, Übersetzung, Suche oder alles!',
+    dropFilesHere: 'Dateien hier ablegen oder klicken zum Durchsuchen'
   },
   fr: {
     home: 'Accueil 🏠',
@@ -1196,7 +1232,16 @@ export const translations: Record<Language, TranslationDict> = {
     authLoginToContinue: 'Se connecter pour continuer',
     signInWithFacebook: 'Se connecter avec Facebook',
     facebookAuthFailed: 'Échec de la connexion Facebook. Veuillez réessayer.',
-    facebookNoEmail: "Facebook n'a pas fourni d'email pour ce compte"
+    facebookNoEmail: "Facebook n'a pas fourni d'email pour ce compte",
+    dashboardNav: 'Espace IA',
+    dashboardTitle: 'Espace de travail IA',
+    dashboardDesc: "Votre espace de travail IA unifié. Téléchargez, écrivez et laissez l'IA faire le reste.",
+    audioToolsNav: 'Outils Audio',
+    imageToolsNav: "Génération d'images",
+    searchNav: 'Recherche IA',
+    aiPromptTitle: 'Demandez Tout',
+    aiPromptPlaceholder: 'Tapez votre demande ici... Génération de texte, analyse, traduction, recherche ou autre !',
+    dropFilesHere: 'Glissez-déposez des fichiers ici ou cliquez pour parcourir'
   },
   it: {
     home: 'Home 🏠',
@@ -1432,6 +1477,15 @@ export const translations: Record<Language, TranslationDict> = {
     authLoginToContinue: 'Accedi per continuare',
     signInWithFacebook: 'Accedi con Facebook',
     facebookAuthFailed: 'Accesso Facebook fallito. Riprova.',
-    facebookNoEmail: 'Facebook non ha fornito un\'email per questo account'
+    facebookNoEmail: 'Facebook non ha fornito un\'email per questo account',
+    dashboardNav: 'Area IA',
+    dashboardTitle: 'Area di lavoro IA',
+    dashboardDesc: 'Il tuo spazio di lavoro IA unificato. Carica, scrivi e lascia che l\'IA faccia il resto.',
+    audioToolsNav: 'Strumenti Audio',
+    imageToolsNav: 'Generazione Immagini',
+    searchNav: 'Ricerca IA',
+    aiPromptTitle: 'Chiedi Qualsiasi Cosa',
+    aiPromptPlaceholder: 'Scrivi la tua richiesta qui... Generazione testo, analisi, traduzione, ricerca o altro!',
+    dropFilesHere: 'Trascina i file qui o clicca per sfogliare'
   }
 };
