@@ -67,13 +67,14 @@ async function callOpenRouter(apiKey: string, prompt: string, model?: string, im
   return data.choices?.[0]?.message?.content || ''
 }
 
-async function callGeminiImageGeneration(apiKey: string, prompt: string): Promise<string> {
+async function callGeminiImageGeneration(apiKey: string, prompt: string, style?: string): Promise<string> {
   const { GoogleGenAI } = await import('@google/genai')
   const ai = new GoogleGenAI({ apiKey })
+  const finalPrompt = style ? `${prompt}\n\nالنمط الفني: ${style}` : prompt
   const response = await Promise.race([
     ai.models.generateContent({
       model: 'gemini-2.0-flash-exp-image-generation',
-      contents: prompt,
+      contents: finalPrompt,
       config: {
         generationConfig: { responseModalities: ['Text', 'Image'] }
       } as any,
@@ -112,7 +113,6 @@ export async function generateText(prompt: string, imageBase64?: string, imageMi
       return { result, provider: provider.name, model: provider.model }
     } catch (error: any) {
       lastError = error
-      if (!isTransientError(error)) continue
     }
   }
   throw new Error(lastError?.message || 'جميع مزودي الخدمة غير متاحين حالياً.')
@@ -126,10 +126,13 @@ export async function transcribeAudio(audioBase64: string, fileName: string): Pr
     const prompt = 'اقرأ هذا الملف الصوتي وحول الكلام إلى نص مكتوب باللغة العربية. أعد فقط النص المكتوب بدون أي إضافات.'
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
-      contents: [
-        { text: prompt },
-        { inlineData: { mimeType: fileName.endsWith('.mp3') ? 'audio/mp3' : 'audio/wav', data: audioBase64 } },
-      ],
+      contents: [{
+        role: 'user',
+        parts: [
+          { text: prompt },
+          { inlineData: { mimeType: fileName.endsWith('.mp3') ? 'audio/mp3' : 'audio/wav', data: audioBase64 } },
+        ],
+      }],
     })
     return { text: (response as any).text || '', provider: 'gemini' }
   }
@@ -140,9 +143,12 @@ export async function generateImage(prompt: string, style?: string): Promise<{ i
   const geminiKey = process.env.GEMINI_API_KEY
   if (geminiKey) {
     try {
-      const imageUrl = await callGeminiImageGeneration(geminiKey, prompt)
+      const imageUrl = await callGeminiImageGeneration(geminiKey, prompt, style)
       return { imageUrl, provider: 'gemini' }
-    } catch {}
+    } catch (err: any) {
+      console.error('[generateImage] Gemini error:', err?.message);
+      throw new Error(`Gemini فشل في توليد الصورة: ${err?.message || 'خطأ غير معروف'}`);
+    }
   }
   throw new Error('لا يوجد مزود متاح لتوليد الصور.')
 }

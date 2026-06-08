@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
@@ -68,7 +69,7 @@ async function generateText(prompt: string, imageBase64?: string, imageMimeType?
   let lastError: any = null
   for (const provider of providers) {
     try { const result = await provider.call(); return { result, provider: provider.name, model: provider.model } }
-    catch (error: any) { lastError = error; if (!isTransientError(error)) continue }
+    catch (error: any) { lastError = error }
   }
   throw new Error(lastError?.message || 'جميع مزودي الخدمة غير متاحين حالياً.')
 }
@@ -171,15 +172,16 @@ async function startServer() {
   // API Route: Image Generation
   app.post('/api/generate-image', async (req, res) => {
     try {
-      const { prompt } = req.body
+      const { prompt, style } = req.body
       if (!prompt) return res.status(400).json({ error: 'النص مطلوب.' })
+      const finalPrompt = style ? `${prompt}\n\nالنمط الفني: ${style}` : prompt
       const geminiKey = process.env.GEMINI_API_KEY
       if (geminiKey) {
         try {
           const ai = new GoogleGenAI({ apiKey: geminiKey })
           const resp = await ai.models.generateContent({
             model: 'gemini-2.0-flash-exp-image-generation',
-            contents: prompt,
+            contents: finalPrompt,
             config: { generationConfig: { responseModalities: ['Text', 'Image'] } } as any,
           })
           const parts = (resp as any)?.candidates?.[0]?.content?.parts || []
@@ -187,7 +189,10 @@ async function startServer() {
             if (part.inlineData?.mimeType?.startsWith('image/'))
               return res.json({ success: true, imageUrl: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`, provider: 'gemini' })
           }
-        } catch {}
+        } catch (err: any) {
+          console.error('[generate-image] Gemini error:', err?.message);
+          throw new Error(`Gemini فشل في توليد الصورة: ${err?.message || 'خطأ غير معروف'}`);
+        }
       }
       throw new Error('لا يوجد مزود متاح لتوليد الصور.')
     } catch (error: any) {
@@ -283,8 +288,15 @@ Format: { "action":"chat","explanation":"...","suggestedTools":[],"suggestedWork
     app.use(vite.middlewares);
     // SPA fallback for dev mode: serve index.html for any unmatched GET request
     app.get('*', async (req, res) => {
-      const indexHtml = await vite.transformIndexHtml(req.url, '')
-      res.status(200).send(indexHtml)
+      try {
+        const htmlPath = path.join(process.cwd(), 'index.html');
+        if (!fs.existsSync(htmlPath)) return res.status(404).send('index.html not found');
+        const rawHtml = fs.readFileSync(htmlPath, 'utf-8');
+        const html = await vite.transformIndexHtml(req.url, rawHtml);
+        res.status(200).send(html);
+      } catch (e: any) {
+        res.status(500).send(`SPA fallback error: ${e.message}`);
+      }
     })
   }
 
