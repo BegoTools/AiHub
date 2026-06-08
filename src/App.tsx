@@ -377,8 +377,20 @@ export default function App() {
     setCurrentToolOutput('');
 
     try {
+      let imageBase64: string | undefined;
+      let imageMimeType: string | undefined;
+      for (const input of activeTool.inputs) {
+        if (input.type === 'image' && inputs[input.id]?.startsWith('data:')) {
+          const dataUrl = inputs[input.id];
+          const parts = dataUrl.split(',');
+          imageBase64 = parts[1];
+          imageMimeType = parts[0].split(':')[1]?.split(';')[0] || 'image/jpeg';
+          break;
+        }
+      }
+
       const fullPrompt = activeTool.promptTemplate(inputs);
-      const textResult = await generateAIContent(fullPrompt);
+      const textResult = await generateAIContent(fullPrompt, imageBase64, imageMimeType);
       setCurrentToolOutput(textResult);
 
       const newHistoryItem: HistoryItem = {

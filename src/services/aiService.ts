@@ -1,11 +1,15 @@
-export async function generateAIContent(prompt: string): Promise<string> {
+export async function generateAIContent(prompt: string, imageBase64?: string, imageMimeType?: string): Promise<string> {
   try {
+    const body: Record<string, any> = { prompt };
+    if (imageBase64) body.imageBase64 = imageBase64;
+    if (imageMimeType) body.imageMimeType = imageMimeType;
+
     const response = await fetch('/api/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ prompt })
+      body: JSON.stringify(body)
     });
 
     const data = await response.json();

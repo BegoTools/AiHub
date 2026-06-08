@@ -1831,42 +1831,39 @@ export const tools: Tool[] = [
     id: 'media_image_analyzer',
     categoryId: 'media',
     title: 'تحليل الصور',
-    description: 'TODO: ارفع صورة واحصل على تحليل ذكي لمحتواها. (محتاج API رفع صور)',
+    description: 'ارفع صورة واحصل على تحليل ذكي لمحتواها بالذكاء الاصطناعي.',
     icon: 'ImageUp',
     keywords: ['صورة', 'تحليل', 'image', 'analysis', 'رفع'],
     tags: ['صور', 'تحليل', 'ذكاء اصطناعي'],
     isNew: true,
     inputs: [
-      { id: 'image_url', label: 'رابط الصورة أو مسارها', type: 'text', placeholder: 'TODO: سيتم إضافة رفع الصور لاحقاً...' },
+      { id: 'image_data', label: 'ارفع الصورة', type: 'image', placeholder: 'اختر صورة من جهازك لتحليلها' },
       { id: 'question', label: 'إيه عايز تعرف عن الصورة؟', type: 'text', placeholder: 'مثلاً: إيه الموجود في الصورة دي؟' }
     ],
-    exampleInput: { image_url: 'https://example.com/photo.jpg', question: 'وصف محتوى الصورة بالتفصيل' },
+    exampleInput: { image_data: '', question: 'وصف محتوى الصورة بالتفصيل' },
     promptTemplate: (inputs) => `
 أنت محلل صور محترف.
-حلل الصورة التالية وأجب على السؤال: "${inputs.question}"
-رابط الصورة: "${inputs.image_url}"
-قدم وصفاً تفصيلياً وتحليلاً ذكياً.
-// TODO Future: Replace with actual image upload API with multimodal AI`
+حلل الصورة المرفقة وأجب على السؤال: "${inputs.question}"
+قدم وصفاً تفصيلياً وتحليلاً ذكياً.`
   },
   {
     id: 'media_product_image',
     categoryId: 'media',
     title: 'وصف منتج من صورة',
-    description: 'TODO: ارفع صورة منتج واحصل على وصف تسويقي متكامل.',
+    description: 'ارفع صورة منتج واحصل على وصف تسويقي متكامل بالذكاء الاصطناعي.',
     icon: 'Package',
     keywords: ['منتج', 'صورة', 'وصف', 'product', 'image'],
     tags: ['صور', 'منتجات', 'تسويق'],
     isNew: true,
     inputs: [
-      { id: 'image_url', label: 'رابط صورة المنتج', type: 'text', placeholder: 'TODO: سيتم إضافة رفع الصور لاحقاً...' },
+      { id: 'image_data', label: 'ارفع صورة المنتج', type: 'image', placeholder: 'اختر صورة المنتج من جهازك' },
       { id: 'product_name', label: 'اسم المنتج', type: 'text', placeholder: 'اسم المنتج' }
     ],
-    exampleInput: { image_url: 'https://example.com/product.jpg', product_name: 'حذاء رياضي' },
+    exampleInput: { image_data: '', product_name: 'حذاء رياضي' },
     promptTemplate: (inputs) => `
 أنت كاتب تسويقي محترف.
 اكتب وصف تسويقي جذاب للمنتج: "${inputs.product_name}"
-رابط الصورة: "${inputs.image_url}"
-// TODO Future: Implement image upload and analysis`
+حلل الصورة المرفقة للمنتج وأدرج تفاصيلها في الوصف.`
   },
   {
     id: 'media_pdf_summarizer',

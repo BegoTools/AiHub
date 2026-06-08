@@ -12,7 +12,7 @@ export interface Category {
 export interface InputField {
   id: string;
   label: string;
-  type: 'text' | 'textarea' | 'select' | 'number';
+  type: 'text' | 'textarea' | 'select' | 'number' | 'image';
   placeholder: string;
   options?: { value: string; label: string }[];
   defaultValue?: string;

@@ -23,22 +23,28 @@ function isTransientError(error: any): boolean {
     text.includes('timeout') || text.includes('429')
 }
 
-async function callGemini(apiKey: string, prompt: string, model?: string): Promise<string> {
+async function callGemini(apiKey: string, prompt: string, model?: string, imageBase64?: string, imageMimeType?: string): Promise<string> {
   const ai = new GoogleGenAI({ apiKey })
   const chosenModel = model || 'gemini-2.0-flash'
+  const contents = imageBase64
+    ? [{ text: prompt }, { inlineData: { mimeType: imageMimeType || 'image/jpeg', data: imageBase64 } }]
+    : prompt
   const response = await Promise.race([
-    ai.models.generateContent({ model: chosenModel, contents: prompt }),
+    ai.models.generateContent({ model: chosenModel, contents }),
     new Promise<never>((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), 60000)),
   ])
   return (response as any).text || ''
 }
 
-async function callOpenRouter(apiKey: string, prompt: string, model?: string): Promise<string> {
+async function callOpenRouter(apiKey: string, prompt: string, model?: string, imageBase64?: string, imageMimeType?: string): Promise<string> {
   const chosenModel = model || 'google/gemini-2.0-flash:free'
+  const content = imageBase64
+    ? [{ type: 'text', text: prompt }, { type: 'image_url', image_url: { url: `data:${imageMimeType || 'image/jpeg'};base64,${imageBase64}` } }]
+    : prompt
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}`, 'HTTP-Referer': 'https://ais-dev.europe-west2.run.app', 'X-Title': 'AI Tools Hub' },
-    body: JSON.stringify({ model: chosenModel, messages: [{ role: 'user', content: prompt }] }),
+    body: JSON.stringify({ model: chosenModel, messages: [{ role: 'user', content }] }),
     signal: AbortSignal.timeout(60000),
   })
   if (!response.ok) { const d = await response.json().catch(() => ({})); throw new Error(d.error?.message || `HTTP ${response.status}`) }
@@ -46,12 +52,15 @@ async function callOpenRouter(apiKey: string, prompt: string, model?: string): P
   return data.choices?.[0]?.message?.content || ''
 }
 
-async function callOpenAI(apiKey: string, prompt: string, model?: string): Promise<string> {
+async function callOpenAI(apiKey: string, prompt: string, model?: string, imageBase64?: string, imageMimeType?: string): Promise<string> {
   const chosenModel = model || 'gpt-4o-mini'
+  const content = imageBase64
+    ? [{ type: 'text', text: prompt }, { type: 'image_url', image_url: { url: `data:${imageMimeType || 'image/jpeg'};base64,${imageBase64}` } }]
+    : prompt
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-    body: JSON.stringify({ model: chosenModel, messages: [{ role: 'user', content: prompt }] }),
+    body: JSON.stringify({ model: chosenModel, messages: [{ role: 'user', content }] }),
     signal: AbortSignal.timeout(60000),
   })
   if (!response.ok) { const d = await response.json().catch(() => ({})); throw new Error(d.error?.message || `HTTP ${response.status}`) }
@@ -59,14 +68,14 @@ async function callOpenAI(apiKey: string, prompt: string, model?: string): Promi
   return data.choices?.[0]?.message?.content || ''
 }
 
-async function generateText(prompt: string): Promise<{ result: string; provider: string; model: string }> {
+async function generateText(prompt: string, imageBase64?: string, imageMimeType?: string): Promise<{ result: string; provider: string; model: string }> {
   const geminiKey = process.env.GEMINI_API_KEY
   const openrouterKey = process.env.OPENROUTER_API_KEY
   const openaiKey = process.env.OPENAI_API_KEY
   const providers = [
-    { name: 'gemini', key: geminiKey, model: 'gemini-2.0-flash', call: () => callGemini(geminiKey!, prompt, 'gemini-2.0-flash') },
-    { name: 'openrouter', key: openrouterKey, model: 'google/gemini-2.0-flash:free', call: () => callOpenRouter(openrouterKey!, prompt, 'google/gemini-2.0-flash:free') },
-    { name: 'openai', key: openaiKey, model: 'gpt-4o-mini', call: () => callOpenAI(openaiKey!, prompt, 'gpt-4o-mini') },
+    { name: 'gemini', key: geminiKey, model: 'gemini-2.0-flash', call: () => callGemini(geminiKey!, prompt, 'gemini-2.0-flash', imageBase64, imageMimeType) },
+    { name: 'openrouter', key: openrouterKey, model: 'google/gemini-2.0-flash:free', call: () => callOpenRouter(openrouterKey!, prompt, 'google/gemini-2.0-flash:free', imageBase64, imageMimeType) },
+    { name: 'openai', key: openaiKey, model: 'gpt-4o-mini', call: () => callOpenAI(openaiKey!, prompt, 'gpt-4o-mini', imageBase64, imageMimeType) },
   ].filter(p => p.key)
   let lastError: any = null
   for (const provider of providers) {
@@ -105,12 +114,12 @@ async function startServer() {
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-  // API Route: Generate AI Content (Smart Router)
+  // API Route: Generate AI Content (Smart Router, supports image+text multimodal)
   app.post('/api/generate', async (req, res) => {
     try {
-      const { prompt, provider, model } = req.body;
+      const { prompt, provider, model, imageBase64, imageMimeType } = req.body;
       if (!prompt) return res.status(400).json({ error: 'حقل النص المطلوب (prompt) فارغ.' });
-      const result = await generateText(prompt)
+      const result = await generateText(prompt, imageBase64, imageMimeType)
       return res.json(result)
     } catch (err: any) {
       console.error('[generate] Error:', err?.message);

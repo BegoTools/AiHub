@@ -1,7 +1,8 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { Tool } from '../types';
 import * as icons from 'lucide-react';
-import { Play, RotateCcw, Sparkles } from 'lucide-react';
+import { Play, RotateCcw, Sparkles, Image, Upload, X, Info, Loader2 } from 'lucide-react';
+import { processUploadedFile } from '../services/fileService';
 
 interface ToolFormProps {
   tool: Tool;
@@ -25,6 +26,8 @@ export function DynamicIcon({ name, className, size = 20 }: { name: string; clas
 export default function ToolForm({ tool, onSubmit, isLoading, t = {} as any }: ToolFormProps) {
   const [formValues, setFormValues] = useState<Record<string, string>>({});
   const [isExtractingPdf, setIsExtractingPdf] = useState(false);
+  const [imagePreviews, setImagePreviews] = useState<Record<string, string>>({});
+  const [imageProcessing, setImageProcessing] = useState<Record<string, boolean>>({});
 
   // Initialize form values
   useEffect(() => {
@@ -103,6 +106,31 @@ export default function ToolForm({ tool, onSubmit, isLoading, t = {} as any }: T
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, inputId: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageProcessing(prev => ({ ...prev, [inputId]: true }));
+    try {
+      const fileInfo = await processUploadedFile(file);
+      const dataUrl = `data:${fileInfo.type};base64,${fileInfo.base64}`;
+      handleInputChange(inputId, dataUrl);
+      setImagePreviews(prev => ({ ...prev, [inputId]: dataUrl }));
+    } catch (err: any) {
+      alert(err.message || 'فشل رفع الصورة');
+    } finally {
+      setImageProcessing(prev => ({ ...prev, [inputId]: false }));
+    }
+  };
+
+  const handleRemoveImage = (inputId: string) => {
+    handleInputChange(inputId, '');
+    setImagePreviews(prev => {
+      const next = { ...prev };
+      delete next[inputId];
+      return next;
+    });
+  };
+
   const handleFillExample = () => {
     setFormValues(tool.exampleInput);
   };
@@ -146,9 +174,11 @@ export default function ToolForm({ tool, onSubmit, isLoading, t = {} as any }: T
                 className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between"
               >
                 <span>{input.label} {input.required && <span className="text-rose-500">*</span>}</span>
-                <span className="text-[11px] font-mono text-slate-400">
-                  {value.length} / {maxChars} {t.charCount || 'حرف'}
-                </span>
+                {input.type !== 'image' && (
+                  <span className="text-[11px] font-mono text-slate-400">
+                    {value.length} / {maxChars} {t.charCount || 'حرف'}
+                  </span>
+                )}
               </label>
 
               {input.type === 'textarea' ? (
@@ -193,6 +223,58 @@ export default function ToolForm({ tool, onSubmit, isLoading, t = {} as any }: T
                     </option>
                   ))}
                 </select>
+              ) : input.type === 'image' ? (
+                <div className="space-y-2">
+                  {value && imagePreviews[input.id] ? (
+                    <div className="space-y-2">
+                      <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900">
+                        <img
+                          src={imagePreviews[input.id]}
+                          alt="Preview"
+                          className="w-full max-h-64 object-contain"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(input.id)}
+                          className="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-black/80 text-white rounded-full transition-all cursor-pointer"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                      <div className="p-2.5 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/50 rounded-xl flex items-start gap-2 text-[10px] text-blue-600 dark:text-blue-400">
+                        <Info size={12} className="shrink-0 mt-0.5" />
+                        <span>هذا الملف مؤقت وسيتم حذفه تلقائياً بعد المعالجة.</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-slate-300 dark:border-zinc-700 hover:border-amber-400 dark:hover:border-amber-600 rounded-2xl bg-slate-50 dark:bg-zinc-900/50 cursor-pointer transition-all">
+                      {imageProcessing[input.id] ? (
+                        <Loader2 size={28} className="animate-spin text-amber-500" />
+                      ) : (
+                        <>
+                          <div className="p-4 bg-slate-100 dark:bg-zinc-800 rounded-2xl text-slate-400 dark:text-zinc-500">
+                            <Upload size={28} />
+                          </div>
+                          <div className="text-center">
+                            <p className="text-sm font-bold text-slate-700 dark:text-zinc-300">
+                              {input.placeholder || 'اختر صورة من جهازك'}
+                            </p>
+                            <p className="text-xs text-slate-400 dark:text-zinc-500 mt-1">
+                              يدعم: JPG, PNG, WebP, GIF
+                            </p>
+                          </div>
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        className="hidden"
+                        onChange={(e) => handleImageUpload(e, input.id)}
+                        disabled={imageProcessing[input.id]}
+                      />
+                    </label>
+                  )}
+                </div>
               ) : (
                 <input
                   id={input.id}

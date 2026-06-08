@@ -6,6 +6,7 @@ import OutputView from '../components/OutputView';
 import { Tool, Category } from '../types';
 import { getCustomToolById } from '../services/customToolsService';
 import { StoredCustomTool } from '../types/storageTypes';
+import { clearAllTempFiles } from '../services/fileService';
 
 interface ToolDetailsPageProps {
   t: any;
@@ -49,6 +50,10 @@ export default function ToolDetailsPage({
   const navigate = useNavigate();
   const [fallbackTool, setFallbackTool] = useState<Tool | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    return () => clearAllTempFiles();
+  }, []);
 
   useEffect(() => {
     if (!toolId) return;
