@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -25,12 +25,24 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
   const [fbLoading, setFbLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const isNative = typeof (window as any)?.Capacitor !== 'undefined';
+
+  const closeBrowser = useCallback(async () => {
+    try {
+      const { Browser } = await import('@capacitor/browser');
+      await Browser.close();
+    } catch {
+      // Not in Capacitor
+    }
+  }, []);
+
   useEffect(() => {
     if (user && isOpen) {
       if (user) migrateFromLocalStorage(user.id);
+      closeBrowser();
       onClose();
     }
-  }, [user, isOpen, onClose]);
+  }, [user, isOpen, onClose, closeBrowser]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,9 +91,9 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
     setFbLoading(true);
     setError(null);
     const { error } = await signInWithFacebook();
+    setFbLoading(false);
     if (error) {
       setError(t.facebookAuthFailed || 'حدث خطأ أثناء تسجيل الدخول باستخدام Facebook، حاول مرة أخرى.');
-      setFbLoading(false);
     }
   };
 
