@@ -13,6 +13,7 @@ interface AuthModalProps {
 }
 
 type AuthView = 'login' | 'signup';
+type FbStage = 'idle' | 'opening' | 'waiting' | 'success';
 
 export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProps) {
   const { signIn, signUp, signInWithFacebook, user } = useAuth();
@@ -23,6 +24,7 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [fbLoading, setFbLoading] = useState(false);
+  const [fbStage, setFbStage] = useState<FbStage>('idle');
   const [showPassword, setShowPassword] = useState(false);
 
   const isNative = typeof (window as any)?.Capacitor !== 'undefined';
@@ -43,6 +45,38 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
       onClose();
     }
   }, [user, isOpen, onClose, closeBrowser]);
+
+  // Update fbStage messages over time
+  useEffect(() => {
+    if (!fbLoading) {
+      setFbStage('idle');
+      return;
+    }
+
+    setFbStage('opening');
+    const t1 = setTimeout(() => setFbStage('waiting'), 3000);
+    const t2 = setTimeout(() => setFbStage('success'), 30000);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [fbLoading]);
+
+  const getFbMessage = () => {
+    if (!isNative) return t.signInWithFacebook || 'تسجيل الدخول باستخدام Facebook';
+
+    switch (fbStage) {
+      case 'opening':
+        return 'جاري فتح نافذة تسجيل الدخول إلى Facebook...';
+      case 'waiting':
+        return 'في انتظار إتمام تسجيل الدخول عبر Facebook...';
+      case 'success':
+        return 'تم تسجيل الدخول بنجاح! جاري العودة...';
+      default:
+        return t.signInWithFacebook || 'تسجيل الدخول باستخدام Facebook';
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,7 +127,7 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
     const { error } = await signInWithFacebook();
     setFbLoading(false);
     if (error) {
-      setError(t.facebookAuthFailed || 'حدث خطأ أثناء تسجيل الدخول باستخدام Facebook، حاول مرة أخرى.');
+      setError(error);
     }
   };
 
@@ -249,7 +283,7 @@ export default function AuthModal({ isOpen, onClose, t, message }: AuthModalProp
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
               )}
-              {t.signInWithFacebook || 'تسجيل الدخول باستخدام Facebook'}
+              {fbLoading ? getFbMessage() : (t.signInWithFacebook || 'تسجيل الدخول باستخدام Facebook')}
             </button>
 
             <div className="mt-4 text-center">

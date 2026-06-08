@@ -12,7 +12,8 @@
     "cap:sync": "npm run build && npx cap sync",
     "cap:open:android": "npx cap open android",
     "cap:build:debug": "npm run build && npx cap sync && cd android && ./gradlew assembleDebug",
-    "cap:build:release": "npm run build && npx cap sync && cd android && ./gradlew bundleRelease"
+    "cap:build:release": "npm run build && npx cap sync && cd android && ./gradlew bundleRelease",
+    "cap:logs": "adb logcat -s \"Capacitor/Console\" | findstr \"OAuth DeepLink AuthCallback Redirect Auth\""
   },
   "dependencies": {
     "@capacitor/android": "^8.4.0",
