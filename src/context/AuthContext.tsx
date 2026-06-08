@@ -61,20 +61,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message ?? null };
   };
 
-  const waitForSession = async (maxRetries = 12, delayMs = 500): Promise<boolean> => {
-    for (let i = 0; i < maxRetries; i++) {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        log('Auth', `Session found after retry ${i + 1}/${maxRetries}`);
-        return true;
-      }
-      log('Auth', `No session yet, retry ${i + 1}/${maxRetries}...`);
-      await new Promise(r => setTimeout(r, delayMs));
-    }
-    log('Auth', `Session not found after ${maxRetries} retries`);
-    return false;
-  };
-
   const signInWithFacebook = async (): Promise<{ error: string | null }> => {
     try {
       const redirectTo = `${window.location.origin}/auth/callback`;
