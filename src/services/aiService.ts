@@ -18,7 +18,14 @@ export async function generateAIContent(prompt: string, imageBase64?: string, im
       body: JSON.stringify(body)
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    let data: any;
+    try { data = JSON.parse(text); } catch {
+      if (text.startsWith('An error') || text.startsWith('<!DOCTYPE') || text.startsWith('<html')) {
+        throw new Error(`الخادم أعاد استجابة غير متوقعة (حالة ${response.status}). تأكد من تشغيل خادم Express: \`pnpm dev:server\``);
+      }
+      throw new Error(`استجابة غير صالحة من الخادم: ${text.slice(0, 100)}`);
+    }
 
     if (!response.ok) {
       throw new Error(data.error || `خطأ من الخادم (رموز الحالة ${response.status})`);

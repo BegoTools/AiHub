@@ -37,16 +37,22 @@ export default function DashboardPage({ t }: DashboardPageProps) {
     setResult('')
     const file = uploadedFile
 
-    const resp = file
-      ? await routeRequest({ taskType: 'audio', prompt: prompt || 'حول هذا الملف الصوتي إلى نص', file: file.base64, fileName: file.name, mimeType: file.type })
-      : await routeRequest({ taskType: 'text', prompt })
+    try {
+      const resp = file
+        ? await routeRequest({ taskType: 'audio', prompt: prompt || 'حول هذا الملف الصوتي إلى نص', file: file.base64, fileName: file.name, mimeType: file.type })
+        : await routeRequest({ taskType: 'text', prompt })
 
-    setLoading(false)
-    if (resp.success) {
-      setResult(resp.imageUrl ? `![Generated Image](${resp.imageUrl})` : (resp.result || ''))
-      if (file) { clearFile(file); setUploadedFile(null) }
-    } else {
-      setResult(`**خطأ**: ${resp.error}`)
+      if (resp.success) {
+        setResult(resp.imageUrl ? `![Generated Image](${resp.imageUrl})` : (resp.result || ''))
+        if (file) { clearFile(file); setUploadedFile(null) }
+      } else {
+        setResult(`**خطأ**: ${resp.error}`)
+      }
+    } catch (err: any) {
+      console.error('[Dashboard] Unhandled error:', err)
+      setResult(`**خطأ غير متوقع**: ${err.message || 'تعذر الاتصال بالخادم.'}`)
+    } finally {
+      setLoading(false)
     }
   }
 

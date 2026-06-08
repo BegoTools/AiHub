@@ -90,6 +90,15 @@ async function startServer() {
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+  // Global error handler for body-parser & other middleware errors — always returns JSON
+  app.use((err: any, _req: any, res: any, next: any) => {
+    if (err) {
+      console.error('[Express Global Error]', err.type || err.name, err.message?.slice(0, 200));
+      return res.status(err.status || 500).json({ error: err.message || 'خطأ داخلي في الخادم.' });
+    }
+    next();
+  });
+
   // API Route: Generate AI Content (Smart Router, supports image+text multimodal)
   app.post('/api/generate', async (req, res) => {
     try {
@@ -272,6 +281,11 @@ Format: { "action":"chat","explanation":"...","suggestedTools":[],"suggestedWork
       appType: 'spa',
     });
     app.use(vite.middlewares);
+    // SPA fallback for dev mode: serve index.html for any unmatched GET request
+    app.get('*', async (req, res) => {
+      const indexHtml = await vite.transformIndexHtml(req.url, '')
+      res.status(200).send(indexHtml)
+    })
   }
 
   app.listen(PORT, () => {

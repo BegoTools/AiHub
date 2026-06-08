@@ -12,7 +12,14 @@ async function postJSON<T>(url: string, body: any, timeoutMs = 60000): Promise<T
       body: JSON.stringify(body),
       signal: controller.signal,
     })
-    const data = await res.json()
+    const text = await res.text()
+    let data: any
+    try { data = JSON.parse(text) } catch {
+      if (text.startsWith('An error') || text.startsWith('<!DOCTYPE') || text.startsWith('<html')) {
+        throw new Error(`الخادم أعاد استجابة غير متوقعة (حالة ${res.status}). تأكد من تشغيل خادم Express: \`pnpm dev:server\``)
+      }
+      throw new Error(`استجابة غير صالحة من الخادم: ${text.slice(0, 100)}`)
+    }
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`)
     return data
   } finally {

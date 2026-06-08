@@ -23,14 +23,19 @@ export default function ImageToolsPage() {
     setLoading(true)
     setResult(null)
 
-    const resp = await routeRequest({
-      taskType: 'image',
-      prompt,
-      style,
-    })
-
-    setLoading(false)
-    setResult(resp)
+    try {
+      const resp = await routeRequest({
+        taskType: 'image',
+        prompt,
+        style,
+      })
+      setResult(resp)
+    } catch (err: any) {
+      console.error('[ImageTools] Unhandled error:', err)
+      setResult({ success: false, error: err.message || 'تعذر الاتصال بالخادم.', processingTime: 0 })
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleDownload = async (url: string) => {

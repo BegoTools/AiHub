@@ -22,19 +22,25 @@ export default function AudioToolsPage() {
     setResult(null)
     const file = audioFile
 
-    const resp = await routeRequest({
-      taskType: 'audio',
-      file: file.base64,
-      fileName: file.name,
-      mimeType: file.type,
-    })
+    try {
+      const resp = await routeRequest({
+        taskType: 'audio',
+        file: file.base64,
+        fileName: file.name,
+        mimeType: file.type,
+      })
 
-    setLoading(false)
-    if (resp.success) {
-      clearFile(file)
-      setAudioFile(null)
+      if (resp.success) {
+        clearFile(file)
+        setAudioFile(null)
+      }
+      setResult(resp)
+    } catch (err: any) {
+      console.error('[AudioTools] Unhandled error:', err)
+      setResult({ success: false, error: err.message || 'تعذر الاتصال بالخادم.', processingTime: 0 })
+    } finally {
+      setLoading(false)
     }
-    setResult(resp)
   }
 
   const downloadText = (text: string, filename: string) => {
