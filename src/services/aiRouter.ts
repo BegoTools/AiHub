@@ -54,7 +54,7 @@ export async function routeRequest(req: AiRouterRequest): Promise<AiRouterRespon
         }, 120000)
         let result = data.transcript
         if (data.summary) result = `📝 **النص المستخرج**:\n${data.transcript}\n\n📋 **الملخص**:\n${data.summary}`
-        return { success: true, result, providerUsed: 'whisper', processingTime: Date.now() - startTime }
+        return { success: true, result, providerUsed: 'gemini', processingTime: Date.now() - startTime }
       }
 
       case 'image': {

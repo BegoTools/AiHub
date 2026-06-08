@@ -1,5 +1,5 @@
 export type TaskType = 'text' | 'image' | 'audio' | 'video' | 'search' | 'file'
-export type ApiProvider = 'gemini' | 'openrouter' | 'openai' | 'stability' | 'whisper' | 'serp'
+export type ApiProvider = 'gemini' | 'openrouter' | 'stability' | 'serp'
 
 export interface ApiKeyConfig {
   provider: ApiProvider

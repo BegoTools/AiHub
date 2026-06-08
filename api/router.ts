@@ -24,12 +24,15 @@ function getModelForTask(taskType: string): string {
   return models[taskType] || 'gemini-2.0-flash'
 }
 
-async function callGemini(apiKey: string, prompt: string, model?: string): Promise<string> {
+async function callGemini(apiKey: string, prompt: string, model?: string, imageBase64?: string, imageMimeType?: string): Promise<string> {
   const { GoogleGenAI } = await import('@google/genai')
   const ai = new GoogleGenAI({ apiKey })
   const chosenModel = model || 'gemini-2.0-flash'
+  const contents = imageBase64
+    ? [{ role: 'user', parts: [{ text: prompt }, { inlineData: { mimeType: imageMimeType || 'image/jpeg', data: imageBase64 } }] }]
+    : prompt
   const response = await Promise.race([
-    ai.models.generateContent({ model: chosenModel, contents: prompt }),
+    ai.models.generateContent({ model: chosenModel, contents }),
     new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error('TIMEOUT')), TIMEOUT_MS)
     ),
@@ -37,8 +40,11 @@ async function callGemini(apiKey: string, prompt: string, model?: string): Promi
   return (response as any).text || ''
 }
 
-async function callOpenRouter(apiKey: string, prompt: string, model?: string): Promise<string> {
+async function callOpenRouter(apiKey: string, prompt: string, model?: string, imageBase64?: string, imageMimeType?: string): Promise<string> {
   const chosenModel = model || 'google/gemini-2.0-flash:free'
+  const content = imageBase64
+    ? [{ type: 'text', text: prompt }, { type: 'image_url', image_url: { url: `data:${imageMimeType || 'image/jpeg'};base64,${imageBase64}` } }]
+    : prompt
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -49,7 +55,7 @@ async function callOpenRouter(apiKey: string, prompt: string, model?: string): P
     },
     body: JSON.stringify({
       model: chosenModel,
-      messages: [{ role: 'user', content: prompt }],
+      messages: [{ role: 'user', content }],
     }),
     signal: AbortSignal.timeout(TIMEOUT_MS),
   })
@@ -59,71 +65,6 @@ async function callOpenRouter(apiKey: string, prompt: string, model?: string): P
   }
   const data = await response.json()
   return data.choices?.[0]?.message?.content || ''
-}
-
-async function callOpenAI(apiKey: string, prompt: string, model?: string): Promise<string> {
-  const chosenModel = model || 'gpt-4o-mini'
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: chosenModel,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-  })
-  if (!response.ok) {
-    const errData = await response.json().catch(() => ({}))
-    throw new Error(errData.error?.message || `HTTP ${response.status}`)
-  }
-  const data = await response.json()
-  return data.choices?.[0]?.message?.content || ''
-}
-
-async function callWhisper(apiKey: string, audioBase64: string, fileName: string): Promise<string> {
-  const blob = Buffer.from(audioBase64, 'base64')
-  const formData = new FormData()
-  formData.append('file', new Blob([blob]), fileName)
-  formData.append('model', 'whisper-1')
-  const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${apiKey}` },
-    body: formData,
-    signal: AbortSignal.timeout(120000),
-  })
-  if (!response.ok) {
-    const errData = await response.json().catch(() => ({}))
-    throw new Error(errData.error?.message || `HTTP ${response.status}`)
-  }
-  const data = await response.json()
-  return data.text || ''
-}
-
-async function callImageGeneration(apiKey: string, prompt: string, style?: string): Promise<string> {
-  const stylePrompt = style ? `(${style} style) ${prompt}` : prompt
-  const response = await fetch('https://api.openai.com/v1/images/generations', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: 'dall-e-3',
-      prompt: stylePrompt,
-      n: 1,
-      size: '1024x1024',
-    }),
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-  })
-  if (!response.ok) {
-    const errData = await response.json().catch(() => ({}))
-    throw new Error(errData.error?.message || `HTTP ${response.status}`)
-  }
-  const data = await response.json()
-  return data.data?.[0]?.url || ''
 }
 
 async function callGeminiImageGeneration(apiKey: string, prompt: string): Promise<string> {
@@ -155,15 +96,13 @@ async function callGeminiImageGeneration(apiKey: string, prompt: string): Promis
   throw new Error('لم يتم إنشاء الصورة')
 }
 
-export async function generateText(prompt: string): Promise<{ result: string; provider: string; model: string }> {
+export async function generateText(prompt: string, imageBase64?: string, imageMimeType?: string): Promise<{ result: string; provider: string; model: string }> {
   const geminiKey = process.env.GEMINI_API_KEY
   const openrouterKey = process.env.OPENROUTER_API_KEY
-  const openaiKey = process.env.OPENAI_API_KEY
 
   const providers = [
-    { name: 'gemini', key: geminiKey, call: () => callGemini(geminiKey!, prompt), model: getModelForTask('text') },
-    { name: 'openrouter', key: openrouterKey, call: () => callOpenRouter(openrouterKey!, prompt), model: 'google/gemini-2.0-flash:free' },
-    { name: 'openai', key: openaiKey, call: () => callOpenAI(openaiKey!, prompt), model: 'gpt-4o-mini' },
+    { name: 'gemini', key: geminiKey, call: () => callGemini(geminiKey!, prompt, getModelForTask('text'), imageBase64, imageMimeType), model: getModelForTask('text') },
+    { name: 'openrouter', key: openrouterKey, call: () => callOpenRouter(openrouterKey!, prompt, 'google/gemini-2.0-flash:free', imageBase64, imageMimeType), model: 'google/gemini-2.0-flash:free' },
   ].filter(p => p.key)
 
   let lastError: any = null
@@ -180,13 +119,6 @@ export async function generateText(prompt: string): Promise<{ result: string; pr
 }
 
 export async function transcribeAudio(audioBase64: string, fileName: string): Promise<{ text: string; provider: string }> {
-  const openaiKey = process.env.OPENAI_API_KEY
-  if (openaiKey) {
-    try {
-      const text = await callWhisper(openaiKey, audioBase64, fileName)
-      return { text, provider: 'whisper' }
-    } catch {}
-  }
   const geminiKey = process.env.GEMINI_API_KEY
   if (geminiKey) {
     const { GoogleGenAI } = await import('@google/genai')
@@ -205,13 +137,6 @@ export async function transcribeAudio(audioBase64: string, fileName: string): Pr
 }
 
 export async function generateImage(prompt: string, style?: string): Promise<{ imageUrl: string; provider: string }> {
-  const openaiKey = process.env.OPENAI_API_KEY
-  if (openaiKey) {
-    try {
-      const url = await callImageGeneration(openaiKey, prompt, style)
-      return { imageUrl: url, provider: 'openai' }
-    } catch {}
-  }
   const geminiKey = process.env.GEMINI_API_KEY
   if (geminiKey) {
     try {
